@@ -1,6 +1,6 @@
 # Campaña Apple P1 · no ejecutada
 
-Usar esta guía con el catálogo original; no reemplaza sus expectativas ni las pruebas Kotlin. Operador con ambos dispositivos presentes; únicamente datos sintéticos. Estado inicial de todos los casos físicos: **NOT_RUN**, preparación de build **BLOCKED** mientras falte Xcode.
+Usar esta guía con el catálogo original; no reemplaza sus expectativas ni las pruebas Kotlin. Operador con ambos dispositivos presentes; únicamente datos sintéticos. Estado de los casos físicos: **NOT_RUN**. Xcode ya está disponible y la app compila; instalación física pendiente de iPhone detectado y firma propia. Ver `docs/apple/validation-xcode.md`.
 
 ## Precondiciones y revisión
 

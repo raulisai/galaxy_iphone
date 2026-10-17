@@ -1,0 +1,189 @@
+{
+  "runId": "apple-xcode-validation",
+  "recordedAtUTC": "2026-10-17T03:38:01.584433+00:00",
+  "presentationTimeZone": "America/Mexico_City",
+  "presentationDate": "2026-10-16",
+  "baseCommit": "02136d340e1837132cd506a49ea4bc76a4a5990b",
+  "branch": "feat/ios/xcode-validation",
+  "workingTree": "modified-uncommitted",
+  "sourceManifest": "source-manifest.json",
+  "toolchain": {
+    "recordedAtUTC": "2026-10-17T03:35:07.471019+00:00",
+    "macOS": "26.6.2",
+    "macOSBuild": "25G83",
+    "developerDirectory": "/Applications/Xcode.app/Contents/Developer",
+    "xcode": "27.1",
+    "xcodeBuild": "27A9275",
+    "swiftVersion": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx26.0",
+    "iOSSDK": {
+      "version": "27.1",
+      "build": "24A94232"
+    },
+    "iOSSimulatorSDK": "27.1",
+    "deploymentTarget": "26.0",
+    "testRuntime": {
+      "platform": "iOS Simulator",
+      "model": "iPhone 17",
+      "version": "26.2",
+      "build": "23C54"
+    },
+    "externalSwiftPackages": [],
+    "releaseChannel": "not-independently-certified",
+    "physicalIPhoneOSBuild": null,
+    "note": "Observed local toolchain; a successful simulator build does not certify this SDK/device combination on physical iPhone."
+  },
+  "checks": [
+    {
+      "id": "APPLE-STRUCTURE",
+      "status": "PASS"
+    },
+    {
+      "id": "APPLE-PACKAGE",
+      "status": "PASS",
+      "testCount": 8,
+      "parameterCasesAcrossThreeTests": 16,
+      "command": "bash scripts/apple/test-package.sh",
+      "exitCode": 0
+    },
+    {
+      "id": "APPLE-SIMULATOR-DEBUG",
+      "status": "PASS",
+      "signing": "disabled",
+      "command": "xcodebuild -project apps/ios/WristBridge.xcodeproj -scheme WristBridge -destination generic/platform=iOS\\ Simulator CODE_SIGNING_ALLOWED=NO build",
+      "exitCode": 0
+    },
+    {
+      "id": "APPLE-UI",
+      "status": "PASS",
+      "testCount": 2,
+      "failed": 0,
+      "runtime": "iOS Simulator 26.2 (23C54), iPhone 17, arm64",
+      "command": "xcodebuild -project apps/ios/WristBridge.xcodeproj -scheme WristBridge -destination platform=iOS\\ Simulator,name=iPhone\\ 17,OS=26.2 -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO test",
+      "exitCode": 0
+    },
+    {
+      "id": "APPLE-IPHONE-RELEASE",
+      "status": "PASS",
+      "signing": "disabled-not-installable",
+      "command": "xcodebuild -project apps/ios/WristBridge.xcodeproj -scheme WristBridge -configuration Release -destination generic/platform=iOS CODE_SIGNING_ALLOWED=NO build",
+      "exitCode": 0,
+      "executableSHA256": "380e91418b9d55f262ca5d65e244ce734695af59551f9aa2e004bb4a6e321f12"
+    },
+    {
+      "id": "APPLE-FINAL-CHECK",
+      "status": "PASS",
+      "command": "bash scripts/apple/check.sh",
+      "exitCode": 0,
+      "ui": "NOT_RUN in this wrapper invocation; separately executed and passed"
+    },
+    {
+      "id": "APPLE-PHYSICAL-INSTALL",
+      "status": "BLOCKED",
+      "reason": "Only simulated devices detected; zero valid signing identities and no local signing override"
+    },
+    {
+      "id": "APPLE-AUTHORIZED-FIXTURE-CAMPAIGN",
+      "status": "NOT_RUN",
+      "reason": "No notification permission granted or batch emitted in this run"
+    },
+    {
+      "id": "G0-JOINT",
+      "status": "BLOCKED",
+      "reason": "No physical install or integrated Kotlin counterpart"
+    },
+    {
+      "id": "G1",
+      "status": "NOT_RUN",
+      "reason": "Physical ANCS experiment and integrated campaign pending"
+    }
+  ],
+  "cases": [
+    {
+      "id": "testDemoDoesNotClaimANCSReadiness",
+      "status": "PASS"
+    },
+    {
+      "id": "testLiveLaunchRequiresConsentBeforeSchedulingFixtures",
+      "status": "PASS"
+    }
+  ],
+  "physicalCases": [
+    {
+      "id": "H01",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "H02",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "H03",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "H04",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "H05",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "H06",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "H07",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "H08",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "H09",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "R01",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "R02",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "R03",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "R04",
+      "status": "NOT_RUN"
+    }
+  ],
+  "initialFailuresCorrected": [
+    "Invalid Data writing option name",
+    "Main actor delegate conformance warnings",
+    "Debug app/package architecture mismatch",
+    "UI asynchronous update and offscreen feedback queries"
+  ],
+  "toolDiagnostics": [
+    "Xcode SDK build-format diagnostic invalidDigitCount(94232)",
+    "Debugger version lookup diagnostics; final UI result passed"
+  ],
+  "artifacts": {
+    "signedIPA": null,
+    "releaseProduct": "Unsigned app in local Xcode DerivedData; not installable as delivered",
+    "screenshots": [
+      "demo-stopped.png",
+      "fixture-consent.png"
+    ]
+  },
+  "limits": [
+    "No physical Bluetooth/pairing/ANCS validation",
+    "No signed app or physical install",
+    "No P2 codec or sensitive transfer",
+    "No user notification batch scheduled",
+    "No UI accessibility matrix or battery campaign"
+  ]
+}

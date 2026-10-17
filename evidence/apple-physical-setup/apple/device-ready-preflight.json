@@ -1,0 +1,17 @@
+{
+  "recordedAtUTC": "2026-10-17T03:55:05.055354+00:00",
+  "presentationTimeZone": "America/Mexico_City",
+  "model": "iPhone 15",
+  "osVersion": "26.6.2",
+  "osBuild": "23G90",
+  "pairingState": "paired",
+  "developerMode": "enabled",
+  "developerDiskImagePreparation": "PASS",
+  "developerDiskImageCommandExitCode": 0,
+  "xcodeAccount": "login-form-empty-at-observation",
+  "signingIdentityCountAtPreflight": 0,
+  "install": "BLOCKED",
+  "launch": "NOT_RUN",
+  "reason": "Apple account login and signing setup still pending.",
+  "sensitiveIdentifiers": "not recorded"
+}

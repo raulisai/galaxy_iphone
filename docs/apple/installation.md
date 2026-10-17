@@ -1,13 +1,13 @@
 # Compilar e instalar en iPhone
 
-Estado actual: **BLOCKED por Xcode completo ausente**. No se ha generado IPA ni instalado esta app. Los pasos siguientes son el procedimiento preparado, no evidencia de instalación.
+Estado actual: **WristBridge 0.1.0 (1) firmada, instalada y abierta en iPhone 15**. La cuenta, firma, Modo de desarrollador, DDI y confianza están preparados. Se verificaron proceso activo y pantalla real. Ver `physical-installation.md` para evidencia y vigencia de la firma. El enlace con Watch7 todavía requiere su app de laboratorio y la campaña conjunta.
 
 ## Preparar herramientas
 
-1. Instalar Xcode completo desde [Apple Developer](https://developer.apple.com/xcode/) o la Mac App Store, con SDK que admita el OS real del iPhone. Abrirlo y completar los componentes de plataforma/licencia que solicite Apple.
+1. En este Mac, Xcode completo ya está instalado. Para reproducir en otro equipo, instalarlo desde [Apple Developer](https://developer.apple.com/xcode/) o la Mac App Store, con SDK que admita el OS real del iPhone, y completar los componentes/licencia que solicite Apple.
 2. Seleccionar ese Xcode en Settings → Locations → Command Line Tools. Para un comando aislado también puede usarse `DEVELOPER_DIR` apuntando a su directorio `Contents/Developer`, sin cambiar la configuración global del Mac.
 3. Registrar versión/build de iPhone en Ajustes → General → Información, sin guardar serial/UDID. Completar `environment.md` y el run de HIL.
-4. Comprobar Xcode/SDK y ejecutar `bash scripts/apple/check.sh`. El primer build real puede revelar errores de tipos de SDK que el análisis sintáctico local no puede detectar.
+4. Comprobar Xcode/SDK y ejecutar `bash scripts/apple/check.sh`. Ya se corrigió el error de protección de archivos detectado por la primera compilación real y la configuración de arquitectura Debug para los tests.
 
 ## Firma e instalación de desarrollo
 
@@ -36,7 +36,7 @@ Prueba de UI preparada:
 WRISTBRIDGE_TEST_DESTINATION='platform=iOS Simulator,name=NOMBRE_INSTALADO,OS=VERSION_INSTALADA' bash scripts/apple/check.sh
 ```
 
-Sustituir nombre/versión por un destino real de `xcrun simctl list devices available`. No se ha ejecutado aquí. La prueba confirma que una conexión simulada no cambia ANCS a listo y que detener configuración cambia su estado visible; no prueba autorización del sistema ni Bluetooth.
+Sustituir nombre/versión por un destino real de `xcrun simctl list devices available`. Las dos pruebas UI pasaron en iPhone 17 simulado, iOS 26.2: estado ANCS honesto al conectar/detener y consentimiento previo a programar. Los resultados están en `validation-xcode.md`. Estas pruebas no confirman autorización física ni Bluetooth.
 
 ## CI
 

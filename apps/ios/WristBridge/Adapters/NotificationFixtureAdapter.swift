@@ -137,7 +137,7 @@ final class NotificationFixtureAdapter: NSObject, ObservableObject, UNUserNotifi
             try FileManager.default.createDirectory(at: ledgerURL.deletingLastPathComponent(),
                                                     withIntermediateDirectories: true)
             let data = try JSONEncoder().encode(records)
-            try data.write(to: ledgerURL, options: [.atomic, .completeUntilFirstUserAuthentication])
+            try data.write(to: ledgerURL, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
         } catch {
             persistenceWarning = "No se pudo guardar el registro de pruebas. Expórtalo antes de cerrar la app."
         }

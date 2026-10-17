@@ -1,0 +1,12 @@
+{
+  "recordedAtUTC": "2026-10-17T06:31:11.856571+00:00",
+  "bundleIdentifier": "dev.wristbridge.iphone.lab.a6b689d82",
+  "version": "0.1.0",
+  "build": "1",
+  "signatureVerification": "PASS",
+  "install": "PASS",
+  "launch": "FAIL",
+  "provisioningExpirationUTC": "2026-10-24T06:30:31+00:00",
+  "installExitCode": 0,
+  "launchExitCode": 1
+}

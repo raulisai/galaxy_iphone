@@ -1,0 +1,51 @@
+{
+  "recordedAtUTC": "2026-10-17T06:38:37.664629+00:00",
+  "presentationDate": "2026-10-17",
+  "presentationTimeZone": "America/Mexico_City",
+  "model": "iPhone 15",
+  "osVersion": "26.6.2",
+  "osBuild": "23G90",
+  "bundleIdentifier": "dev.wristbridge.iphone.lab.a6b689d82",
+  "version": "0.1.0",
+  "build": "1",
+  "signature": "PASS",
+  "profileValidation": {
+    "bundleMatchesProfile": true,
+    "teamMatchesProfile": true,
+    "targetDeviceIncluded": true,
+    "profileNotExpired": true,
+    "developmentDebugPermission": true
+  },
+  "install": "PASS",
+  "launch": "PASS",
+  "provisioningExpirationUTC": "2026-10-24T06:30:31+00:00",
+  "physicalANCS": "NOT_RUN",
+  "G1": "NOT_RUN",
+  "privateSigningConfiguration": "ignored local file, not distributed",
+  "identifiersOmitted": [
+    "Apple account",
+    "signing team",
+    "physical UDID",
+    "physical serial"
+  ],
+  "launchAfterTrustExitCode": 0,
+  "runtimeProcessObserved": true,
+  "physicalUISmoke": "PASS",
+  "screenEvidence": "iphone-app-running.png",
+  "observedUI": [
+    "WristBridge navigation title",
+    "Laboratorio de avisos",
+    "Own-notification permission Sin solicitar",
+    "Synthetic fixture controls"
+  ],
+  "limitations": [
+    "Launch and visible UI only; no BLE pairing or ANCS reception demonstrated",
+    "No notification permission requested or batch emitted in this check",
+    "Watch counterpart readiness not confirmed"
+  ],
+  "nextStep": "Windows supplies and installs laboratory APK, confirms advertisement/profile and ANCS diagnostics; then execute path A together.",
+  "watchAppInstalled": false,
+  "watchReadinessSource": "user confirmation",
+  "integrationStatus": "BLOCKED",
+  "integrationReason": "WristBridge laboratory app not installed on Watch7"
+}

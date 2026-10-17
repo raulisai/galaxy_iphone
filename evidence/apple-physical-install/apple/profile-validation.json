@@ -1,0 +1,12 @@
+{
+  "checks": {
+    "bundleMatchesProfile": true,
+    "teamMatchesProfile": true,
+    "targetDeviceIncluded": true,
+    "profileNotExpired": true,
+    "developmentDebugPermission": true
+  },
+  "deviceComparison": "hardware UDID compared in memory; CoreDevice identifier is a separate identifier",
+  "expirationUTC": "2026-10-24T06:30:31+00:00",
+  "personalIdentifiers": "not recorded"
+}

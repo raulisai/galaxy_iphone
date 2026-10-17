@@ -1,0 +1,106 @@
+Writing result bundle at path:
+	/tmp/WristBridge-apple-xcode-ui.xcresult
+
+/Users/djoker/code/galaxy_iphone/apps/ios/WristBridge.xcodeproj: WristBridge: ld: warning: ignoring file '/Users/djoker/Library/Developer/Xcode/DerivedData/WristBridge-fkiemupxvusvglgsyghxcuosvhaz/Build/Products/Debug-iphonesimulator/WristBridgeProtocol.o': found architecture 'arm64', required architecture 'x86_64'
+/Users/djoker/code/galaxy_iphone/apps/ios/WristBridge.xcodeproj: WristBridge: ld: warning: Could not find or use auto-linked framework 'CoreAudioTypes': framework 'CoreAudioTypes' not found
+/Users/djoker/code/galaxy_iphone/apps/ios/WristBridge.xcodeproj: WristBridge: ld: warning: Could not find or use auto-linked framework 'UIUtilities': framework 'UIUtilities' not found
+/Users/djoker/code/galaxy_iphone/apps/ios/WristBridge.xcodeproj: WristBridge: ld: warning: Could not parse or use implicit file '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/SwiftUICore.framework/SwiftUICore.tbd': cannot link directly with 'SwiftUICore' because product being built is not an allowed client of it
+Undefined symbols for architecture x86_64:
+  "nominal type descriptor for WristBridgeProtocol.BridgeEvent", referenced from:
+      _symbolic y_____cSg 19WristBridgeProtocol0B5EventO in AccessorySetupAdapter.o
+      _symbolic _____ytIegnr_ 19WristBridgeProtocol0B5EventO in AccessorySetupAdapter.o
+      _symbolic _____Iegy_ 19WristBridgeProtocol0B5EventO in AccessorySetupAdapter.o
+  "WristBridgeProtocol.BridgeState.apply(WristBridgeProtocol.BridgeEvent) -> ()", referenced from:
+      WristBridge.BridgeModel.(apply in _68229D6565A198EDBEFB7F17850239FF)(WristBridgeProtocol.BridgeEvent) -> () in BridgeModel.o
+  "WristBridgeProtocol.BridgeState.init() -> WristBridgeProtocol.BridgeState", referenced from:
+      variable initialization expression of WristBridge.BridgeModel.(_state in _68229D6565A198EDBEFB7F17850239FF) : Combine.Published<WristBridgeProtocol.BridgeState> in BridgeModel.o
+      WristBridge.BridgeModel.init(isDemo: Swift.Bool, preferences: __C.NSUserDefaults) -> WristBridge.BridgeModel in BridgeModel.o
+  "nominal type descriptor for WristBridgeProtocol.BridgeState", referenced from:
+      _symbolic _____ 19WristBridgeProtocol0B5StateV in BridgeModel.o
+      _symbolic _____y_____G 7Combine9PublishedV 19WristBridgeProtocol0D5StateV in BridgeModel.o
+      _symbolic _____y______G 7Combine9PublishedV9PublisherV 19WristBridgeProtocol0E5StateV in BridgeModel.o
+  "type metadata for WristBridgeProtocol.BridgeState", referenced from:
+      property wrapper backing initializer of WristBridge.BridgeModel.state : WristBridgeProtocol.BridgeState in BridgeModel.o
+      property wrapped field init accessor of WristBridge.BridgeModel.state : WristBridgeProtocol.BridgeState in BridgeModel.o
+      type metadata accessor for Combine.Published<WristBridgeProtocol.BridgeState> in BridgeModel.o
+  "WristBridgeProtocol.BLEProfile.proposedAdvertisedName.unsafeMutableAddressor : Swift.String", referenced from:
+      WristBridge.AccessorySetupAdapter.showPicker() -> () in AccessorySetupAdapter.o
+  "WristBridgeProtocol.BLEProfile.service.unsafeMutableAddressor : Foundation.UUID", referenced from:
+      WristBridge.AccessorySetupAdapter.showPicker() -> () in AccessorySetupAdapter.o
+      WristBridge.BluetoothCentralAdapter.centralManager(_: __C.CBCentralManager, didConnect: __C.CBPeripheral) -> () in BluetoothCentralAdapter.o
+      closure #1 (__C.CBService) -> Swift.Bool in WristBridge.BluetoothCentralAdapter.peripheral(_: __C.CBPeripheral, didDiscoverServices: Swift.Error?) -> () in BluetoothCentralAdapter.o
+      WristBridge.BluetoothCentralAdapter.peripheral(_: __C.CBPeripheral, didModifyServices: [__C.CBService]) -> () in BluetoothCentralAdapter.o
+      WristBridge.BluetoothCentralAdapter.centralManager(_: __C.CBCentralManager, willRestoreState: [Swift.String : Any]) -> () in BluetoothCentralAdapter.o
+  "WristBridgeProtocol.FixturePlan.init(runID: Swift.String, count: Swift.Int, initialDelay: Swift.Double, spacing: Swift.Double) throws -> WristBridgeProtocol.FixturePlan", referenced from:
+      (1) suspend resume partial function for WristBridge.NotificationFixtureAdapter.schedule(runID: Swift.String) async -> () in NotificationFixtureAdapter.o
+  "WristBridgeProtocol.FixtureRecord.init(runID: Swift.String, fixtureID: Swift.String, observation: WristBridgeProtocol.FixtureObservation, recordedAt: Foundation.Date) -> WristBridgeProtocol.FixtureRecord", referenced from:
+      WristBridge.NotificationFixtureAdapter.(append in _BE80EAF70EF61E405F7622540D8A472A)(Swift.String, Swift.String, WristBridgeProtocol.FixtureObservation) -> () in NotificationFixtureAdapter.o
+  "type metadata accessor for WristBridgeProtocol.FixtureRecord", referenced from:
+      variable initialization expression of WristBridge.NotificationFixtureAdapter.(_records in _BE80EAF70EF61E405F7622540D8A472A) : Combine.Published<[WristBridgeProtocol.FixtureRecord]> in NotificationFixtureAdapter.o
+      WristBridge.NotificationFixtureAdapter.init() -> WristBridge.NotificationFixtureAdapter in NotificationFixtureAdapter.o
+      lazy protocol witness table accessor for type WristBridgeProtocol.FixtureRecord and conformance WristBridgeProtocol.FixtureRecord : Swift.Decodable in WristBridgeProtocol in NotificationFixtureAdapter.o
+      closure #1 (WristBridgeProtocol.FixtureRecord) -> Swift.Bool in WristBridge.NotificationFixtureAdapter.schedule(runID: Swift.String) async -> () in NotificationFixtureAdapter.o
+      WristBridge.NotificationFixtureAdapter.(append in _BE80EAF70EF61E405F7622540D8A472A)(Swift.String, Swift.String, WristBridgeProtocol.FixtureObservation) -> () in NotificationFixtureAdapter.o
+      closure #1 (WristBridgeProtocol.FixtureRecord) -> Swift.Bool in WristBridge.NotificationFixtureAdapter.observeDelivered() async -> () in NotificationFixtureAdapter.o
+      lazy protocol witness table accessor for type WristBridgeProtocol.FixtureRecord and conformance WristBridgeProtocol.FixtureRecord : Swift.Encodable in WristBridgeProtocol in NotificationFixtureAdapter.o
+      ...
+  "nominal type descriptor for WristBridgeProtocol.FixtureRecord", referenced from:
+      _symbolic Say_____G 19WristBridgeProtocol13FixtureRecordV in NotificationFixtureAdapter.o
+      _symbolic _____ySay_____GG 7Combine9PublishedV 19WristBridgeProtocol13FixtureRecordV in NotificationFixtureAdapter.o
+      _symbolic _____ySay_____G_G 7Combine9PublishedV9PublisherV 19WristBridgeProtocol13FixtureRecordV in NotificationFixtureAdapter.o
+      _symbolic _____y_____G s10ArraySliceV 19WristBridgeProtocol13FixtureRecordV in NotificationFixtureAdapter.o
+  "protocol conformance descriptor for WristBridgeProtocol.FixtureRecord : Swift.Encodable in WristBridgeProtocol", referenced from:
+      lazy protocol witness table accessor for type WristBridgeProtocol.FixtureRecord and conformance WristBridgeProtocol.FixtureRecord : Swift.Encodable in WristBridgeProtocol in NotificationFixtureAdapter.o
+  "protocol conformance descriptor for WristBridgeProtocol.FixtureRecord : Swift.Decodable in WristBridgeProtocol", referenced from:
+      lazy protocol witness table accessor for type WristBridgeProtocol.FixtureRecord and conformance WristBridgeProtocol.FixtureRecord : Swift.Decodable in WristBridgeProtocol in NotificationFixtureAdapter.o
+  "WristBridgeProtocol.ConfigurationChannel.rawValue.getter : Swift.String", referenced from:
+      WristBridge.BridgeModel.diagnosticSummary.getter : Swift.String in BridgeModel.o
+  "WristBridgeProtocol.SyntheticNotification.id.getter : Swift.String", referenced from:
+      (5) suspend resume partial function for WristBridge.NotificationFixtureAdapter.schedule(runID: Swift.String) async -> () in NotificationFixtureAdapter.o
+      (5) suspend resume partial function for WristBridge.NotificationFixtureAdapter.schedule(runID: Swift.String) async -> () in NotificationFixtureAdapter.o
+      (7) suspend resume partial function for WristBridge.NotificationFixtureAdapter.schedule(runID: Swift.String) async -> () in NotificationFixtureAdapter.o
+      (7) suspend resume partial function for WristBridge.NotificationFixtureAdapter.schedule(runID: Swift.String) async -> () in NotificationFixtureAdapter.o
+      (8) suspend resume partial function for WristBridge.NotificationFixtureAdapter.schedule(runID: Swift.String) async -> () in NotificationFixtureAdapter.o
+      (8) suspend resume partial function for WristBridge.NotificationFixtureAdapter.schedule(runID: Swift.String) async -> () in NotificationFixtureAdapter.o
+      key path getter for WristBridgeProtocol.SyntheticNotification.id : Swift.String : WristBridgeProtocol.SyntheticNotification in NotificationFixtureAdapter.o
+      ...
+  "property descriptor for WristBridgeProtocol.SyntheticNotification.id : Swift.String", referenced from:
+      l_keypath.30 in NotificationFixtureAdapter.o
+  "nominal type descriptor for WristBridgeProtocol.SyntheticNotification", referenced from:
+      _symbolic _____ 19WristBridgeProtocol21SyntheticNotificationV in NotificationFixtureAdapter.o
+      _symbolic Say_____G 19WristBridgeProtocol21SyntheticNotificationV in NotificationFixtureAdapter.o
+      _symbolic _____ySay_____GG s16IndexingIteratorV 19WristBridgeProtocol21SyntheticNotificationV in NotificationFixtureAdapter.o
+  "type metadata for WristBridgeProtocol.SyntheticNotification", referenced from:
+      (5) suspend resume partial function for WristBridge.NotificationFixtureAdapter.schedule(runID: Swift.String) async -> () in NotificationFixtureAdapter.o
+      (5) suspend resume partial function for WristBridge.NotificationFixtureAdapter.schedule(runID: Swift.String) async -> () in NotificationFixtureAdapter.o
+      (7) suspend resume partial function for WristBridge.NotificationFixtureAdapter.schedule(runID: Swift.String) async -> () in NotificationFixtureAdapter.o
+      (8) suspend resume partial function for WristBridge.NotificationFixtureAdapter.schedule(runID: Swift.String) async -> () in NotificationFixtureAdapter.o
+  "WristBridgeProtocol.AccessoryAuthorization.rawValue.getter : Swift.String", referenced from:
+      WristBridge.BridgeModel.diagnosticSummary.getter : Swift.String in BridgeModel.o
+ld: symbol(s) not found for architecture x86_64
+/Users/djoker/code/galaxy_iphone/apps/ios/WristBridge.xcodeproj: WristBridge: clang: error: linker command failed with exit code 1 (use -v to see invocation)
+Testing failed:
+	Undefined symbol: nominal type descriptor for WristBridgeProtocol.BridgeEvent
+	Undefined symbol: WristBridgeProtocol.BridgeState.apply(WristBridgeProtocol.BridgeEvent) -> ()
+	Undefined symbol: WristBridgeProtocol.BridgeState.init() -> WristBridgeProtocol.BridgeState
+	Undefined symbol: nominal type descriptor for WristBridgeProtocol.BridgeState
+	Undefined symbol: type metadata for WristBridgeProtocol.BridgeState
+	Undefined symbol: WristBridgeProtocol.BLEProfile.proposedAdvertisedName.unsafeMutableAddressor : Swift.String
+	Undefined symbol: WristBridgeProtocol.BLEProfile.service.unsafeMutableAddressor : Foundation.UUID
+	Undefined symbol: WristBridgeProtocol.FixturePlan.init(runID: Swift.String, count: Swift.Int, initialDelay: Swift.Double, spacing: Swift.Double) throws -> WristBridgeProtocol.FixturePlan
+	Undefined symbol: WristBridgeProtocol.FixtureRecord.init(runID: Swift.String, fixtureID: Swift.String, observation: WristBridgeProtocol.FixtureObservation, recordedAt: Foundation.Date) -> WristBridgeProtocol.FixtureRecord
+	Undefined symbol: type metadata accessor for WristBridgeProtocol.FixtureRecord
+	Undefined symbol: nominal type descriptor for WristBridgeProtocol.FixtureRecord
+	Undefined symbol: protocol conformance descriptor for WristBridgeProtocol.FixtureRecord : Swift.Encodable in WristBridgeProtocol
+	Undefined symbol: protocol conformance descriptor for WristBridgeProtocol.FixtureRecord : Swift.Decodable in WristBridgeProtocol
+	Undefined symbol: WristBridgeProtocol.ConfigurationChannel.rawValue.getter : Swift.String
+	Undefined symbol: WristBridgeProtocol.SyntheticNotification.id.getter : Swift.String
+	Undefined symbol: property descriptor for WristBridgeProtocol.SyntheticNotification.id : Swift.String
+	Undefined symbol: nominal type descriptor for WristBridgeProtocol.SyntheticNotification
+	Undefined symbol: type metadata for WristBridgeProtocol.SyntheticNotification
+	Undefined symbol: WristBridgeProtocol.AccessoryAuthorization.rawValue.getter : Swift.String
+	Linker command failed with exit code 1 (use -v to see invocation)
+	Testing cancelled because the build failed.
+
+** TEST FAILED **
+

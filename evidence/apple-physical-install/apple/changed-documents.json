@@ -1,0 +1,25 @@
+{
+  "scope": "physical installation documentation",
+  "files": {
+    "README.md": {
+      "bytes": 1834,
+      "sha256": "c68f8a6bf73f4c9b1b864897c64ad52aca6aa70757e5ec84b0631d0a6ac08d29"
+    },
+    "docs/apple/environment.md": {
+      "bytes": 3890,
+      "sha256": "1afcb1b33e1acebef180c455f5c4b47d43cc0d6ea174d69c89b075639ac3ad78"
+    },
+    "docs/apple/installation.md": {
+      "bytes": 4264,
+      "sha256": "988a06dd9cf287fb97855142fc3b88b7c7500eff578b55f703e21b81a2d7d010"
+    },
+    "docs/apple/handoff-G0.md": {
+      "bytes": 5534,
+      "sha256": "0ab27aa94c31726ad20257a1177cbc0ff677385254f41f585053d026c1e8dff5"
+    },
+    "docs/apple/physical-installation.md": {
+      "bytes": 2826,
+      "sha256": "52ab891627483f551b27807568b328ae11ae749dda65b195d1b66000d53e869f"
+    }
+  }
+}

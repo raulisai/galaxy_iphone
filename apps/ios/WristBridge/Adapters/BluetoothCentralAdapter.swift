@@ -4,7 +4,10 @@ import WristBridgeProtocol
 
 /// Path A laboratory transport. No P2 writes, arbitrary scanning or ANCS parsing.
 @MainActor
-final class BluetoothCentralAdapter: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
+// CoreBluetooth callbacks use the .main queue supplied below. Enforce that
+// isolation at runtime when entering its Objective-C delegate requirements.
+final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerDelegate,
+                                     @preconcurrency CBPeripheralDelegate {
     var onEvent: ((BridgeEvent) -> Void)?
     var onMessage: ((String) -> Void)?
     var onRadio: ((String) -> Void)?

@@ -79,6 +79,7 @@ def configurations(scope, extra):
                         TARGETED_DEVICE_FAMILY="1", SUPPORTED_PLATFORMS="iphoneos iphonesimulator",
                         ENABLE_USER_SCRIPT_SANDBOXING="YES", **extra)
         settings.update(SWIFT_OPTIMIZATION_LEVEL="-Onone" if name == "Debug" else "-O",
+                        ONLY_ACTIVE_ARCH="YES" if name == "Debug" else "NO",
                         SWIFT_ACTIVE_COMPILATION_CONDITIONS="DEBUG" if name == "Debug" else "",
                         DEBUG_INFORMATION_FORMAT="dwarf" if name == "Debug" else "dwarf-with-dsym",
                         ENABLE_TESTABILITY="YES" if name == "Debug" else "NO")

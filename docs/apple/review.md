@@ -2,6 +2,8 @@
 
 Fecha de presentación: 16 de octubre de 2026, America/Mexico_City. Los documentos originales usan 17 de octubre en UTC. Revisión del paquete completo de documentación, sus 60 tareas y el catálogo de 148 casos más cinco E2E. Los seis archivos coinciden en tamaño y SHA-256 con `Doc/manifest.json`.
 
+Actualización posterior a instalar Xcode: la app ya compila contra SDK iOS. El bloqueo de herramientas de esta revisión inicial es histórico; consultar `validation-xcode.md` y `environment.md` para el estado vigente. ANCS y los gates físicos continúan pendientes.
+
 ## Entendimiento del producto
 
 El primer producto son dos apps nativas. El sistema iOS entrega ANCS directamente al consumidor Kotlin del Watch7; SwiftUI facilita autorización, configuración y diagnóstico. El canal BLE propio es una ruta adicional, no el transporte de los avisos de terceros. Música usa AMS del sistema; IA necesita Internet del reloj y autorización específica; Mac, voz y salud/contactos corresponden a fases posteriores.
@@ -40,7 +42,7 @@ No existe evidencia para afirmar que el camino A sea el mejor en energía o comp
 4. Mantener iOS 26 mínimo para esta primera pareja es una reducción de matriz propuesta por el plan, no una necesidad de ASK, disponible desde iOS 18. Ampliar soporte solo con necesidad y pruebas.
 5. Las jornadas del plan siguen siendo estimaciones orientativas. No se pueden ratificar como calendario sin enlace probado, firma y revisión integrada del watch.
 
-## Limitaciones actuales que impiden la validación completa del sistema
+## Limitaciones al cierre de la revisión inicial
 
 - Falta Xcode completo: no se ejecutó el compilador contra SDK iOS, no se renderizó UI ni se comprobó la firma.
 - El usuario confirma iPhone y Watch7 disponibles. Esta sesión no ha obtenido su versión/build, autorizado instalación ni observado su radio; disponibilidad no equivale a prueba ejecutada.

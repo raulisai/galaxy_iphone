@@ -1,0 +1,20 @@
+Writing result bundle at path:
+	/tmp/WristBridge-apple-xcode-ui-final.xcresult
+
+2026-10-16 21:35:00.687 xcodebuild[56794:22534553] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-10-16 21:35:03.667 xcodebuild[56794:22534553] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-16 21:35:03.668 xcodebuild[56794:22534553] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-16 21:35:03.714 xcodebuild[56794:22534553] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-10-16 21:35:10.908 xcodebuild[56794:22534553] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-10-16 21:35:10.909 xcodebuild[56794:22534553] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-10-16 21:35:11.974 xcodebuild[56794:22534553] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-16 21:35:11.974 xcodebuild[56794:22534553] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-16 21:35:11.980 xcodebuild[56794:22534553] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-10-16 21:35:25.093 xcodebuild[56794:22534553] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-10-16 21:35:25.094 xcodebuild[56794:22534553] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-10-16 21:35:25.107 xcodebuild[56794:22534553] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-10-16 21:35:25.108 xcodebuild[56794:22534553] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-10-16 21:35:25.390 xcodebuild[56794:22534553] [MT] IDETestOperationsObserverDebug: 24.764 elapsed -- Testing started completed.
+2026-10-16 21:35:25.390 xcodebuild[56794:22534553] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-16 21:35:25.390 xcodebuild[56794:22534553] [MT] IDETestOperationsObserverDebug: 24.764 sec, +24.764 sec -- end
+Testing started

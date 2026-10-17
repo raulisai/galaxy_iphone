@@ -1,0 +1,25 @@
+{
+  "recordedAtUTC": "2026-10-17T03:35:07.471019+00:00",
+  "macOS": "26.6.2",
+  "macOSBuild": "25G83",
+  "developerDirectory": "/Applications/Xcode.app/Contents/Developer",
+  "xcode": "27.1",
+  "xcodeBuild": "27A9275",
+  "swiftVersion": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx26.0",
+  "iOSSDK": {
+    "version": "27.1",
+    "build": "24A94232"
+  },
+  "iOSSimulatorSDK": "27.1",
+  "deploymentTarget": "26.0",
+  "testRuntime": {
+    "platform": "iOS Simulator",
+    "model": "iPhone 17",
+    "version": "26.2",
+    "build": "23C54"
+  },
+  "externalSwiftPackages": [],
+  "releaseChannel": "not-independently-certified",
+  "physicalIPhoneOSBuild": null,
+  "note": "Observed local toolchain; a successful simulator build does not certify this SDK/device combination on physical iPhone."
+}
