@@ -30,4 +30,20 @@ bash scripts/apple/check.sh
 
 El script devuelve `2` si falta Xcode, después de verificar estructura y paquete. Las pruebas de UI requieren `WRISTBRIDGE_TEST_DESTINATION` con un simulador instalado. No ejecutan la radio ni sustituyen HIL.
 
+## Windows · Galaxy Watch7
+
+App Kotlin/Wear OS en `apps/watch` y módulos JVM en `core/*`, compilados con Gradle desde Windows. Estado: laboratorio P1 compilado y con pruebas JVM; sin prueba física todavía.
+
+- [Entorno Windows](docs/windows/environment.md).
+- [ADB, VS Code/Android Studio e instalación en el reloj](docs/windows/installation.md).
+- [Entrega Windows G0](docs/windows/handoff-G0.md).
+- [Campaña física lado reloj](test/hil/windows/p1-campaign.md).
+
+```powershell
+.\gradlew.bat :core:protocol-kotlin:test :core:notification-domain:test :core:assistant-domain:test
+.\gradlew.bat :apps:watch:lintDebug :apps:watch:assembleDebug
+```
+
+## Apple
+
 Abrir `apps/ios/WristBridge.xcodeproj`, scheme compartido `WristBridge`. El proyecto usa un paquete local sin dependencias externas. Para regenerarlo después de añadir archivos Swift: `python3 scripts/apple/generate_project.py`.

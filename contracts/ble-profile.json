@@ -1,0 +1,38 @@
+{
+  "schema": "wristbridge.ble-profile",
+  "contractVersion": "1.0",
+  "profileRevision": "p1-lab-1",
+  "source": "Doc/01_CONTRATO_COMPARTIDO.md §2 (reserved UUIDs); Apple ANCS specification (official ANCS UUIDs)",
+  "status": "P1 laboratory profile. Characteristic properties, permissions, CCCD and wire format are NOT frozen (P2-04).",
+  "ownService": {
+    "service": "6f06b8b1-21d9-4c65-9d7e-118880e36a01",
+    "reservedCharacteristics": {
+      "capabilities": "6f06b8b1-21d9-4c65-9d7e-118880e36a02",
+      "requests": "6f06b8b1-21d9-4c65-9d7e-118880e36a03",
+      "events": "6f06b8b1-21d9-4c65-9d7e-118880e36a04"
+    },
+    "p1Exposure": "Primary service only. Reserved characteristics are not added to the GATT database in P1.",
+    "roleUnderTest": "A: watch peripheral/GATT server for the own service, iPhone central. Watch is also ANCS GATT client."
+  },
+  "advertising": {
+    "serviceUuidInAdvertisement": "6f06b8b1-21d9-4c65-9d7e-118880e36a01",
+    "localName": "WristBridge",
+    "localNameStatus": "Apple proposal for AccessorySetupKit name filtering. Windows P1 lab app puts the system Bluetooth name in the scan response; the operator may set it to 'WristBridge' from the watch diagnostics (reversible). Pending joint confirmation in ADR-001.",
+    "connectable": true,
+    "noPersonalData": true
+  },
+  "ancs": {
+    "service": "7905f431-b5ce-4e99-a40f-4b1e122d00d0",
+    "notificationSource": "9fbf120d-6301-42d9-8c58-25e699a21dbd",
+    "controlPoint": "69d1d8f3-45e1-49a8-9821-9bbdfdaad9d9",
+    "dataSource": "22eac6e9-24d6-4bb5-be44-b36ace7c7bfb",
+    "consumer": "Kotlin watch only. Swift does not parse or relay ANCS."
+  },
+  "productLimits": {
+    "maxPendingUids": 128,
+    "maxAncsResponseBytes": 16384,
+    "titleMaxBytes": 256,
+    "messageMaxBytes": 1024,
+    "note": "Product limits from the plan, not official ANCS maximums."
+  }
+}

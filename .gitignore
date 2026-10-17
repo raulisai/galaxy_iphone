@@ -8,3 +8,16 @@ xcuserdata/
 *.mobileprovision
 .swiftpm/
 apps/ios/Signing.local.xcconfig
+
+# Windows/Kotlin (Gradle, Android Studio, signing)
+.gradle/
+.kotlin/
+build/
+local.properties
+.idea/
+*.iml
+captures/
+.cxx/
+*.jks
+*.keystore
+keystore.properties
