@@ -1,0 +1,109 @@
+Starting a Gradle Daemon, 1 incompatible and 1 stopped Daemons could not be reused, use --status for details
+Calculating task graph as configuration cache cannot be reused because output of the external process 'git' has changed.
+> Task :core:notification-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:assistant-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:protocol-kotlin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:assistant-domain:processResources NO-SOURCE
+> Task :core:notification-domain:processResources NO-SOURCE
+> Task :core:protocol-kotlin:processTestResources NO-SOURCE
+> Task :core:notification-domain:processTestResources NO-SOURCE
+> Task :core:assistant-domain:processTestResources NO-SOURCE
+> Task :core:protocol-kotlin:processResources NO-SOURCE
+> Task :apps:watch:preBuild UP-TO-DATE
+> Task :apps:watch:generateDebugAssets UP-TO-DATE
+> Task :apps:watch:preDebugBuild UP-TO-DATE
+> Task :apps:watch:preDebugAndroidTestBuild SKIPPED
+> Task :apps:watch:preDebugUnitTestBuild UP-TO-DATE
+> Task :apps:watch:extractProguardFiles
+> Task :apps:watch:generateDebugBuildConfig
+> Task :apps:watch:generateDebugResources
+> Task :apps:watch:mapDebugSourceSetPaths
+> Task :apps:watch:createDebugCompatibleScreenManifests
+> Task :apps:watch:extractDeepLinksDebug
+> Task :apps:watch:packageDebugResources
+> Task :apps:watch:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :apps:watch:processDebugNavigationResources
+> Task :apps:watch:javaPreCompileDebug
+> Task :apps:watch:mergeDebugAssets
+> Task :apps:watch:checkDebugAarMetadata
+> Task :apps:watch:compressDebugAssets
+> Task :apps:watch:compileDebugNavigationResources
+> Task :apps:watch:desugarDebugFileDependencies
+> Task :apps:watch:parseDebugLocalResources
+> Task :apps:watch:mergeDebugJniLibFolders
+> Task :apps:watch:generateDebugRFile
+> Task :apps:watch:checkDebugDuplicateClasses
+> Task :apps:watch:writeDebugAppMetadata
+> Task :apps:watch:validateSigningDebug
+> Task :apps:watch:processDebugMainManifest
+> Task :apps:watch:writeDebugSigningConfigVersions
+> Task :apps:watch:processDebugManifest
+> Task :apps:watch:processDebugManifestForPackage
+> Task :apps:watch:generateDebugGlobalSynthetics
+> Task :apps:watch:mergeDebugResources
+> Task :apps:watch:processDebugResources
+> Task :core:assistant-domain:compileKotlin
+> Task :core:assistant-domain:compileJava NO-SOURCE
+> Task :core:assistant-domain:classes UP-TO-DATE
+> Task :core:assistant-domain:jar
+> Task :apps:watch:mergeExtDexDebug
+> Task :core:assistant-domain:compileTestKotlin
+> Task :core:assistant-domain:compileTestJava NO-SOURCE
+> Task :core:assistant-domain:testClasses UP-TO-DATE
+> Task :core:assistant-domain:test
+> Task :core:protocol-kotlin:compileKotlin
+> Task :core:protocol-kotlin:compileJava NO-SOURCE
+> Task :core:protocol-kotlin:classes UP-TO-DATE
+> Task :core:protocol-kotlin:jar
+> Task :core:notification-domain:compileKotlin
+> Task :core:notification-domain:compileJava NO-SOURCE
+> Task :core:notification-domain:classes UP-TO-DATE
+> Task :core:notification-domain:jar
+> Task :core:protocol-kotlin:compileTestKotlin
+> Task :core:protocol-kotlin:compileTestJava NO-SOURCE
+> Task :core:protocol-kotlin:testClasses UP-TO-DATE
+> Task :apps:watch:mergeDebugNativeLibs
+> Task :apps:watch:mergeLibDexDebug
+> Task :apps:watch:stripDebugDebugSymbols
+> Task :core:notification-domain:compileTestKotlin
+> Task :core:notification-domain:compileTestJava NO-SOURCE
+> Task :core:notification-domain:testClasses UP-TO-DATE
+> Task :core:protocol-kotlin:test
+> Task :core:notification-domain:test
+
+> Task :apps:watch:compileDebugKotlin
+w: file:///F:/proyectos/galaxy_iphone/.claude/worktrees/android-studio-windows-setup-672676/apps/watch/src/main/java/dev/wristbridge/watch/bridge/AncsClient.kt:107:18 'fun connectGatt(p0: Context!, p1: Boolean, p2: BluetoothGattCallback!, p3: Int, p4: Int, p5: Handler!): BluetoothGatt!' is deprecated. Deprecated in Java.
+
+> Task :apps:watch:processDebugJavaRes
+> Task :apps:watch:compileDebugJavaWithJavac
+> Task :apps:watch:bundleDebugClassesToCompileJar
+> Task :apps:watch:generateDebugAndroidTestLintModel
+> Task :apps:watch:generateDebugUnitTestLintModel
+> Task :apps:watch:generateDebugLintReportModel
+> Task :apps:watch:dexBuilderDebug
+> Task :apps:watch:mergeProjectDexDebug
+> Task :apps:watch:mergeDebugJavaResource
+> Task :apps:watch:packageDebug
+> Task :apps:watch:assembleDebug
+> Task :apps:watch:createDebugApkListingFileRedirect
+> Task :apps:watch:lintAnalyzeDebugUnitTest
+> Task :apps:watch:lintAnalyzeDebugAndroidTest
+> Task :apps:watch:lintAnalyzeDebug
+
+> Task :apps:watch:lintReportDebug
+Wrote HTML report to file:///F:/proyectos/galaxy_iphone/.claude/worktrees/android-studio-windows-setup-672676/apps/watch/build/reports/lint-results-debug.html
+Wrote SARIF report to file:///F:/proyectos/galaxy_iphone/.claude/worktrees/android-studio-windows-setup-672676/apps/watch/build/reports/lint-results-debug.sarif
+
+> Task :apps:watch:lintDebug
+
+[Incubating] Problems report is available at: file:///F:/proyectos/galaxy_iphone/.claude/worktrees/android-studio-windows-setup-672676/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.8.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1m 39s
+60 actionable tasks: 60 executed
+Configuration cache entry stored.

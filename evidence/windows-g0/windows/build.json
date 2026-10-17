@@ -1,0 +1,34 @@
+{
+  "run": "windows-g0",
+  "recordedAt": "2026-10-17T10:45:05-0600",
+  "gitRevision": "4e06b70c1e4c",
+  "branch": "claude/android-studio-windows-setup-672676",
+  "note": "Clean build of the committed revision (git describe without -dirty). The app shows this revision on its first line (H01).",
+  "commands": "gradlew.bat --rerun-tasks :core:protocol-kotlin:test :core:notification-domain:test :core:assistant-domain:test :apps:watch:lintDebug :apps:watch:assembleDebug",
+  "gradleExitCode": 0,
+  "toolchain": { "jdk": "Temurin 21.0.12.1+1", "gradle": "9.8.1", "agp": "9.4.1", "kotlin": "2.4.21", "compileSdk": 37, "targetSdk": 36, "minSdk": 33 },
+  "apk": {
+    "path": "apps/watch/build/outputs/apk/debug/watch-debug.apk",
+    "applicationId": "dev.wristbridge.watch",
+    "versionName": "0.1.0-lab",
+    "versionCode": 1,
+    "bytes": 35357182,
+    "sha256": "fa66f53075c2185d026c01e683f656fdd279ebf5d3f8430f8d7fa7079a03c8f3",
+    "signing": "Android debug keystore (local, not in Git)"
+  },
+  "tests": {
+    "total": 48,
+    "failures": 0,
+    "suites": [
+      { "suite": "dev.wristbridge.assistant.AssistantGateTest", "tests": 1, "failures": 0 },
+      { "suite": "dev.wristbridge.notification.AncsSessionEngineTest", "tests": 18, "failures": 0 },
+      { "suite": "dev.wristbridge.protocol.ContractConsistencyTest", "tests": 4, "failures": 0 },
+      { "suite": "dev.wristbridge.protocol.ancs.AncsCommandsTest", "tests": 5, "failures": 0 },
+      { "suite": "dev.wristbridge.protocol.ancs.DataSourceAssemblerTest", "tests": 10, "failures": 0 },
+      { "suite": "dev.wristbridge.protocol.ancs.NotificationSourceParserTest", "tests": 4, "failures": 0 },
+      { "suite": "dev.wristbridge.protocol.gatt.GattOperationQueueTest", "tests": 6, "failures": 0 }
+    ]
+  },
+  "lint": { "errors": 0, "issues": ["Warning:DataExtractionRules"] },
+  "physical": { "watchInventory": "NOT_RUN", "install": "NOT_RUN", "H01_H09": "NOT_RUN", "N_physical": "NOT_RUN", "R01_R04": "NOT_RUN", "ADR001": "NOT_RUN" }
+}
