@@ -6,7 +6,8 @@ Actualizado el 17 de octubre de 2026 (America/Mexico_City). Primera entrega Kotl
 
 | Campo | Valor |
 |---|---|
-| Commit del código | El APK muestra su commit en la primera línea de la app (`BuildConfig.GIT_COMMIT`). El commit exacto de la entrega, el APK y su SHA-256 están en `evidence/windows-g0/windows/build.json`. |
+| Commit del código | `4e06b70c1e4c`. El APK muestra ese commit en la primera línea de la app (`BuildConfig.GIT_COMMIT`, sin `-dirty`). |
+| SHA-256 del APK | `fa66f53075c2185d026c01e683f656fdd279ebf5d3f8430f8d7fa7079a03c8f3` (35 357 182 bytes). Detalle en `evidence/windows-g0/windows/build.json`. |
 | APK | `apps/watch/build/outputs/apk/debug/watch-debug.apk`, `dev.wristbridge.watch` 0.1.0-lab (1). Firma debug local de Android Studio; ninguna clave en Git. |
 | Instalación | ADB inalámbrico, ver [installation.md](installation.md). Sin reset del reloj. |
 | Contrato | Documento 1.0; `contracts/ble-profile.json` revisión `p1-lab-1`. Formato P2 y propiedades GATT **no congelados**. |
