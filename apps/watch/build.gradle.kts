@@ -6,9 +6,15 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+val gitCommit: String = providers.exec {
+    commandLine("git", "describe", "--always", "--dirty", "--abbrev=12", "--exclude=*")
+    isIgnoreExitValue = true
+}.standardOutput.asText.map { it.trim().ifEmpty { "unknown" } }.getOrElse("unknown")
+
 android {
     namespace = "dev.wristbridge.watch"
-    compileSdk = 36
+    // AndroidX 2026.09 libraries require compiling against API 37; runtime behaviour stays at targetSdk 36.
+    compileSdk = 37
 
     defaultConfig {
         // Own product ID; not copied from any reference repository (Doc/02 §Primera sesión).
@@ -18,6 +24,8 @@ android {
         versionCode = 1
         versionName = "0.1.0-lab"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // H01: the running build must identify its exact revision. "-dirty" marks uncommitted changes.
+        buildConfigField("String", "GIT_COMMIT", "\"$gitCommit\"")
     }
 
     buildTypes {
