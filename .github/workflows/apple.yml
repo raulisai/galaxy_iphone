@@ -1,0 +1,35 @@
+name: Apple validation (explicit toolchain)
+on:
+  workflow_dispatch:
+    inputs:
+      developer_directory:
+        description: Installed Xcode Developer directory on macos-26 runner
+        required: true
+        type: string
+      xcode_version:
+        description: Exact expected first line from xcodebuild -version (e.g. Xcode 26.6)
+        required: true
+        type: string
+      simulator_destination:
+        description: Installed iPhone simulator destination (platform=iOS Simulator,name=...,OS=...)
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  apple:
+    runs-on: macos-26
+    timeout-minutes: 30
+    env:
+      DEVELOPER_DIR: ${{ inputs.developer_directory }}
+      EXPECTED_XCODE_VERSION: ${{ inputs.xcode_version }}
+      WRISTBRIDGE_TEST_DESTINATION: ${{ inputs.simulator_destination }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Verify explicitly selected Xcode
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          test "$(xcodebuild -version | head -n 1)" = "$EXPECTED_XCODE_VERSION"
+      - name: Validate package, simulator build and UI
+        run: bash scripts/apple/check.sh

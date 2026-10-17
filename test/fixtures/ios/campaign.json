@@ -1,0 +1,19 @@
+{
+  "fixtureVersion": 1,
+  "scope": "own-app-local-notifications-only",
+  "generator": "WristBridgeProtocol.FixturePlan",
+  "exampleRunId": "mvp1042-a",
+  "count": 10,
+  "initialDelaySeconds": 10,
+  "spacingSeconds": 3,
+  "fixtureIdPattern": "F001...F010",
+  "bodyCycle": ["short", "spanish-unicode-emoji", "long-over-1024-utf8-bytes"],
+  "observations": {
+    "scheduleAccepted": "UNUserNotificationCenter accepted request, not proof of delivery",
+    "foregroundCallback": "willPresent callback, not proof of visible banner or ANCS event",
+    "deliveredSnapshot": "present in deliveredNotifications at query time",
+    "cancelled": "requested removal of pending request; not proof no delivery occurred"
+  },
+  "automatedModifiedRemoved": false,
+  "hardwareStatus": "NOT_RUN"
+}

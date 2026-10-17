@@ -1,0 +1,168 @@
+Generated Xcode project: 6 app sources, UI test, local package.
+PASS: Original documentation intact: 00_LEEME_Y_COORDINACION.md
+PASS: Original documentation intact: 01_CONTRATO_COMPARTIDO.md
+PASS: Original documentation intact: 02_WINDOWS_KOTLIN.md
+PASS: Original documentation intact: 03_MAC_SWIFT.md
+PASS: Original documentation intact: 04_MATRIZ_60_TAREAS.md
+PASS: Original documentation intact: referencias/plan_ejecucion_galaxy_apple.md
+PASS: Swift UUID constants match the documented reservation
+PASS: 60 unique tasks in ownership matrix
+PASS: Picker service matches contract
+PASS: Picker name proposal declared
+PASS: Only implemented background role enabled
+PASS: No premature sensitive permissions
+PASS: Xcode root object resolves
+PASS: Project reference fileRef resolves (94DB40E280255E53F091B95E)
+PASS: Project reference buildConfigurationList resolves (59830EBC3A4184110566BF1A)
+PASS: Project reference productReference resolves (59830EBC3A4184110566BF1A)
+PASS: Project list buildPhases resolves (59830EBC3A4184110566BF1A)
+PASS: Project list dependencies resolves (59830EBC3A4184110566BF1A)
+PASS: Source file exists: WristBridgeUITests.swift
+PASS: Project reference fileRef resolves (0523A87E90D74F8639ED6EFC)
+PASS: Project reference fileRef resolves (7000C944555CB835C740AB82)
+PASS: Project list files resolves (DC549ACCB7C726C62ECFD4E2)
+PASS: Source file exists: Adapters/BluetoothCentralAdapter.swift
+PASS: Source file exists: Adapters/NotificationFixtureAdapter.swift
+PASS: Project reference containerPortal resolves (1241936D4DD3AAD68FE7BFBD)
+PASS: Local Swift package resolves
+PASS: Project list buildConfigurations resolves (66347432B32AAA402CD1360D)
+PASS: Project list children resolves (0A3E27B8CA818264D75C8D81)
+PASS: Project list files resolves (91024282FFD499F5807DB5BC)
+PASS: Project list children resolves (0D6E4079E36703EBD37C0072)
+PASS: Project list buildConfigurations resolves (76F8DEC3DFE0BDB465198890)
+PASS: Project reference target resolves (F26350DAFE3F19AABFD69AC4)
+PASS: Project reference targetProxy resolves (F26350DAFE3F19AABFD69AC4)
+PASS: Project reference fileRef resolves (5DE95319F17467ED6DC58E4E)
+PASS: Source file exists: Adapters/AccessorySetupAdapter.swift
+PASS: Project reference fileRef resolves (587854A59EFBF8969CAFD37F)
+PASS: Source file exists: WristBridgeApp.swift
+PASS: Project reference fileRef resolves (6A51C2756EF03A404A9DB54F)
+PASS: Source file exists: BridgeModel.swift
+PASS: Project list buildConfigurations resolves (06CB67C35A91E16DBD17B949)
+PASS: Project reference buildConfigurationList resolves (244210E48437B6556980A702)
+PASS: Project reference mainGroup resolves (244210E48437B6556980A702)
+PASS: Project reference productRefGroup resolves (244210E48437B6556980A702)
+PASS: Project list targets resolves (244210E48437B6556980A702)
+PASS: Project list packageReferences resolves (244210E48437B6556980A702)
+PASS: Project reference fileRef resolves (2A50B4455A619DD5B9D0F101)
+PASS: Project reference productRef resolves (E02D92A320435E3A7A34374C)
+PASS: Project reference package resolves (A47E76BAFC20DD79BAE3CC25)
+PASS: Project list files resolves (D8AFF257B45D0C513672EC45)
+PASS: Project list children resolves (48BA5869060C40ADB5964A48)
+PASS: Project reference fileRef resolves (94FC738582F39828F783E9EE)
+PASS: Project list children resolves (5652941471EEF5B25819CDC3)
+PASS: Project list files resolves (B2298129A58493C45A5D7D9A)
+PASS: Project list files resolves (3F6BC17F79ADBDD97FB52430)
+PASS: Project list files resolves (28557525D9B40FEE6754FB60)
+PASS: Project reference buildConfigurationList resolves (A172CEDCAE47474B615C54D5)
+PASS: Project reference productReference resolves (A172CEDCAE47474B615C54D5)
+PASS: Project list buildPhases resolves (A172CEDCAE47474B615C54D5)
+PASS: Project list dependencies resolves (A172CEDCAE47474B615C54D5)
+PASS: Project list packageProductDependencies resolves (A172CEDCAE47474B615C54D5)
+PASS: Source file exists: Views/ContentView.swift
+PASS: Shared scheme references existing targets
+PASS: Apple Swift syntax parses (no SDK typechecking)
+PASS: Project regeneration is deterministic and complete
+Building for debugging...
+[2 / 8] WristBridgeProtocolTests-product
+error: SwiftCompile normal arm64 failed with a nonzero exit code. Command line:     cd /Users/djoker/code/galaxy_iphone/packages
+    
+/Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/Tests/WristBridgeProtocolTests/AppleFoundationTests.swift:5:12: error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test'; plugin for module 'TestingMacros' not found
+ 3 | @testable import WristBridgeProtocol
+ 4 | 
+ 5 | @Test func connectionNeverProvesANCS() {
+   |            `- error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test'; plugin for module 'TestingMacros' not found
+ 6 |     var state = BridgeState()
+ 7 |     for event: BridgeEvent in [.authorized, .connecting, .connected, .serviceFound] {
+
+Testing.Test:1:30: note: 'Test' declared here
+1 | @attached(peer) public macro Test(_ traits: any Testing.TestTrait...) = #externalMacro(module: "TestingMacros", type: "TestDeclarationMacro")
+  |                              `- note: 'Test' declared here
+
+/Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/Tests/WristBridgeProtocolTests/AppleFoundationTests.swift:15:12: error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test'; plugin for module 'TestingMacros' not found
+13 | }
+14 | 
+15 | @Test func lateConnectionAfterRevocationIsIgnored() {
+   |            `- error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test'; plugin for module 'TestingMacros' not found
+16 |     var state = BridgeState()
+17 |     state.apply(.authorized)
+
+Testing.Test:1:30: note: 'Test' declared here
+1 | @attached(peer) public macro Test(_ traits: any Testing.TestTrait...) = #externalMacro(module: "TestingMacros", type: "TestDeclarationMacro")
+  |                              `- note: 'Test' declared here
+
+/Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/Tests/WristBridgeProtocolTests/AppleFoundationTests.swift:26:12: error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test'; plugin for module 'TestingMacros' not found
+24 | }
+25 | 
+26 | @Test func cancelRetryAndStopPreserveHonestState() {
+   |            `- error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test'; plugin for module 'TestingMacros' not found
+27 |     var state = BridgeState()
+28 |     state.apply(.pickerOpened)
+
+Testing.Test:1:30: note: 'Test' declared here
+1 | @attached(peer) public macro Test(_ traits: any Testing.TestTrait...) = #externalMacro(module: "TestingMacros", type: "TestDeclarationMacro")
+  |                              `- note: 'Test' declared here
+
+/Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/Tests/WristBridgeProtocolTests/AppleFoundationTests.swift:43:12: error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test'; plugin for module 'TestingMacros' not found
+41 | }
+42 | 
+43 | @Test func fixtureIDsAndTimingAreReproducible() throws {
+   |            `- error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test'; plugin for module 'TestingMacros' not found
+44 |     let first = try FixturePlan(runID: "run-1042", count: 50)
+45 |     #expect(first.notifications == (try FixturePlan(runID: "run-1042", count: 50)).notifications)
+
+Testing.Test:1:30: note: 'Test' declared here
+1 | @attached(peer) public macro Test(_ traits: any Testing.TestTrait...) = #externalMacro(module: "TestingMacros", type: "TestDeclarationMacro")
+  |                              `- note: 'Test' declared here
+
+/Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/Tests/WristBridgeProtocolTests/AppleFoundationTests.swift:55:6: error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test(_:arguments:)'; plugin for module 'TestingMacros' not found
+53 | 
+54 | @Test(arguments: ["", "../personal", "a.b", "nombre con espacios", "🇲🇽", String(repeating: "a", count: 65)])
+55 | func unsafeRunIDIsRejected(runID: String) {
+   |      `- error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test(_:arguments:)'; plugin for module 'TestingMacros' not found
+56 |     #expect(throws: FixturePlanError.invalidRunID) { try FixturePlan(runID: runID) }
+57 | }
+
+Testing.Test:1:30: note: 'Test(_:arguments:)' declared here
+1 | @attached(peer) public macro Test<C>(_ traits: any Testing.TestTrait..., arguments collection: C) = #externalMacro(module: "TestingMacros", type: "TestDeclarationMacro") where C : Collection, C : Sendable, C.Element : Sendable
+  |                              `- note: 'Test(_:arguments:)' declared here
+
+/Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/Tests/WristBridgeProtocolTests/AppleFoundationTests.swift:60:6: error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test(_:arguments:)'; plugin for module 'TestingMacros' not found
+58 | 
+59 | @Test(arguments: [0, -1, 51, Int.max])
+60 | func batchRemainsBelowSystemPendingLimit(count: Int) {
+   |      `- error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test(_:arguments:)'; plugin for module 'TestingMacros' not found
+61 |     #expect(throws: FixturePlanError.invalidCount) { try FixturePlan(runID: "run", count: count) }
+62 | }
+
+Testing.Test:1:30: note: 'Test(_:arguments:)' declared here
+1 | @attached(peer) public macro Test<C>(_ traits: any Testing.TestTrait..., arguments collection: C) = #externalMacro(module: "TestingMacros", type: "TestDeclarationMacro") where C : Collection, C : Sendable, C.Element : Sendable
+  |                              `- note: 'Test(_:arguments:)' declared here
+
+/Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/Tests/WristBridgeProtocolTests/AppleFoundationTests.swift:65:6: error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test(_:arguments:)'; plugin for module 'TestingMacros' not found
+63 | 
+64 | @Test(arguments: [Double.nan, Double.infinity, -1, 0, 4, 3601])
+65 | func invalidDelayIsRejected(delay: Double) {
+   |      `- error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test(_:arguments:)'; plugin for module 'TestingMacros' not found
+66 |     #expect(throws: FixturePlanError.invalidTiming) { try FixturePlan(runID: "run", initialDelay: delay) }
+67 | }
+
+Testing.Test:1:30: note: 'Test(_:arguments:)' declared here
+1 | @attached(peer) public macro Test<C>(_ traits: any Testing.TestTrait..., arguments collection: C) = #externalMacro(module: "TestingMacros", type: "TestDeclarationMacro") where C : Collection, C : Sendable, C.Element : Sendable
+  |                              `- note: 'Test(_:arguments:)' declared here
+
+/Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/Tests/WristBridgeProtocolTests/AppleFoundationTests.swift:69:12: error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test'; plugin for module 'TestingMacros' not found
+67 | }
+68 | 
+69 | @Test func metadataDistinguishesSchedulingAndDelivery() throws {
+   |            `- error: external macro implementation type 'TestingMacros.TestDeclarationMacro' could not be found for macro 'Test'; plugin for module 'TestingMacros' not found
+70 |     let scheduled = FixtureRecord(runID: "run", fixtureID: "F001", observation: .scheduleAccepted)
+71 |     let data = try JSONEncoder().encode(scheduled)
+
+Testing.Test:1:30: note: 'Test' declared here
+1 | @attached(peer) public macro Test(_ traits: any Testing.TestTrait...) = #externalMacro(module: "TestingMacros", type: "TestDeclarationMacro")
+  |                              `- note: 'Test' declared here
+Failed frontend command:
+/Library/Developer/CommandLineTools/usr/bin/swift-frontend -frontend -emit-module -experimental-skip-non-inlinable-function-bodies-without-types /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Intermediates.noindex/WristBridgeProtocol.build/Debug/WristBridgeProtocolTests-p.build/DerivedSources/test_entry_point.swift /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/Tests/WristBridgeProtocolTests/AppleFoundationTests.swift -target arm64-apple-macos14.0 -module-can-import-version Testing 2084 0 -disable-cross-import-overlay-search -swift-module-cross-import Testing /Library/Developer/CommandLineTools/Library/Developer/Frameworks/Testing.framework/Modules/Testing.swiftcrossimport/AppKit.swiftoverlay -swift-module-cross-import Testing /Library/Developer/CommandLineTools/Library/Developer/Frameworks/Testing.framework/Modules/Testing.swiftcrossimport/CoreGraphics.swiftoverlay -swift-module-cross-import Testing /Library/Developer/CommandLineTools/Library/Developer/Frameworks/Testing.framework/Modules/Testing.swiftcrossimport/CoreImage.swiftoverlay -swift-module-cross-import Testing /Library/Developer/CommandLineTools/Library/Developer/Frameworks/Testing.framework/Modules/Testing.swiftcrossimport/CoreTransferable.swiftoverlay -swift-module-cross-import Testing /Library/Developer/CommandLineTools/Library/Developer/Frameworks/Testing.framework/Modules/Testing.swiftcrossimport/Foundation.swiftoverlay -load-resolved-plugin /Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/libObservationMacros.dylib\#\#ObservationMacros -load-resolved-plugin /Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/libSwiftMacros.dylib\#\#SwiftMacros -disable-implicit-swift-modules -Xcc -fno-implicit-modules -Xcc -fno-implicit-module-maps -explicit-swift-module-map-file /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Intermediates.noindex/WristBridgeProtocol.build/Debug/WristBridgeProtocolTests-p.build/Objects-normal/arm64/WristBridgeProtocolTests-dependencies-1.json -Xllvm -aarch64-use-tbi -enable-objc-interop -stack-check -sdk /Library/Developer/CommandLineTools/SDKs/MacOSX27.0.sdk -I /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Products/Debug -Isystem /Library/Developer/CommandLineTools/Developer/usr/lib -F /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Products/Debug/PackageFrameworks -F /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Products/Debug -F /Library/Developer/CommandLineTools/Library/Developer/Frameworks -F /Library/Developer/CommandLineTools/Developer/Library/Frameworks -module-cache-path /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Intermediates.noindex/SwiftExplicitPrecompiledModules -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D Xcode -serialize-debugging-options -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/djoker/code/galaxy_iphone/packages -enable-anonymous-context-mangled-names -file-compilation-dir /Users/djoker/code/galaxy_iphone/packages -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -ivfsstatcache -Xcc /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/SDKStatCaches.noindex/macosx27.0-26A425-a0facfad118c1a7a18f0aad9463f6549ffd68ff603bdaacc80b00cb8898de72d.sdkstatcache -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -Xcc -I/Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Products/Debug/include -Xcc -I/Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Intermediates.noindex/WristBridgeProtocol.build/Debug/WristBridgeProtocolTests-p.build/DerivedSources-normal/arm64 -Xcc -I/Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Intermediates.noindex/WristBridgeProtocol.build/Debug/WristBridgeProtocolTests-p.build/DerivedSources/arm64 -Xcc -I/Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Intermediates.noindex/WristBridgeProtocol.build/Debug/WristBridgeProtocolTests-p.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\=1 -no-auto-bridging-header-chaining -module-name WristBridgeProtocolTests -package-name wristbridgeprotocol -const-gather-protocols-file /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Intermediates.noindex/WristBridgeProtocol.build/Debug/WristBridgeProtocolTests-p.build/Objects-normal/arm64/WristBridgeProtocolTests_const_extract_protocols.json -disable-clang-spi -clang-target arm64-apple-macos27.0 -target-sdk-version 27.0 -target-sdk-name macosx27.0 -in-process-plugin-server-path /Library/Developer/CommandLineTools/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -emit-module-doc-path /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Intermediates.noindex/WristBridgeProtocol.build/Debug/WristBridgeProtocolTests-p.build/Objects-normal/arm64/WristBridgeProtocolTests.swiftdoc -emit-module-source-info-path /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Intermediates.noindex/WristBridgeProtocol.build/Debug/WristBridgeProtocolTests-p.build/Objects-normal/arm64/WristBridgeProtocolTests.swiftsourceinfo -serialize-diagnostics-path /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Intermediates.noindex/WristBridgeProtocol.build/Debug/WristBridgeProtocolTests-p.build/Objects-normal/arm64/WristBridgeProtocolTests-primary-emit-module.dia -emit-dependencies-path /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Intermediates.noindex/WristBridgeProtocol.build/Debug/WristBridgeProtocolTests-p.build/Objects-normal/arm64/WristBridgeProtocolTests-primary-emit-module.d -parse-as-library -o /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Intermediates.noindex/WristBridgeProtocol.build/Debug/WristBridgeProtocolTests-p.build/Objects-normal/arm64/WristBridgeProtocolTests.swiftmodule -emit-abi-descriptor-path /Users/djoker/code/galaxy_iphone/packages/WristBridgeProtocol/.build/out/Intermediates.noindex/WristBridgeProtocol.build/Debug/WristBridgeProtocolTests-p.build/Objects-normal/arm64/WristBridgeProtocolTests.abi.json
+error: Build failed
+error: fatalError

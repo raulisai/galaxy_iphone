@@ -1,0 +1,4 @@
+// Local overrides are intentionally ignored by Git. No team or certificate is shared.
+CODE_SIGN_STYLE = Automatic
+WRISTBRIDGE_APP_BUNDLE_ID = dev.wristbridge.iphone
+#include? "Signing.local.xcconfig"

@@ -1,0 +1,481 @@
+// !$*UTF8*$!
+{
+	"archiveVersion" = "1";
+	"classes" = {
+	};
+	"objectVersion" = "56";
+	"objects" = {
+		"AE65CDDE9CEEFEEB75842E7E" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Adapters/AccessorySetupAdapter.swift";
+			"sourceTree" = "<group>";
+		};
+		"6A51C2756EF03A404A9DB54F" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "AE65CDDE9CEEFEEB75842E7E";
+		};
+		"24082B447A58C4FF09767EB0" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Adapters/BluetoothCentralAdapter.swift";
+			"sourceTree" = "<group>";
+		};
+		"7000C944555CB835C740AB82" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "24082B447A58C4FF09767EB0";
+		};
+		"D2B7B488D37F2345D55D6DD5" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Adapters/NotificationFixtureAdapter.swift";
+			"sourceTree" = "<group>";
+		};
+		"2A50B4455A619DD5B9D0F101" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "D2B7B488D37F2345D55D6DD5";
+		};
+		"6BAD5550F9512AAC289E3DC2" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "BridgeModel.swift";
+			"sourceTree" = "<group>";
+		};
+		"0523A87E90D74F8639ED6EFC" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "6BAD5550F9512AAC289E3DC2";
+		};
+		"AA2C263208145D0776D049E6" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Views/ContentView.swift";
+			"sourceTree" = "<group>";
+		};
+		"94FC738582F39828F783E9EE" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "AA2C263208145D0776D049E6";
+		};
+		"6229094C876603F9B4DC3A4D" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "WristBridgeApp.swift";
+			"sourceTree" = "<group>";
+		};
+		"94DB40E280255E53F091B95E" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "6229094C876603F9B4DC3A4D";
+		};
+		"06271BAF49532C879AA3C58B" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "text.plist.xml";
+			"path" = "Info.plist";
+			"sourceTree" = "<group>";
+		};
+		"A4CC6BC01A927E2A78FD3BEC" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "text.xml";
+			"path" = "Resources/PrivacyInfo.xcprivacy";
+			"sourceTree" = "<group>";
+		};
+		"5DE95319F17467ED6DC58E4E" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A4CC6BC01A927E2A78FD3BEC";
+		};
+		"A56472E961F58FFFAE622D5B" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "WristBridgeUITests.swift";
+			"sourceTree" = "<group>";
+		};
+		"587854A59EFBF8969CAFD37F" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A56472E961F58FFFAE622D5B";
+		};
+		"763D774377779C412BB71F6F" = {
+			"isa" = "PBXFileReference";
+			"explicitFileType" = "wrapper.application";
+			"includeInIndex" = "0";
+			"path" = "WristBridge.app";
+			"sourceTree" = "BUILT_PRODUCTS_DIR";
+		};
+		"00444E2C37DD529B70E931A2" = {
+			"isa" = "PBXFileReference";
+			"explicitFileType" = "wrapper.cfbundle";
+			"includeInIndex" = "0";
+			"path" = "WristBridgeUITests.xctest";
+			"sourceTree" = "BUILT_PRODUCTS_DIR";
+		};
+		"5652941471EEF5B25819CDC3" = {
+			"isa" = "PBXGroup";
+			"children" = (
+				"AE65CDDE9CEEFEEB75842E7E",
+				"24082B447A58C4FF09767EB0",
+				"D2B7B488D37F2345D55D6DD5",
+				"6BAD5550F9512AAC289E3DC2",
+				"AA2C263208145D0776D049E6",
+				"6229094C876603F9B4DC3A4D",
+				"06271BAF49532C879AA3C58B",
+				"A4CC6BC01A927E2A78FD3BEC",
+			);
+			"path" = "WristBridge";
+			"sourceTree" = "<group>";
+		};
+		"48BA5869060C40ADB5964A48" = {
+			"isa" = "PBXGroup";
+			"children" = (
+				"A56472E961F58FFFAE622D5B",
+			);
+			"path" = "WristBridgeUITests";
+			"sourceTree" = "<group>";
+		};
+		"0A3E27B8CA818264D75C8D81" = {
+			"isa" = "PBXGroup";
+			"children" = (
+				"763D774377779C412BB71F6F",
+				"00444E2C37DD529B70E931A2",
+			);
+			"name" = "Products";
+			"sourceTree" = "<group>";
+		};
+		"BDEFC259426BD086D1126108" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "text.xcconfig";
+			"path" = "Signing.xcconfig";
+			"sourceTree" = "<group>";
+		};
+		"0D6E4079E36703EBD37C0072" = {
+			"isa" = "PBXGroup";
+			"children" = (
+				"5652941471EEF5B25819CDC3",
+				"48BA5869060C40ADB5964A48",
+				"BDEFC259426BD086D1126108",
+				"0A3E27B8CA818264D75C8D81",
+			);
+			"sourceTree" = "<group>";
+		};
+		"BC4A71180870F7945155FBB0" = {
+			"isa" = "XCLocalSwiftPackageReference";
+			"relativePath" = "../../packages/WristBridgeProtocol";
+		};
+		"A47E76BAFC20DD79BAE3CC25" = {
+			"isa" = "XCSwiftPackageProductDependency";
+			"package" = "BC4A71180870F7945155FBB0";
+			"productName" = "WristBridgeProtocol";
+		};
+		"E02D92A320435E3A7A34374C" = {
+			"isa" = "PBXBuildFile";
+			"productRef" = "A47E76BAFC20DD79BAE3CC25";
+		};
+		"D8AFF257B45D0C513672EC45" = {
+			"isa" = "PBXSourcesBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+				"6A51C2756EF03A404A9DB54F",
+				"7000C944555CB835C740AB82",
+				"2A50B4455A619DD5B9D0F101",
+				"0523A87E90D74F8639ED6EFC",
+				"94FC738582F39828F783E9EE",
+				"94DB40E280255E53F091B95E",
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"91024282FFD499F5807DB5BC" = {
+			"isa" = "PBXFrameworksBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+				"E02D92A320435E3A7A34374C",
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"DC549ACCB7C726C62ECFD4E2" = {
+			"isa" = "PBXResourcesBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+				"5DE95319F17467ED6DC58E4E",
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"B2298129A58493C45A5D7D9A" = {
+			"isa" = "PBXSourcesBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+				"587854A59EFBF8969CAFD37F",
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"28557525D9B40FEE6754FB60" = {
+			"isa" = "PBXFrameworksBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"3F6BC17F79ADBDD97FB52430" = {
+			"isa" = "PBXResourcesBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"B00CCDD09424E369308D67FA" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"CLANG_ENABLE_MODULES" = "YES";
+				"SWIFT_VERSION" = "5.0";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "26.0";
+				"SDKROOT" = "iphoneos";
+				"TARGETED_DEVICE_FAMILY" = "1";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"ENABLE_USER_SCRIPT_SANDBOXING" = "YES";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "$(WRISTBRIDGE_APP_BUNDLE_ID)";
+				"INFOPLIST_FILE" = "WristBridge/Info.plist";
+				"GENERATE_INFOPLIST_FILE" = "NO";
+				"MARKETING_VERSION" = "0.1.0";
+				"CURRENT_PROJECT_VERSION" = "1";
+				"LD_RUNPATH_SEARCH_PATHS" = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"SWIFT_EMIT_LOC_STRINGS" = "YES";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "DEBUG";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"ENABLE_TESTABILITY" = "YES";
+			};
+			"name" = "Debug";
+			"baseConfigurationReference" = "BDEFC259426BD086D1126108";
+		};
+		"1B104479E55E37CF8A63CBDF" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"CLANG_ENABLE_MODULES" = "YES";
+				"SWIFT_VERSION" = "5.0";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "26.0";
+				"SDKROOT" = "iphoneos";
+				"TARGETED_DEVICE_FAMILY" = "1";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"ENABLE_USER_SCRIPT_SANDBOXING" = "YES";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "$(WRISTBRIDGE_APP_BUNDLE_ID)";
+				"INFOPLIST_FILE" = "WristBridge/Info.plist";
+				"GENERATE_INFOPLIST_FILE" = "NO";
+				"MARKETING_VERSION" = "0.1.0";
+				"CURRENT_PROJECT_VERSION" = "1";
+				"LD_RUNPATH_SEARCH_PATHS" = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"SWIFT_EMIT_LOC_STRINGS" = "YES";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-O";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf-with-dsym";
+				"ENABLE_TESTABILITY" = "NO";
+			};
+			"name" = "Release";
+			"baseConfigurationReference" = "BDEFC259426BD086D1126108";
+		};
+		"06CB67C35A91E16DBD17B949" = {
+			"isa" = "XCConfigurationList";
+			"buildConfigurations" = (
+				"B00CCDD09424E369308D67FA",
+				"1B104479E55E37CF8A63CBDF",
+			);
+			"defaultConfigurationIsVisible" = "0";
+			"defaultConfigurationName" = "Release";
+		};
+		"22341BB87F410D35D057D37C" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"CLANG_ENABLE_MODULES" = "YES";
+				"SWIFT_VERSION" = "5.0";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "26.0";
+				"SDKROOT" = "iphoneos";
+				"TARGETED_DEVICE_FAMILY" = "1";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"ENABLE_USER_SCRIPT_SANDBOXING" = "YES";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "$(WRISTBRIDGE_APP_BUNDLE_ID).uitests";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"TEST_TARGET_NAME" = "WristBridge";
+				"LD_RUNPATH_SEARCH_PATHS" = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "DEBUG";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"ENABLE_TESTABILITY" = "YES";
+			};
+			"name" = "Debug";
+			"baseConfigurationReference" = "BDEFC259426BD086D1126108";
+		};
+		"A188B1844D481F2A55033242" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"CLANG_ENABLE_MODULES" = "YES";
+				"SWIFT_VERSION" = "5.0";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "26.0";
+				"SDKROOT" = "iphoneos";
+				"TARGETED_DEVICE_FAMILY" = "1";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"ENABLE_USER_SCRIPT_SANDBOXING" = "YES";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "$(WRISTBRIDGE_APP_BUNDLE_ID).uitests";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"TEST_TARGET_NAME" = "WristBridge";
+				"LD_RUNPATH_SEARCH_PATHS" = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				"SWIFT_OPTIMIZATION_LEVEL" = "-O";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf-with-dsym";
+				"ENABLE_TESTABILITY" = "NO";
+			};
+			"name" = "Release";
+			"baseConfigurationReference" = "BDEFC259426BD086D1126108";
+		};
+		"66347432B32AAA402CD1360D" = {
+			"isa" = "XCConfigurationList";
+			"buildConfigurations" = (
+				"22341BB87F410D35D057D37C",
+				"A188B1844D481F2A55033242",
+			);
+			"defaultConfigurationIsVisible" = "0";
+			"defaultConfigurationName" = "Release";
+		};
+		"73EBF6644258C120893E685D" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"CLANG_ENABLE_MODULES" = "YES";
+				"SWIFT_VERSION" = "5.0";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "26.0";
+				"SDKROOT" = "iphoneos";
+				"TARGETED_DEVICE_FAMILY" = "1";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"ENABLE_USER_SCRIPT_SANDBOXING" = "YES";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "DEBUG";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"ENABLE_TESTABILITY" = "YES";
+			};
+			"name" = "Debug";
+		};
+		"0B0C687DF8B6B8DC790B519C" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"CLANG_ENABLE_MODULES" = "YES";
+				"SWIFT_VERSION" = "5.0";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "26.0";
+				"SDKROOT" = "iphoneos";
+				"TARGETED_DEVICE_FAMILY" = "1";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"ENABLE_USER_SCRIPT_SANDBOXING" = "YES";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-O";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf-with-dsym";
+				"ENABLE_TESTABILITY" = "NO";
+			};
+			"name" = "Release";
+		};
+		"76F8DEC3DFE0BDB465198890" = {
+			"isa" = "XCConfigurationList";
+			"buildConfigurations" = (
+				"73EBF6644258C120893E685D",
+				"0B0C687DF8B6B8DC790B519C",
+			);
+			"defaultConfigurationIsVisible" = "0";
+			"defaultConfigurationName" = "Release";
+		};
+		"A172CEDCAE47474B615C54D5" = {
+			"isa" = "PBXNativeTarget";
+			"buildConfigurationList" = "06CB67C35A91E16DBD17B949";
+			"buildPhases" = (
+				"D8AFF257B45D0C513672EC45",
+				"91024282FFD499F5807DB5BC",
+				"DC549ACCB7C726C62ECFD4E2",
+			);
+			"buildRules" = (
+			);
+			"dependencies" = (
+			);
+			"name" = "WristBridge";
+			"packageProductDependencies" = (
+				"A47E76BAFC20DD79BAE3CC25",
+			);
+			"productName" = "WristBridge";
+			"productReference" = "763D774377779C412BB71F6F";
+			"productType" = "com.apple.product-type.application";
+		};
+		"1241936D4DD3AAD68FE7BFBD" = {
+			"isa" = "PBXContainerItemProxy";
+			"containerPortal" = "244210E48437B6556980A702";
+			"proxyType" = "1";
+			"remoteGlobalIDString" = "A172CEDCAE47474B615C54D5";
+			"remoteInfo" = "WristBridge";
+		};
+		"F26350DAFE3F19AABFD69AC4" = {
+			"isa" = "PBXTargetDependency";
+			"target" = "A172CEDCAE47474B615C54D5";
+			"targetProxy" = "1241936D4DD3AAD68FE7BFBD";
+		};
+		"59830EBC3A4184110566BF1A" = {
+			"isa" = "PBXNativeTarget";
+			"buildConfigurationList" = "66347432B32AAA402CD1360D";
+			"buildPhases" = (
+				"B2298129A58493C45A5D7D9A",
+				"28557525D9B40FEE6754FB60",
+				"3F6BC17F79ADBDD97FB52430",
+			);
+			"buildRules" = (
+			);
+			"dependencies" = (
+				"F26350DAFE3F19AABFD69AC4",
+			);
+			"name" = "WristBridgeUITests";
+			"productName" = "WristBridgeUITests";
+			"productReference" = "00444E2C37DD529B70E931A2";
+			"productType" = "com.apple.product-type.bundle.ui-testing";
+		};
+		"244210E48437B6556980A702" = {
+			"isa" = "PBXProject";
+			"attributes" = {
+				"BuildIndependentTargetsInParallel" = "YES";
+				"LastUpgradeCheck" = "2600";
+				"TargetAttributes" = {
+					"A172CEDCAE47474B615C54D5" = {
+						"CreatedOnToolsVersion" = "26.0";
+					};
+					"59830EBC3A4184110566BF1A" = {
+						"CreatedOnToolsVersion" = "26.0";
+						"TestTargetID" = "A172CEDCAE47474B615C54D5";
+					};
+				};
+			};
+			"buildConfigurationList" = "76F8DEC3DFE0BDB465198890";
+			"compatibilityVersion" = "Xcode 14.0";
+			"developmentRegion" = "es";
+			"hasScannedForEncodings" = "0";
+			"knownRegions" = (
+				"es",
+				"en",
+				"Base",
+			);
+			"mainGroup" = "0D6E4079E36703EBD37C0072";
+			"packageReferences" = (
+				"BC4A71180870F7945155FBB0",
+			);
+			"productRefGroup" = "0A3E27B8CA818264D75C8D81";
+			"projectDirPath" = "";
+			"projectRoot" = "";
+			"targets" = (
+				"A172CEDCAE47474B615C54D5",
+				"59830EBC3A4184110566BF1A",
+			);
+		};
+	};
+	"rootObject" = "244210E48437B6556980A702";
+}

@@ -1,0 +1,34 @@
+{
+  "packageVersion": "1.0",
+  "dateUTC": "2026-10-17",
+  "status": "planning-handoff-no-app-code",
+  "tasks": 60,
+  "catalogCases": 148,
+  "endToEndScenarios": 5,
+  "files": {
+    "00_LEEME_Y_COORDINACION.md": {
+      "bytes": 10075,
+      "sha256": "7d33de0242d52e37e0c7ace6af55a9d5aa1eab4b1884d52895114c400dbbf334"
+    },
+    "01_CONTRATO_COMPARTIDO.md": {
+      "bytes": 9737,
+      "sha256": "0dee4990f741d74edc38fe10edd10247404beed0377e55ff893f9e819f73c668"
+    },
+    "02_WINDOWS_KOTLIN.md": {
+      "bytes": 13493,
+      "sha256": "20937756a026fdb3efbfa825f1f382b8f2c15c3363c4cef747564af12d48b97f"
+    },
+    "03_MAC_SWIFT.md": {
+      "bytes": 13952,
+      "sha256": "a074403f72789be9acd7815355133f74ce7048e1758015253d152122a73eeef9"
+    },
+    "04_MATRIZ_60_TAREAS.md": {
+      "bytes": 14402,
+      "sha256": "d265c27a998c7752f68c66297f6c2632d482c71a6ad52f2651839d1763e180c7"
+    },
+    "referencias/plan_ejecucion_galaxy_apple.md": {
+      "bytes": 101461,
+      "sha256": "29678d9de9203f54e406c9968a464bf289dd99c0bcc3f0e18985bb38442b34eb"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+[0/1] Planning build
+Building for debugging...
+[0/3] Write swift-version--1AB21518FC5DEDBE.txt
+[2/7] Compiling WristBridgeProtocol BridgeState.swift
+[3/7] Compiling WristBridgeProtocol FixturePlan.swift
+[4/7] Compiling WristBridgeProtocol BLEProfile.swift
+[5/7] Emitting module WristBridgeProtocol
+[6/9] Emitting module WristBridgeProtocolTests
+[7/9] Compiling WristBridgeProtocolTests AppleFoundationTests.swift
+[8/11] Compiling WristBridgeProtocolPackageTests runner.swift
+[9/11] Emitting module WristBridgeProtocolPackageTests
+[9/11] Write Objects.LinkFileList
+[10/11] Linking WristBridgeProtocolPackageTests
+Build complete! (3.32s)
+warning: '--build-system native' has been deprecated and will be removed in a future release; please report an issue at https://github.com/swiftlang/swift-package-manager/issues if you are unable to adopt the default build system.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test metadataDistinguishesSchedulingAndDelivery() started.
+◇ Test batchRemainsBelowSystemPendingLimit(count:) started.
+◇ Test cancelRetryAndStopPreserveHonestState() started.
+◇ Test lateConnectionAfterRevocationIsIgnored() started.
+◇ Test unsafeRunIDIsRejected(runID:) started.
+◇ Test connectionNeverProvesANCS() started.
+◇ Test invalidDelayIsRejected(delay:) started.
+◇ Test fixtureIDsAndTimingAreReproducible() started.
+◇ Test case passing 1 argument runID → "" to unsafeRunIDIsRejected(runID:) started.
+◇ Test case passing 1 argument count → 0 to batchRemainsBelowSystemPendingLimit(count:) started.
+◇ Test case passing 1 argument count → -1 to batchRemainsBelowSystemPendingLimit(count:) started.
+◇ Test case passing 1 argument runID → "../personal" to unsafeRunIDIsRejected(runID:) started.
+◇ Test case passing 1 argument runID → "a.b" to unsafeRunIDIsRejected(runID:) started.
+◇ Test case passing 1 argument runID → "nombre con espacios" to unsafeRunIDIsRejected(runID:) started.
+◇ Test case passing 1 argument runID → "🇲🇽" to unsafeRunIDIsRejected(runID:) started.
+◇ Test case passing 1 argument delay → nan to invalidDelayIsRejected(delay:) started.
+◇ Test case passing 1 argument runID → "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" to unsafeRunIDIsRejected(runID:) started.
+◇ Test case passing 1 argument count → 51 to batchRemainsBelowSystemPendingLimit(count:) started.
+◇ Test case passing 1 argument delay → inf to invalidDelayIsRejected(delay:) started.
+✔ Test lateConnectionAfterRevocationIsIgnored() passed after 0.001 seconds.
+◇ Test case passing 1 argument count → 9223372036854775807 to batchRemainsBelowSystemPendingLimit(count:) started.
+◇ Test case passing 1 argument delay → -1.0 to invalidDelayIsRejected(delay:) started.
+◇ Test case passing 1 argument delay → 0.0 to invalidDelayIsRejected(delay:) started.
+◇ Test case passing 1 argument delay → 3601.0 to invalidDelayIsRejected(delay:) started.
+◇ Test case passing 1 argument delay → 4.0 to invalidDelayIsRejected(delay:) started.
+✔ Test connectionNeverProvesANCS() passed after 0.001 seconds.
+✔ Test cancelRetryAndStopPreserveHonestState() passed after 0.001 seconds.
+✔ Test metadataDistinguishesSchedulingAndDelivery() passed after 0.001 seconds.
+✔ Test batchRemainsBelowSystemPendingLimit(count:) with 4 test cases passed after 0.001 seconds.
+✔ Test unsafeRunIDIsRejected(runID:) with 6 test cases passed after 0.001 seconds.
+✔ Test invalidDelayIsRejected(delay:) with 6 test cases passed after 0.001 seconds.
+✔ Test fixtureIDsAndTimingAreReproducible() passed after 0.001 seconds.
+✔ Test run with 8 tests in 0 suites passed after 0.001 seconds.

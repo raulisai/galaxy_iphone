@@ -1,0 +1,231 @@
+{
+  "runId": "apple-initial",
+  "recordedAtUTC": "2026-10-17T02:59:03.844644+00:00",
+  "presentationDate": "2026-10-16",
+  "presentationTimeZone": "America/Mexico_City",
+  "productCommit": null,
+  "branch": "feat/ios/g0-p1",
+  "sourceManifest": "source-manifest.json",
+  "contract": {
+    "documentVersion": "1.0",
+    "sha256": "0dee4990f741d74edc38fe10edd10247404beed0377e55ff893f9e819f73c668",
+    "bleProfile": "reserved-UUIDs-only",
+    "wireFormat": "not-frozen",
+    "path": "A-experiment-not-accepted",
+    "advertisedNameProposal": "WristBridge",
+    "sensitiveTransferEnabled": false
+  },
+  "app": {
+    "version": "0.1.0",
+    "build": "1",
+    "bundleId": "dev.wristbridge.iphone",
+    "deploymentTarget": "iOS 26.0",
+    "artifact": null
+  },
+  "environment": {
+    "macOS": "26.6.2",
+    "macOSBuild": "25G83",
+    "swift": "6.4 (swiftlang-6.4.0.34.1)",
+    "selectedDeveloperDirectory": "/Library/Developer/CommandLineTools",
+    "macOSSDK": "27.0",
+    "xcode": null,
+    "iOSSDK": null,
+    "iPhoneOSBuild": null,
+    "watchOSBuild": null,
+    "physicalDevices": "available-per-user-not-yet-observed"
+  },
+  "checks": [
+    {
+      "id": "APPLE-DOC-INTEGRITY",
+      "status": "PASS",
+      "detail": "Six original files match manifest size and SHA-256"
+    },
+    {
+      "id": "APPLE-STRUCTURE",
+      "status": "PASS",
+      "detail": "UUIDs, plist, permissions, Xcode references, scheme and deterministic generation"
+    },
+    {
+      "id": "APPLE-SYNTAX",
+      "status": "PASS",
+      "detail": "Swift parse only; no iOS SDK typechecking"
+    },
+    {
+      "id": "APPLE-PACKAGE",
+      "status": "PASS",
+      "detail": "8 Swift Testing tests, including 16 parameter variants in 3 tests; CLT adaptation script"
+    },
+    {
+      "id": "APPLE-DEFAULT-SWIFTBUILD",
+      "status": "FAIL",
+      "detail": "Current CLT backend could not load TestingMacros after platform update; local adaptation verified; see swiftbuild-failure.log"
+    },
+    {
+      "id": "APPLE-SIMULATOR-BUILD",
+      "status": "BLOCKED",
+      "detail": "Full Xcode unavailable"
+    },
+    {
+      "id": "APPLE-UI",
+      "status": "NOT_RUN",
+      "detail": "UI test source prepared; Xcode/runtime unavailable"
+    },
+    {
+      "id": "APPLE-SIGN-INSTALL",
+      "status": "BLOCKED",
+      "detail": "Full Xcode and signing configuration required"
+    },
+    {
+      "id": "APPLE-CI",
+      "status": "NOT_RUN",
+      "detail": "Manual workflow prepared; no remote repository"
+    },
+    {
+      "id": "G0",
+      "status": "BLOCKED",
+      "detail": "No iOS build, Kotlin counterpart or integrated base commit"
+    },
+    {
+      "id": "G1",
+      "status": "NOT_RUN",
+      "detail": "No integrated physical campaign"
+    }
+  ],
+  "hardwareCases": [
+    {
+      "id": "H01",
+      "status": "NOT_RUN",
+      "reason": "Awaiting compiled/integrated builds and physical execution"
+    },
+    {
+      "id": "H02",
+      "status": "NOT_RUN",
+      "reason": "Awaiting compiled/integrated builds and physical execution"
+    },
+    {
+      "id": "H03",
+      "status": "NOT_RUN",
+      "reason": "Awaiting compiled/integrated builds and physical execution"
+    },
+    {
+      "id": "H04",
+      "status": "NOT_RUN",
+      "reason": "Awaiting compiled/integrated builds and physical execution"
+    },
+    {
+      "id": "H05",
+      "status": "NOT_RUN",
+      "reason": "Awaiting compiled/integrated builds and physical execution"
+    },
+    {
+      "id": "H06",
+      "status": "NOT_RUN",
+      "reason": "Awaiting compiled/integrated builds and physical execution"
+    },
+    {
+      "id": "H07",
+      "status": "NOT_RUN",
+      "reason": "Awaiting compiled/integrated builds and physical execution"
+    },
+    {
+      "id": "H08",
+      "status": "NOT_RUN",
+      "reason": "Awaiting compiled/integrated builds and physical execution"
+    },
+    {
+      "id": "H09",
+      "status": "NOT_RUN",
+      "reason": "Awaiting compiled/integrated builds and physical execution"
+    },
+    {
+      "id": "R01",
+      "status": "NOT_RUN",
+      "reason": "Awaiting compiled/integrated builds and physical execution"
+    },
+    {
+      "id": "R02",
+      "status": "NOT_RUN",
+      "reason": "Awaiting compiled/integrated builds and physical execution"
+    },
+    {
+      "id": "R03",
+      "status": "NOT_RUN",
+      "reason": "Awaiting compiled/integrated builds and physical execution"
+    },
+    {
+      "id": "R04",
+      "status": "NOT_RUN",
+      "reason": "Awaiting compiled/integrated builds and physical execution"
+    },
+    {
+      "id": "N01",
+      "status": "NOT_RUN",
+      "reason": "Synthetic plan is unit-tested; no physical notification delivery observed"
+    },
+    {
+      "id": "N02",
+      "status": "NOT_RUN",
+      "reason": "Synthetic plan is unit-tested; no physical notification delivery observed"
+    },
+    {
+      "id": "N03",
+      "status": "NOT_RUN",
+      "reason": "Synthetic plan is unit-tested; no physical notification delivery observed"
+    },
+    {
+      "id": "N04",
+      "status": "NOT_RUN",
+      "reason": "Synthetic plan is unit-tested; no physical notification delivery observed"
+    },
+    {
+      "id": "N05",
+      "status": "NOT_RUN",
+      "reason": "Synthetic plan is unit-tested; no physical notification delivery observed"
+    },
+    {
+      "id": "N06",
+      "status": "NOT_RUN",
+      "reason": "Synthetic plan is unit-tested; no physical notification delivery observed"
+    },
+    {
+      "id": "N07",
+      "status": "NOT_RUN",
+      "reason": "Synthetic plan is unit-tested; no physical notification delivery observed"
+    },
+    {
+      "id": "N08",
+      "status": "NOT_RUN",
+      "reason": "Synthetic plan is unit-tested; no physical notification delivery observed"
+    }
+  ],
+  "commands": [
+    {
+      "command": "bash scripts/apple/check.sh",
+      "exitCode": 2,
+      "reason": "Structure/package PASS, missing Xcode BLOCKED"
+    },
+    {
+      "command": "bash scripts/apple/test-package.sh",
+      "exitCode": 0
+    },
+    {
+      "command": "python3 scripts/apple/validate_structure.py",
+      "exitCode": 0
+    },
+    {
+      "command": "bash -n scripts/apple/check.sh scripts/apple/test-package.sh",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "limitations": [
+    "No iOS SDK typechecking or UI rendering",
+    "No physical pairing, ANCS or background evidence",
+    "No P2 wire codec or sensitive commands",
+    "No distribution artifact or integrated commit",
+    "Toolchain stability not certified"
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "algorithm": "sha256",
+  "scope": "all deliverable files excluding evidence and Git-ignored outputs",
+  "files": {
+    ".github/workflows/apple.yml": {
+      "bytes": 1221,
+      "sha256": "af86f77841736460d3b53080f9f27bdf408588c70c83bf6c0909a10bdea3ad2a"
+    },
+    ".gitignore": {
+      "bytes": 129,
+      "sha256": "56a68c12330658010e8d5037a2fd724f2e3c13f450ffe6a9785d6f59433ea620"
+    },
+    "AGENTS.md": {
+      "bytes": 1764,
+      "sha256": "9a45a74b5daad3d4a283932c6c1afbd8b960b810908e7b2fd0494491e085fe65"
+    },
+    "Doc/00_LEEME_Y_COORDINACION.md": {
+      "bytes": 10075,
+      "sha256": "7d33de0242d52e37e0c7ace6af55a9d5aa1eab4b1884d52895114c400dbbf334"
+    },
+    "Doc/01_CONTRATO_COMPARTIDO.md": {
+      "bytes": 9737,
+      "sha256": "0dee4990f741d74edc38fe10edd10247404beed0377e55ff893f9e819f73c668"
+    },
+    "Doc/02_WINDOWS_KOTLIN.md": {
+      "bytes": 13493,
+      "sha256": "20937756a026fdb3efbfa825f1f382b8f2c15c3363c4cef747564af12d48b97f"
+    },
+    "Doc/03_MAC_SWIFT.md": {
+      "bytes": 13952,
+      "sha256": "a074403f72789be9acd7815355133f74ce7048e1758015253d152122a73eeef9"
+    },
+    "Doc/04_MATRIZ_60_TAREAS.md": {
+      "bytes": 14402,
+      "sha256": "d265c27a998c7752f68c66297f6c2632d482c71a6ad52f2651839d1763e180c7"
+    },
+    "Doc/manifest.json": {
+      "bytes": 1064,
+      "sha256": "0479948e6f1a83f760df2be74833b6d0c4237cf793b2eca7798e97b6fef917d7"
+    },
+    "Doc/referencias/plan_ejecucion_galaxy_apple.md": {
+      "bytes": 101461,
+      "sha256": "29678d9de9203f54e406c9968a464bf289dd99c0bcc3f0e18985bb38442b34eb"
+    },
+    "README.md": {
+      "bytes": 1572,
+      "sha256": "5e12c740185507ed8725f761ee49daff1aca19ae9a256fea225a830767278d54"
+    },
+    "apps/ios/Signing.local.xcconfig.example": {
+      "bytes": 161,
+      "sha256": "d319e4cfbe2c469e62854afe58928448a7fe65c4c333980fb85cb27bd7c02d26"
+    },
+    "apps/ios/Signing.xcconfig": {
+      "bytes": 201,
+      "sha256": "97fa8a4efc92f1ebe4da94ec42a245f5ff3448a784b5169eaeb2c8c3df87635c"
+    },
+    "apps/ios/WristBridge.xcodeproj/project.pbxproj": {
+      "bytes": 14378,
+      "sha256": "d01baaa070e4816e97939bd4995b4065a0b66c150671f34773c255ec473e1d34"
+    },
+    "apps/ios/WristBridge.xcodeproj/xcshareddata/xcschemes/WristBridge.xcscheme": {
+      "bytes": 2336,
+      "sha256": "09acd326c49173a370d3a8682d25c3f781c124cafb760536dca0773d0dfed622"
+    },
+    "apps/ios/WristBridge/Adapters/AccessorySetupAdapter.swift": {
+      "bytes": 4853,
+      "sha256": "c7185431890f78cc3af65fb75e9fe655daca76a856c122787c2f9b2810840234"
+    },
+    "apps/ios/WristBridge/Adapters/BluetoothCentralAdapter.swift": {
+      "bytes": 7341,
+      "sha256": "a026024d14da83348cf8790811b2a97426fe47a3552f8c55f76f296e9949c2ea"
+    },
+    "apps/ios/WristBridge/Adapters/NotificationFixtureAdapter.swift": {
+      "bytes": 7912,
+      "sha256": "25d85c11b39226a4eaa6edfc6f703750a76d888a1eec3b14a1b53aa6079e135f"
+    },
+    "apps/ios/WristBridge/BridgeModel.swift": {
+      "bytes": 4487,
+      "sha256": "7a5e766657dd487794ca103bcbde95ff6be76917b5e768eef2cbe8fc1975fd93"
+    },
+    "apps/ios/WristBridge/Info.plist": {
+      "bytes": 1416,
+      "sha256": "8468d6fea704fb757cc603175bedeba929a06533774dd6c94c4d5af6942fcdf0"
+    },
+    "apps/ios/WristBridge/Resources/PrivacyInfo.xcprivacy": {
+      "bytes": 590,
+      "sha256": "6a7b5e0f1cc319e385cd0aea83741f2e550fb6229bc53ddaa34f93cff0119cc2"
+    },
+    "apps/ios/WristBridge/Views/ContentView.swift": {
+      "bytes": 8140,
+      "sha256": "071169ad6ff831686461794d450cbaa51a2bbd86694ed389037e95512f6806df"
+    },
+    "apps/ios/WristBridge/WristBridgeApp.swift": {
+      "bytes": 528,
+      "sha256": "71c66cb63287ea927db765323261134b0cc2bad3bb95ce6957c6c1f26635976f"
+    },
+    "apps/ios/WristBridgeUITests/WristBridgeUITests.swift": {
+      "bytes": 684,
+      "sha256": "31ab2eba18666cddf82545edd364eb5556bc1de98bed8db503f15b0b6b529459"
+    },
+    "docs/apple/environment.md": {
+      "bytes": 2591,
+      "sha256": "05f8933866e92007689c60147eccc5b59576d740e808b4f45b9b48d4da04d211"
+    },
+    "docs/apple/handoff-G0.md": {
+      "bytes": 5195,
+      "sha256": "af90c8c58ee4a8b68e931c32f3ab98fa7517ca0bf63c08ee7751f61474664cf4"
+    },
+    "docs/apple/installation.md": {
+      "bytes": 3935,
+      "sha256": "77e481839a06123f67d8804f4a4487a22d0c5f840ce30b676d1340a5ee0203cb"
+    },
+    "docs/apple/review.md": {
+      "bytes": 8978,
+      "sha256": "083b7878f21a75af263cc9137e63ec97bd8a99d7c30f4614aa4426857a8d8f04"
+    },
+    "docs/provenance/apple.md": {
+      "bytes": 1310,
+      "sha256": "5ed3c7e9df2836b07a763a36f6a74d68e29fed6a129e478364933e5ee4a95906"
+    },
+    "packages/WristBridgeProtocol/Package.swift": {
+      "bytes": 407,
+      "sha256": "78b96a147c5a5f56b454ba279d546ef5963be255a1219d64da4cd6fcc63bedee"
+    },
+    "packages/WristBridgeProtocol/Sources/WristBridgeProtocol/BLEProfile.swift": {
+      "bytes": 695,
+      "sha256": "b2e094f49effad60a2f89d7c5a528624b658a26636308e7de0704e2fe51321d7"
+    },
+    "packages/WristBridgeProtocol/Sources/WristBridgeProtocol/BridgeState.swift": {
+      "bytes": 2046,
+      "sha256": "538aefc700e1a567f2242cf102034c0486b44b71ee87fc5b7a08d41ce59d96a3"
+    },
+    "packages/WristBridgeProtocol/Sources/WristBridgeProtocol/FixturePlan.swift": {
+      "bytes": 2721,
+      "sha256": "33b7e48b2bc9d2b5e9838633084c6088b9d3eeba2e3b4a3cb5ef3efef3be7b70"
+    },
+    "packages/WristBridgeProtocol/Tests/WristBridgeProtocolTests/AppleFoundationTests.swift": {
+      "bytes": 3042,
+      "sha256": "4be1396611121283aca83ebd2b88374886ab0b3651fbb4f0908da971a45abf65"
+    },
+    "scripts/apple/check.sh": {
+      "bytes": 777,
+      "sha256": "1dd1374d87390e29dde1949d5bf8f7ebe0eaf450f14f37e5940698ea8e0413aa"
+    },
+    "scripts/apple/generate_project.py": {
+      "bytes": 9516,
+      "sha256": "b8dda19adad66a940aeff6758968428e451676b660badccc0e9688c082508aaf"
+    },
+    "scripts/apple/test-package.sh": {
+      "bytes": 797,
+      "sha256": "7dcd12a8c9a86e0301ed867d56c524eec21b00d09c9e4b1292c3d8b5e2d532e4"
+    },
+    "scripts/apple/validate_structure.py": {
+      "bytes": 4144,
+      "sha256": "3c95b6745a55027b4f6e7409e7b0fe087ffa6f6f8fb56f0d9fd702432b22fd89"
+    },
+    "test/fixtures/ios/campaign.json": {
+      "bytes": 780,
+      "sha256": "c5b63ae7b2740f9b4d96ee5658b64a493b7a13e5dd62a1e4a6c3f82fc6e6248f"
+    },
+    "test/hil/apple/mvp.md": {
+      "bytes": 5694,
+      "sha256": "485d6957b6e22ce2659f80cbaee681334d10a6635c42f0a466e8996ffdbb6bcb"
+    }
+  }
+}

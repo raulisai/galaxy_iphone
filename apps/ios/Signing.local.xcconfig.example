@@ -1,0 +1,3 @@
+// Copy to Signing.local.xcconfig, then set your own development team.
+// DEVELOPMENT_TEAM = YOUR_TEAM_ID
+// WRISTBRIDGE_APP_BUNDLE_ID = your.unique.wristbridge
