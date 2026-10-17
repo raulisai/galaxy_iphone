@@ -1,0 +1,8 @@
+# Original docs are hash-checked against Doc/manifest.json: keep exact bytes on every OS
+# (Windows core.autocrlf would otherwise rewrite them to CRLF on checkout).
+Doc/** -text
+
+# Shell scripts must stay LF to run on macOS/Linux; Windows batch files stay CRLF.
+*.sh text eol=lf
+gradlew text eol=lf
+*.bat text eol=crlf
