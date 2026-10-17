@@ -4,6 +4,8 @@ Base Apple para conectar un iPhone con Galaxy Watch7. El reloj consume ANCS dire
 
 El código inicial cubre G0 y preparación Apple de P1. **La app está firmada, instalada y abre correctamente en el iPhone 15**, con iOS 26.6.2 (23G90). Se verificó el proceso activo y la pantalla real de laboratorio. La confianza del perfil quedó resuelta; las pruebas de enlace Bluetooth y avisos con el Watch7 siguen pendientes.
 
+Ramas: `main` conserva la base integrada y `development_codex` es la única rama de trabajo Apple. Los avances de `feat/ios/xcode-validation` ya están incorporados.
+
 - [Revisión del plan y decisiones](docs/apple/review.md).
 - [Entorno y restricciones reales](docs/apple/environment.md).
 - [Instalación y prueba iPhone](docs/apple/installation.md).

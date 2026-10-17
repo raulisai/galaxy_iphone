@@ -2,6 +2,7 @@
 
 Read `Doc/00_LEEME_Y_COORDINACION.md`, `Doc/01_CONTRATO_COMPARTIDO.md`, `Doc/03_MAC_SWIFT.md` and `docs/apple/handoff-G0.md` before changes.
 
+- Work on `development_codex`, the single Apple working branch requested by the user. Keep `main` as the integrated base; do not create extra task branches unless requested. The previous `feat/ios/xcode-validation` work has been integrated.
 - Apple owns `apps/ios`, `packages/WristBridgeProtocol`, Apple scripts, tests and docs. Do not write Kotlin, Gradle or shared contracts assigned to Windows.
 - Current scope: G0 and Apple P1 laboratory implementation. ADR-001 requires physical evidence. Do not start AI, macOS, health or sensitive BLE commands before their gates.
 - Keep original `Doc/**` unchanged; its manifest hashes are checked. Corrections belong in `docs/apple/review.md` and handoffs.

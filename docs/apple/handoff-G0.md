@@ -1,6 +1,6 @@
 # Handoff Apple · G0 y preparación P1
 
-Actualizado el 16 de octubre de 2026, America/Mexico_City, después de instalar Xcode. Revisión base `02136d3` (`init`), rama `feat/ios/xcode-validation`, con cambios locales pendientes de commit. Ya existe repositorio con `origin/main`; no se hizo push ni se modificó el trabajo Windows. La ejecución vigente está en `evidence/apple-xcode-validation/apple`; `evidence/apple-initial` conserva la primera sesión.
+Actualizado el 17 de octubre de 2026, America/Mexico_City. El código Apple de `7585f8c` (`version ios`) quedó integrado en `main` sin conflictos ni reescritura de historial. La única rama de trabajo Apple es `development_codex`, creada desde esa base integrada; sustituye a `feat/ios/xcode-validation`. No se modificó código Windows. La evidencia de compilación está en `evidence/apple-xcode-validation/apple`, la instalación y apertura físicas en `evidence/apple-physical-install/apple`, y `evidence/apple-initial` conserva la primera sesión.
 
 Actualización física posterior: iPhone 15 detectado por cable, emparejado, iOS 26.6.2 (23G90). Se resolvió la falta de detección. El preflight de `evidence/apple-physical-setup/apple` aún bloquea instalación por Modo de desarrollador desactivado y firma/cuenta Apple pendientes. El inventario y las limitaciones de la campaña con Xcode de abajo son históricos donde mencionan falta de detección; no se ejecutó todavía la campaña ANCS.
 
@@ -28,7 +28,7 @@ No hay codec P2, parsing ANCS Swift, IA, Mac, salud ni transferencias propias se
 
 | ID | Resultado local | Pendiente |
 |---|---|---|
-| P1-01.S | Inventario Mac/Xcode/SDK y del iPhone 15: iOS 26.6.2 (23G90), conectado, emparejado, Modo de desarrollador activo y DDI preparado | Cuenta Apple y configuración de firma pendientes. |
+| P1-01.S | Inventario Mac/Xcode/SDK y del iPhone 15: iOS 26.6.2 (23G90), conectado, emparejado, Modo de desarrollador activo, DDI y firma configurados | Sin bloqueo de preparación Apple; contraparte Watch7 pendiente. |
 | P1-02.S | Proyecto y paquete compilados; ocho tests Swift, dos UI simuladas y arranque/pantalla en iPhone físico PASS | G0 integrado con Windows y prueba de enlace real. |
 | P1-04.S | ASK y transporte A compilados | Publicidad y pairing LE reales, ADR-001, decisión A/B. |
 | P1-05.S | UI ejecutada en simulador; estado ANCS honesto | Picker y permisos físicos H02–H04. |
@@ -55,4 +55,4 @@ Confirmar pairing LE, perfil mínimo y diagnóstico watch separado para bond, pe
 
 ## Siguiente acción Apple
 
-Conectar/desbloquear/confiar en iPhone, configurar el equipo propio en Xcode, firmar e instalar. Registrar versión/build y ejecutar el spike A con Windows. La disponibilidad de hardware confirmada por el usuario no sustituye su detección ni la ejecución física. Continuar con `test/hil/apple/mvp.md`; no avanzar a funciones sensibles o fases posteriores antes de sus gates.
+Continuar en `development_codex`. El iPhone ya está instalado, autorizado y ejecutando la app. Esperar la instalación del APK de laboratorio en Watch7 por Windows, confirmar anuncio/UUID y revisión integrada y ejecutar el spike A de `test/hil/apple/mvp.md`. No avanzar a funciones sensibles o fases posteriores antes de sus gates.
