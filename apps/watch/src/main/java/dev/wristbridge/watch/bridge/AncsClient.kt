@@ -9,6 +9,8 @@ import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothProfile
 import android.bluetooth.BluetoothStatusCodes
 import android.content.Context
+import androidx.core.content.edit
+import dev.wristbridge.watch.WristBridgeApp
 import android.os.Handler
 import android.os.SystemClock
 import dev.wristbridge.notification.BondWait
@@ -42,7 +44,10 @@ class AncsClient(
     media: MediaPresenter,
 ) {
     private val clock = MonotonicClock { SystemClock.elapsedRealtimeNanos() }
-    private val engine = AncsSessionEngine(clock)
+    private val prefs = context.getSharedPreferences(WristBridgeApp.PREFS, Context.MODE_PRIVATE)
+
+    // Seeded from the last persisted generation so a restarted service never reuses a visible card's tag.
+    private val engine = AncsSessionEngine(clock, initialGeneration = prefs.getLong(WristBridgeApp.PREF_LAST_GENERATION, 0))
 
     private var gatt: BluetoothGatt? = null
     private var device: BluetoothDevice? = null
@@ -240,6 +245,7 @@ class AncsClient(
             BridgeStatus.event("Data Source confirmado")
             subscribe(g, ns) {
                 val effects = engine.startSession(Pseudonym.of(peer))
+                prefs.edit { putLong(WristBridgeApp.PREF_LAST_GENERATION, engine.generation) }
                 autoRebuilds = 0
                 BridgeStatus.update { it.copy(ancs = AncsState.READY, ancsDetail = "", generation = engine.generation) }
                 BridgeStatus.event("ANCS listo gen=${engine.generation}")

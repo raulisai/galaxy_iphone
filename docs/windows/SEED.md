@@ -1,6 +1,6 @@
 # SEED · estado y continuación del lado Windows/Kotlin
 
-Archivo de relevo para cualquier agente (Claude, Codex u otro) que continúe el trabajo del reloj. **Léelo primero, actualízalo al terminar cada bloque de trabajo y no lo uses para secretos ni datos personales.** Última actualización: 18 de octubre de 2026 (build 0.2.1-lab (5)), America/Mexico_City.
+Archivo de relevo para cualquier agente (Claude, Codex u otro) que continúe el trabajo del reloj. **Léelo primero, actualízalo al terminar cada bloque de trabajo y no lo uses para secretos ni datos personales.** Última actualización: 18 de octubre de 2026 (build 0.3.0-lab (7)), America/Mexico_City.
 
 Lectura obligatoria previa: `AGENTS.md`, `Doc/00_LEEME_Y_COORDINACION.md`, `Doc/01_CONTRATO_COMPARTIDO.md`, `Doc/02_WINDOWS_KOTLIN.md`, `docs/windows/handoff-G0.md`.
 
@@ -29,6 +29,7 @@ Lectura obligatoria previa: `AGENTS.md`, `Doc/00_LEEME_Y_COORDINACION.md`, `Doc/
 | Identificación de app (nombre, color, monograma) y llamadas diferenciadas, build 0.1.2-lab (3) | PASS en JVM/lint/assemble; instalación y pruebas físicas NOT_RUN | `docs/windows/release-0.1.2-lab.md`, `evidence/windows-p1-update-3/` |
 | Prototipo 0.2.0-lab (4): acciones ANCS (aceptar/rechazar/borrar), música AMS, descarte sincronizado opcional, pantalla renovada | PASS en JVM (70), lint, assemble e instalación con checksum; casos físicos NOT_RUN | `docs/windows/release-0.2.0-lab.md`, `evidence/windows-p1-update-4/` |
 | 0.2.1-lab (5) en el reloj: reanuda solo tras actualizar/reiniciar; ANCS y AMS listos; backlog silencioso; corrige «Recuperar» sin reenvío de avisos y Service Changed atascado | PASS observado por logcat; repetir Recuperar y R03 NOT_RUN | `release-0.2.0-lab.md` (sección 0.2.1), `evidence/windows-p1-update-5/` |
+| 0.3.0-lab (7): música como sesión de medios nativa, UI estilo Apple Watch (tiles, llamada a pantalla completa), generación persistida entre reinicios del servicio | PASS compilación/instalación; sesión de medios y pantalla de inicio vistas en el reloj; resto NOT_RUN | `evidence/windows-p1-update-6/` |
 | Avisos reales de otras apps, iPhone bloqueado, UI cerrada, 30 min (H05) | NOT_RUN | pendiente |
 | R01–R04 (reconexión, Bluetooth off/on, Service Changed, corte durante consulta) | NOT_RUN | pendiente |
 | ADR-001 (elegir A o B) | Pendiente de redactar con la evidencia anterior | `docs/adr/ADR-001-roles-ble.md` |

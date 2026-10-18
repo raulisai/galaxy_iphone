@@ -1,0 +1,19 @@
+{
+  "applicationId": "dev.wristbridge.watch",
+  "versionName": "0.3.0-lab",
+  "versionCode": 7,
+  "apk": "build/releases/wristbridge-watch-0.3.0-lab-7.apk",
+  "sha256": "7238f8312b5b4bce33ee8004ca307bc03639f7914471f48d1a07d8a5e097040b",
+  "bytes": 35975857,
+  "build": "PASS",
+  "lint": "PASS",
+  "jvmTests": "PASS (70 tests)",
+  "installation": "PASS (installedSha256Matches true)",
+  "onDevice": {
+    "nativeMediaSession": "PASS: dumpsys media_session shows WristBridge session with PlaybackState and actions",
+    "homeScreen": "PASS: tiles Avisos/Música/Conexión rendered",
+    "generationPersistedAcrossRestart": "installed; re-test NOT_RUN"
+  },
+  "physicalChecks": "NOT_RUN: calls, new notifications, music controls from the native player, recovery with 0.3.0",
+  "G1": "NOT_RUN"
+}

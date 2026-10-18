@@ -52,5 +52,8 @@ class WristBridgeApp : Application() {
         /** Ongoing now-playing notification with transport controls. Default true. */
         const val PREF_MEDIA_NOTIFICATION = "media_notification"
         const val PREF_ORIGINAL_NAME = "original_bt_name"
+
+        /** Last ANCS session generation; keeps generations increasing across service restarts and processes. */
+        const val PREF_LAST_GENERATION = "last_generation"
     }
 }

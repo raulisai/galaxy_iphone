@@ -8,6 +8,7 @@ import dev.wristbridge.watch.bridge.BridgeUiState
 import dev.wristbridge.watch.bridge.MediaUiState
 import dev.wristbridge.watch.bridge.OwnChannelState
 import dev.wristbridge.watch.bridge.RadioState
+import androidx.compose.ui.graphics.Color
 import kotlin.math.roundToInt
 
 /**
@@ -111,4 +112,21 @@ internal fun diagnostics(s: BridgeUiState): String {
         "tarjetas +${c.cardsPosted} ~${c.cardsUpdated} -${c.cardsRemoved} desbordes=${c.queueOverflow} " +
         "descartes=${c.discardedResponses} obsoletos=${c.staleInputsIgnored} inválidos=${c.nsInvalid}\n" +
         "acciones ok=${c.actionsRequested} fallo=${c.actionsFailed}"
+}
+
+/** Status-dot color: green when ready, red on error, amber while working, grey when the bridge is stopped. */
+internal fun statusColor(h: Headline, serviceRunning: Boolean): Color = when {
+    h.tone == Tone.OK -> WbColors.Green
+    h.tone == Tone.ERROR -> WbColors.Red
+    serviceRunning -> WbColors.Amber
+    else -> WbColors.Secondary
+}
+
+/** Short secondary line for the Home music tile when there is no player to show. */
+internal fun musicShort(ui: MediaUiState): String = when (ui.ams) {
+    AmsState.READY -> "Sin reproducción"
+    AmsState.IDLE -> "Sin conexión"
+    AmsState.SUBSCRIBING -> "Conectando…"
+    AmsState.NOT_FOUND -> "No disponible"
+    AmsState.FAILED -> "Error"
 }

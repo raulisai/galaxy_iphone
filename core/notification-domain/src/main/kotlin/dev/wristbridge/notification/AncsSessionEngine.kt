@@ -32,6 +32,12 @@ class AncsSessionEngine(
     private val limits: AncsLimits = AncsLimits(),
     private val writeTimeoutNanos: Long = 5_000_000_000L,
     private val responseTimeoutNanos: Long = 10_000_000_000L,
+    /**
+     * Last generation used by an earlier engine (previous service instance or process). Generations must keep
+     * growing: cards and notification tags of older engines outlive them, and only a higher generation's
+     * [SessionEffect.RemoveCardsBefore] retires them.
+     */
+    initialGeneration: Long = 0,
 ) {
     private sealed interface Fetch {
         data class Notification(val uid: AncsUid) : Fetch
@@ -60,7 +66,7 @@ class AncsSessionEngine(
         var cancelled: Boolean = false,
     )
 
-    var generation: Long = 0
+    var generation: Long = initialGeneration
         private set
     var sourceDeviceId: String? = null
         private set
