@@ -1,6 +1,6 @@
 # Entrega iPhone y estado de todas las fases
 
-18 de octubre de 2026 · `development_codex` · candidato **0.2.1 (6)**. Alcance autorizado: completar el trabajo iPhone que permita el plan mientras el teléfono está desconectado. El paquete firmado 0.2.1 (6) se instaló y abrió en el iPhone. La traza propia confirmó un descubrimiento de servicio restaurado; esto no cierra los gates físicos completos. No se editó Kotlin, Gradle, contratos compartidos ni documentos originales.
+18 de octubre de 2026 · `development_codex`. Estado vigente: [continuación 0.3.3 (10)](handoff-0.3.3.md); instalación y apertura por versión en su evidencia. El texto siguiente conserva la entrega **0.2.1 (6)**. Alcance autorizado: completar el trabajo iPhone que permita el plan mientras el teléfono está desconectado. El paquete firmado 0.2.1 (6) se instaló y abrió en el iPhone. La traza propia confirmó un descubrimiento de servicio restaurado; esto no cierra los gates físicos completos. No se editó Kotlin, Gradle, contratos compartidos ni documentos originales.
 
 Actualización 0.2.1: lotes 10/25/50, espera para bloquear y próxima ID tras aceptación completa. [Pruebas rápidas](../../test/hil/apple/quickstart-0.2.1.md) y [handoff de integración](handoff-0.2.1.md). Los resultados anteriores de 0.2.0 conservan su evidencia histórica.
 
@@ -18,7 +18,7 @@ Actualización 0.2.1: lotes 10/25/50, espera para bloquear y próxima ID tras ac
 | Fase | Parte del iPhone entregada | Qué impide cerrar la fase |
 |---|---|---|
 | P1 · Avisos | Configuración, permisos, fixtures, diagnóstico e instalación de laboratorio previa. El usuario reportó recepción incluso tras cerrar deslizando. | Consolidar G1/ADR-001, revisión exacta del APK y campaña conjunta completa; la captura de timeout anterior se conserva como FAIL. |
-| P2 · Fiabilidad | Recuperación/restauración, ajustes versionados, observaciones y almacenamiento local. | Windows aún no entrega wire format/propiedades/vectores F01–F12 ni seguridad revisada. No implementar un codec incompatible. Faltan 20 ciclos y 24/72 h reales. |
+| P2 · Fiabilidad | Recuperación/restauración, ajustes versionados, observaciones y almacenamiento local. | Windows entregó un borrador P2 y Apple respondió; formato/propiedades/vectores F01–F12 y seguridad aún no están aprobados ni congelados. No implementar un codec incompatible. Faltan 20 ciclos y 24/72 h reales. |
 | P3 · Experiencia | Tres pantallas SwiftUI, permisos por función disponible, recuperación guiada, privacidad y resultados manuales fechados. | Ajustes sincronizados y estado reportado por el reloj requieren canal P2. AMS/música son del reloj; los estímulos iPhone se describen en la campaña. G3 depende de G2. |
 | P4 · IA | Revisión de responsabilidad: el iPhone no es cliente/proxy obligatorio. No hay credenciales iOS que gestionar en la arquitectura actual. | ADR de proveedor/ruta soportada y decisión conjunta de si iPhone participa; implementación principal Kotlin. No inventar autenticación móvil ni importar historial ChatGPT. |
 | P5 · Voz/herramientas | Sin relay de audio iPhone. Ejecutor Apple no asignado en el MVP. | Implementación watch, ADR y capacidades aprobadas/canal seguro si se requiere un ejecutor iPhone. |

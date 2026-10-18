@@ -9,6 +9,8 @@ struct HomeView: View {
     @ObservedObject var campaign: RecoveryCampaignController
     @Binding var showForgetConfirmation: Bool
     let openNotifications: () -> Void
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var textSize
     @Namespace private var zoom
     @Namespace private var glass
     @State private var taps: [String: Int] = [:]
@@ -68,7 +70,7 @@ struct HomeView: View {
 
     private var quickActions: some View {
         GlassEffectContainer(spacing: 22) {
-            HStack(alignment: .top, spacing: 20) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: textSize.isAccessibilitySize ? 1 : (authorized ? 4 : 2)), spacing: 16) {
                 if !authorized {
                     quickAction("Seleccionar reloj", id: "select", symbol: "plus", action: model.selectWatch)
                         .disabled(!model.pickerAvailable)
@@ -98,14 +100,15 @@ struct HomeView: View {
             VStack(spacing: 7) {
                 Image(systemName: symbol)
                     .font(.system(size: 19, weight: .semibold))
-                    .symbolEffect(.bounce, value: taps[id, default: 0])
-                    .symbolEffect(.rotate, options: .repeating, isActive: spinning)
+                    .symbolEffect(.bounce, value: reduceMotion ? 0 : taps[id, default: 0])
+                    .symbolEffect(.rotate, options: .repeating, isActive: spinning && !reduceMotion)
                     .contentTransition(.symbolEffect(.replace))
                     .frame(width: 54, height: 54)
                     .glassEffect(.regular, in: .circle)
                     .glassEffectID(id, in: glass)
-                Text(title).font(.caption2.weight(.medium)).multilineTextAlignment(.center).lineLimit(2)
-                    .frame(width: 74)
+                Text(title).font(.caption2.weight(.medium)).multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity)
             }
             .foregroundStyle(.white)
             .contentShape(Rectangle())
@@ -150,7 +153,7 @@ struct HomeView: View {
     }
 
     private var featureGrid: some View {
-        LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: textSize.isAccessibilitySize ? 1 : 2), spacing: 12) {
             Button(action: openNotifications) {
                 featureTile("Notificaciones", detail: "Avisos de prueba y resultados", symbol: "bell.fill", color: .orange)
             }
@@ -188,7 +191,8 @@ struct HomeView: View {
                 Image(systemName: "chevron.right").font(.caption.weight(.bold)).foregroundStyle(.tertiary)
             }
             Text(title).font(.headline).foregroundStyle(.primary)
-            Text(detail).font(.caption).foregroundStyle(.secondary).lineLimit(2, reservesSpace: true)
+            Text(detail).font(.caption).foregroundStyle(.secondary).lineLimit(textSize.isAccessibilitySize ? nil : 2)
+                .fixedSize(horizontal: false, vertical: true)
                 .contentTransition(.numericText())
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -200,7 +204,8 @@ struct HomeView: View {
     /// Galaxy Wearable features that depend on the watch's secure channel. Each opens
     /// a full screen with what works locally; the rest stays locked, never simulated.
     private var upcoming: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        let still = reduceMotion
+        return VStack(alignment: .leading, spacing: 10) {
             Text("Funciones del reloj").font(.headline).padding(.horizontal, 4)
             ScrollView(.horizontal) {
                 HStack(spacing: 12) {
@@ -217,16 +222,17 @@ struct HomeView: View {
                                 }
                                 Text(feature.title).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
                                 Text(feature.summary).font(.caption2).foregroundStyle(.secondary)
-                                    .lineLimit(2, reservesSpace: true)
+                                    .lineLimit(textSize.isAccessibilitySize ? nil : 2)
+                                    .fixedSize(horizontal: false, vertical: true)
                             }
                             .padding(14)
-                            .frame(width: 150, alignment: .leading)
+                            .frame(width: textSize.isAccessibilitySize ? 260 : 150, alignment: .leading)
                             .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
                             .matchedTransitionSource(id: feature.id, in: zoom)
                         }
                         .buttonStyle(PressableStyle())
                         .scrollTransition(.interactive, axis: .horizontal) { view, phase in
-                            view.scaleEffect(phase.isIdentity ? 1 : 0.92).opacity(phase.isIdentity ? 1 : 0.6)
+                            view.scaleEffect(phase.isIdentity || still ? 1 : 0.92).opacity(phase.isIdentity ? 1 : 0.6)
                         }
                         .accessibilityIdentifier("feature-\(feature.id)")
                     }
@@ -235,6 +241,7 @@ struct HomeView: View {
             }
             .scrollIndicators(.hidden)
             .scrollTargetBehavior(.viewAligned)
+            .accessibilityIdentifier("watchFeatures")
             .scrollClipDisabled()
             Text("Lo que necesita el canal seguro con el reloj aparece bloqueado; no se simulan datos.")
                 .font(.caption).foregroundStyle(.secondary).padding(.horizontal, 4)

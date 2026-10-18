@@ -4,7 +4,7 @@
 > Contiene el estado vivo del proyecto para que cualquier agente continúe sin perder contexto.
 > Si algo aquí contradice un documento antiguo, esto se verifica con `git log` y se corrige aquí.
 
-Última actualización: 2026-10-18 · por: Claude (Opus 5.5) · rama: `development_codex`
+Última actualización: 2026-10-18 · por: Codex · rama: `development_codex`
 
 ## 1. Qué es
 App iPhone (Swift) que configura el accesorio y genera avisos de prueba para un Galaxy Watch7 (Kotlin, equipo Windows). El reloj consume ANCS directamente. Tres productos: iPhone (este repo, Apple), reloj (Windows), Mac (P6, futuro).
@@ -22,11 +22,11 @@ App iPhone (Swift) que configura el accesorio y genera avisos de prueba para un 
 ## 3. Estado actual
 | Área | Estado | Evidencia |
 |---|---|---|
-| Candidato firmado instalado en iPhone | 0.2.1 (6): PASS instalación y servicio restaurado | `evidence/apple-0.2.1/apple/` |
-| Integración con Windows | `origin/developer` ya trae Windows hasta 0.4.0-lab (con borrador P2) y se fusionó en `development_codex` (merge 2026-10-18). **Sin conflictos**: `development_codex` lo fusionó localmente (9df0e24). Mis commits 0.3.x aún **no están en `developer`** (falta push). Tras la fusión: Apple PASS (26 pruebas de paquete, `validate_structure`, build y 7/7 UI en simulador). Pruebas Kotlin **BLOCKED en este Mac** (sin JDK; Windows reporta 70 pruebas JVM en `docs/windows/SEED.md`). UUID de servicio coincide Swift/Kotlin; `contracts/**` y `Doc/**` sin cambios | 2026-10-18 |
-| Código 0.3.0 (7) | Ensayo de reconexión (`cef2c29`), rediseño UI (`71c32b6`) y pase de animaciones (sin commit) | §4 |
+| Candidato firmado instalado en iPhone | 0.3.3 (10): firma e instalación finales PASS; apertura final BLOCKED (se bloqueó de nuevo). Candidato previo de la misma versión: apertura y servicio PASS, ATT 512/512 medido, con huellas separadas. Ensayo de 20 reconexiones NOT_RUN | `evidence/apple-0.3.3/apple/run.json` |
+| Integración con Windows | `origin/developer` y `origin/development_codex` contienen `5c79d64`: Apple 0.3.1/0.3.2, Windows 0.4.0-lab y respuesta P7, sin conflictos. El borrador P2 sigue sin congelar | `git log` y `git fetch`, 2026-10-18 |
+| Código actual | 0.3.3 (10): continuación de accesibilidad y diagnóstico ATT persistido; validación local PASS, entrega instalada | `docs/apple/handoff-0.3.3.md` |
 | Pruebas del paquete Swift | PASS, 26 pruebas (2026-10-18) | `scripts/apple/test-package.sh` |
-| Compilación + UI tests simulador | PASS build; PASS 7/7 UI tests en iPhone 17 Pro iOS 26.2 (`WRISTBRIDGE_TEST_DESTINATION=id=<sim>`) | 2026-10-18 |
+| Compilación + UI tests simulador | 0.3.3: PASS build y 8/8 UI; tras último ajuste, build aislado y 2/2 pruebas afectadas PASS (iPhone 17 Pro iOS 26.2) | 2026-10-18 |
 | 0.3.1 (8) en iPhone físico | Firmado e **instalado: PASS**; apertura **BLOCKED** (iPhone bloqueado); reconexión en vivo y aceptación **NOT_RUN** | `evidence/apple-0.3.1/apple/run.json` |
 | 0.3.0 en iPhone físico (histórico) | Firmado y **instalado: PASS**; apertura **BLOCKED** (iPhone bloqueado); ensayo de 20 reconexiones y aceptación **NOT_RUN** | `evidence/apple-0.3.0/apple/run.json` |
 | Campaña P2 20 ciclos / 19-de-20 en 30 s | **NOT_RUN** física | `test/hil/apple/p2-recovery.md` |
@@ -36,8 +36,11 @@ App iPhone (Swift) que configura el accesorio y genera avisos de prueba para un 
 Fases P1–P8: ver tabla en `docs/apple/iphone-phases.md` (no se duplica aquí).
 
 ## 4. Registro de trabajo (más reciente arriba)
+
+Revisión Apple de ADR-001: completada en `docs/apple/adr-001-review.md`; recomendación A condicionada, sin aprobar G1.
 | Fecha | Agente | Tarea | Estado | Notas / qué falta |
 |---|---|---|---|---|
+| 2026-10-18 | Codex | Continuación del relevo: accesibilidad de interfaz, validación 0.3.3, candidato físico y actualización del estado integrado | HECHO | 0.3.3 instalada; 26 Swift, 8 UI + 2 UI finales PASS. Servicio/ATT físico PASS en candidato previo, huellas separadas. Apertura final BLOCKED por bloqueo del iPhone. Ensayo físico pendiente. |
 | 2026-10-18 | Claude | Revisión de lo que dejó Windows (`docs/windows/handoff-to-apple.md`, `contracts/proposals/p2-channel-draft.md`): respuesta Apple en `docs/apple/p2-draft-response.md` (Q-A1…Q-A10, hallazgo de contradicción en 3.5 sobre carga por frame, 10 vectores a mano NOT_RUN). 0.3.2 (9): diagnóstico registra `att-capacity` (solo lectura) para Q-A5 | HECHO (sin commit; build 0.3.2 no instalada) | Sin codec/claves/mensajes. Falta: medir `att-capacity` en el iPhone real, respuesta de Windows a (A)/(B), revisión independiente de §8, verificar Keychain tras desinstalar (Q-A7). |
 | 2026-10-18 | Claude | Salud P7: investigación y propuesta `docs/apple/health-sync-proposal.md` (reloj lee Health Services → outbox; iPhone pide por cursor, guarda en libro local y confirma; Apple Salud opcional). Samsung Health/Health Connect son solo Android | HECHO (solo propuesta, sin código) | Bloqueado por G2/contrato/sesión segura y por saber si el Watch7 expone pasos/ritmo a terceros. Preguntas abiertas para Windows en el documento. No se implementó HealthKit ni mensajes BLE. |
 | 2026-10-18 | Claude | 0.3.1 (8): (a) reconexión en vivo: el tiempo de espera de descubrimiento ya no detiene la recuperación, `LinkResumePolicy` + `BridgeModel.resumeLinkIfNeeded()` al volver a primer plano y cada 8 s; (b) pantallas `Views/FeatureScreens.swift`: Esferas (borrador local), Salud, Buscar reloj (última conexión local `lastLinkedAt`), Música; acciones que requieren canal seguro siguen bloqueadas | HECHO (sin commit) | Causa de (a) inferida del código (stop() tras 20 s sin servicio dejaba el enlace muerto hasta relanzar), NO reproducida en dispositivo: verificar apagando/encendiendo el reloj con el iPhone abierto. Esferas/Salud/Buscar/Música no envían ni leen nada del reloj. |
@@ -48,13 +51,15 @@ Fases P1–P8: ver tabla en `docs/apple/iphone-phases.md` (no se duplica aquí).
 | 2026-10-18 | Codex | 0.2.1: lotes 10/25/50, instalación firmada, traza física | HECHO, commit `8b066f2` | `docs/apple/handoff-0.2.1.md` |
 
 ## 5. Siguiente trabajo, por prioridad
-1. **(usuario + iPhone)** 0.3.0 (7) ya está instalado (2026-10-18). Desbloquear el iPhone, abrir la app, conectar el reloj y ejecutar el ensayo de 20 reconexiones y compartir el informe. Registrar PASS/FAIL en `evidence/apple-0.3.0/apple/run.json` (no inventar resultados).
-2. Actualizar `docs/provenance/apple-inventory.json` y `evidence/**` al generar el candidato 0.3.0 (hoy menciona 0.2.1).
-3. Quitar la entrada de `README.md` "Candidato actual 0.2.1" cuando 0.3.0 se instale y pruebe; hasta entonces dice 0.2.1 por ser lo verificado en dispositivo.
-4. P3 local: revisar Dynamic Type y Reducir movimiento del rediseño; medir CPU del fondo `LivingBackground` en iPhone físico. P8 empaquetado autorizado.
-5. Enviar `docs/apple/health-sync-proposal.md` a Windows para revisión (preguntas abiertas) y esperar wire format, seguridad, UUID/propiedades finales, nombre anunciado `WristBridge` (propuesta Apple pendiente de confirmar).
-6. **P2 / tareas iPhone que dejó Windows** (respuesta ya escrita: `docs/apple/p2-draft-response.md`; esperar decisión de Windows). Pendientes de contrato: (`docs/windows/compatibilidad-iphone.md`, necesitan contrato conjunto P2, **no implementar aún**): «Abrir en el iPhone» (reloj envía bundleId+uid; iOS puede no abrir sin primer plano), respuestas rápidas vía Atajos con consentimiento, ajustes/estado desde el iPhone. Acción Apple ahora: revisar y responder la propuesta en el contrato. Límites ya aceptados: sin audio/micrófono de llamada (HFP no soportado por Wear OS con iOS), sin responder WhatsApp.
-7. Cuando exista el canal seguro: activar las acciones bloqueadas de `Views/FeatureScreens.swift` (Enviar al reloj, Sincronizar salud, Hacer sonar), una por gate aprobado; sin canal no hay datos ni envíos simulados.
+1. **Apple + usuario:** comprobar versión 0.3.3 (10), servicio y recuperación al apagar/encender el reloj con la app abierta. Estado de instalación/apertura en `evidence/apple-0.3.3/apple/run.json`.
+2. Ejecutar el ensayo de **20 reconexiones** con la app visible y compartir el informe. Sigue NOT_RUN físico; mide solo configuración y no aprueba G1.
+3. Q-A5 medido en iPhone: 512 bytes con respuesta y 512 sin respuesta. Ver traza fechada en `evidence/apple-0.3.3/apple/`; Windows debe usar las capacidades negociadas/observadas de su propia API y probar los frames, sin inferir capacidad Notify.
+4. Windows debe resolver regla A/B de fragmentación y revisar los vectores/respuestas de `docs/apple/p2-draft-response.md`. Falta revisión independiente de seguridad, contrato final y vectores cruzados antes de codec/Keychain/sesión Swift.
+5. Campaña conjunta G1/ADR-001, radio/permisos/distancia y 24/72 h con consumo y referencia. Accesibilidad y CPU/batería aún requieren comprobación física.
+6. P7: Windows contestó en `docs/windows/respuesta-salud-p7.md`; es inspección de sensores, no prueba con app de terceros. ADR-009 y ledger/retención se diseñan conjuntamente; no se implementan sensores/HealthKit hasta G2 y canal seguro.
+7. «Abrir en iPhone», respuestas mediante Atajos, ajustes remotos y botones bloqueados de `FeatureScreens.swift` esperan contratos y capacidades aprobadas. Los controles AMS y acciones ANCS existentes pertenecen al reloj.
+
+Las anotaciones históricas «sin commit» de §4 describen el momento de su escritura; los commits posteriores 70a30b6 y 181ccf2 ya incorporaron 0.3.1/0.3.2. No repetir ni descartar ese trabajo.
 
 ## 6. Decisiones firmes (no reabrir)
 - ANCS lo consume el reloj; el iPhone no puede tratar su autorización de notificaciones ni un enlace CoreBluetooth como "ANCS listo".

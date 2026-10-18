@@ -12,7 +12,10 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
     var onMessage: ((String) -> Void)?
     var onRadio: ((String) -> Void)?
     private let diagnostics = BluetoothDiagnostics()
-    func clearDiagnostics() { diagnostics.clear() }
+    func clearDiagnostics() {
+        diagnostics.clear()
+        attCapacity = "not-measured"
+    }
     var diagnosticTrace: String { diagnostics.summary }
     var tracePersistenceAvailable: Bool { diagnostics.persistenceAvailable }
     private var central: CBCentralManager?
@@ -230,7 +233,11 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
         if error == nil,
            peripheral.services?.contains(where: { $0.uuid == CBUUID(nsuuid: BLEProfile.service) }) == true {
             retryPolicy.reset()
-            attCapacity = "write-with-response=\(peripheral.maximumWriteValueLength(for: .withResponse)) write-without-response=\(peripheral.maximumWriteValueLength(for: .withoutResponse))"
+            let withResponse = peripheral.maximumWriteValueLength(for: .withResponse)
+            let withoutResponse = peripheral.maximumWriteValueLength(for: .withoutResponse)
+            attCapacity = "write-with-response=\(withResponse) write-without-response=\(withoutResponse)"
+            diagnostics.record(.writeWithResponseCapacity, value: withResponse)
+            diagnostics.record(.writeWithoutResponseCapacity, value: withoutResponse)
             diagnostics.record(.serviceVerified)
             onEvent?(.serviceFound)
             onMessage?("Se encontró el servicio de configuración. Los avisos del reloj siguen sin comprobarse.")

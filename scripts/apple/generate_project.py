@@ -94,7 +94,7 @@ def configurations(scope, extra):
 app_configs = configurations("app", dict(
     PRODUCT_NAME="$(TARGET_NAME)", PRODUCT_BUNDLE_IDENTIFIER="$(WRISTBRIDGE_APP_BUNDLE_ID)",
     INFOPLIST_FILE="WristBridge/Info.plist", GENERATE_INFOPLIST_FILE="NO",
-    MARKETING_VERSION="0.3.2", CURRENT_PROJECT_VERSION="9",
+    MARKETING_VERSION="0.3.3", CURRENT_PROJECT_VERSION="10",
     LD_RUNPATH_SEARCH_PATHS=["$(inherited)", "@executable_path/Frameworks"], SWIFT_EMIT_LOC_STRINGS="YES"))
 test_configs = configurations("tests", dict(
     PRODUCT_NAME="$(TARGET_NAME)", PRODUCT_BUNDLE_IDENTIFIER="$(WRISTBRIDGE_APP_BUNDLE_ID).uitests",

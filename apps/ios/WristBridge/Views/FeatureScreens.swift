@@ -357,12 +357,13 @@ private extension String {
 // MARK: - Música
 
 struct MusicScreen: View {
+    @Environment(\.scenePhase) private var scenePhase
     @ObservedObject var model: BridgeModel
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         FeatureScroll(feature: .music, subtitle: "El reloj controla la música del iPhone por sí mismo.") {
-            TimelineView(.animation(minimumInterval: 1 / 24, paused: reduceMotion)) { context in
+            TimelineView(.animation(minimumInterval: 1 / 24, paused: reduceMotion || scenePhase != .active)) { context in
                 let t = context.date.timeIntervalSinceReferenceDate
                 HStack(alignment: .bottom, spacing: 6) {
                     ForEach(0..<16, id: \.self) { i in

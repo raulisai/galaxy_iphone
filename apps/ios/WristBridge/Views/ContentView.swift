@@ -7,6 +7,7 @@ struct ContentView: View {
     @ObservedObject var fixtures: NotificationFixtureAdapter
     @StateObject private var observations: LabJournalStore
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var runID = Self.newRunID()
     @State private var fixtureCount = 10
     @State private var fixtureDelay = 30.0
@@ -64,6 +65,12 @@ struct ContentView: View {
             }
             .tabItem { Label("Ajustes", systemImage: "gearshape") }
             .tag(Tab.settings)
+        }
+        .transaction { transaction in
+            if reduceMotion {
+                transaction.animation = nil
+                transaction.disablesAnimations = true
+            }
         }
         .tint(Theme.accent)
         .tabBarMinimizeBehavior(.onScrollDown)
