@@ -1,10 +1,10 @@
 # WristBridge Apple workspace
 
-Read `Doc/00_LEEME_Y_COORDINACION.md`, `Doc/01_CONTRATO_COMPARTIDO.md`, `Doc/03_MAC_SWIFT.md` and `docs/apple/handoff-G0.md` before changes.
+Read `Doc/00_LEEME_Y_COORDINACION.md`, `Doc/01_CONTRATO_COMPARTIDO.md`, `Doc/03_MAC_SWIFT.md` and `docs/apple/handoff-G0.md` before changes. For current Apple work also read `docs/apple/iphone-phases.md`, `docs/apple/handoff-P2.md` and `docs/apple/handoff-0.2.1.md`.
 
-- Work on `development_codex`, the single Apple working branch requested by the user. Keep `main` as the integrated base; do not create extra task branches unless requested. The previous `feat/ios/xcode-validation` work has been integrated.
+- Work on `development_codex`, the single Apple working branch requested by the user. Use `developer` as the integrated branch explicitly requested by the user; preserve the existing `main` history; do not create extra task branches unless requested. The previous `feat/ios/xcode-validation` work has been integrated.
 - Apple owns `apps/ios`, `packages/WristBridgeProtocol`, Apple scripts, tests and docs. Do not write Kotlin, Gradle or shared contracts assigned to Windows.
-- Current scope: G0 and Apple P1 laboratory implementation. ADR-001 requires physical evidence. Do not start AI, macOS, health or sensitive BLE commands before their gates.
+- Current scope: user authorized all iPhone work permitted by existing contracts/gates, including local P3 UI/privacy and P8 packaging (18 October 2026). P2 acceptance remains pending physical regression; wire/security require the joint contract. ADR-001 requires physical evidence. Do not start AI, macOS, health or sensitive BLE commands before their gates.
 - Keep original `Doc/**` unchanged; its manifest hashes are checked. Corrections belong in `docs/apple/review.md` and handoffs.
 - ANCS is consumed by the watch. iOS cannot treat its own notification authorization or a CoreBluetooth link as ANCS readiness.
 - Wire format and characteristic properties are not frozen. No made-up codec or peer status parsing. Reserved UUIDs come from the original contract.

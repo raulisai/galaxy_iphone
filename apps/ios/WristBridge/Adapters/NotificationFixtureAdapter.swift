@@ -9,9 +9,11 @@ final class NotificationFixtureAdapter: NSObject, ObservableObject, UNUserNotifi
     @Published private(set) var records: [FixtureRecord] = []
     @Published private(set) var message = "Los avisos de prueba pertenecen únicamente a esta app."
     @Published private(set) var busy = false
+    @Published private(set) var lastBatchID: String?
     @Published private(set) var persistenceWarning: String?
     private let center = UNUserNotificationCenter.current()
     private let ledgerURL: URL
+    private var ledgerWritable = true
 
     override init() {
         let directory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -23,9 +25,11 @@ final class NotificationFixtureAdapter: NSObject, ObservableObject, UNUserNotifi
                 let data = try Data(contentsOf: ledgerURL)
                 records = Array(try JSONDecoder().decode([FixtureRecord].self, from: data).suffix(1000))
             } catch {
+                ledgerWritable = false
                 persistenceWarning = "No se pudo recuperar el registro anterior. No uses estos contadores para cerrar una campaña."
             }
         }
+        lastBatchID = records.last(where: { $0.observation == .scheduleAccepted })?.runID
         center.delegate = self
     }
 
@@ -48,16 +52,21 @@ final class NotificationFixtureAdapter: NSObject, ObservableObject, UNUserNotifi
         } catch { message = "No se pudo solicitar el permiso. Revisa Ajustes." }
     }
 
-    func schedule(runID: String) async {
-        guard !busy else { return }
+    @discardableResult
+    func schedule(runID: String, count: Int = 10, initialDelay: TimeInterval = 10) async -> Bool {
+        guard !busy else { return false }
+        guard ledgerWritable, persistenceWarning == nil else {
+            message = "Resuelve el aviso del registro antes de programar otro lote. Puedes borrar los datos locales desde Ajustes."
+            return false
+        }
         busy = true
         defer { busy = false }
         do {
-            let plan = try FixturePlan(runID: runID)
+            let plan = try FixturePlan(runID: runID, count: count, initialDelay: initialDelay)
             let settings = await center.notificationSettings()
             guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else {
                 message = "Autoriza primero los avisos de prueba."
-                return
+                return false
             }
             let pending = await center.pendingNotificationRequests()
             let identifiers = Set(plan.notifications.map(\.id))
@@ -65,11 +74,11 @@ final class NotificationFixtureAdapter: NSObject, ObservableObject, UNUserNotifi
             guard !records.contains(where: { $0.runID == runID }),
                   !pending.contains(where: { identifiers.contains($0.identifier) }) else {
                 message = "Ese ID de ejecución ya se usó. Elige uno nuevo."
-                return
+                return false
             }
             guard pending.count + plan.notifications.count <= 60 else {
                 message = "Hay demasiados avisos pendientes. Cancela el lote anterior o espera."
-                return
+                return false
             }
             var accepted = 0
             // Anchor deadlines once so sequential add calls don't stretch the intended spacing.
@@ -89,9 +98,15 @@ final class NotificationFixtureAdapter: NSObject, ObservableObject, UNUserNotifi
                     accepted += 1
                     append(fixture.runID, fixture.fixtureID, .scheduleAccepted)
                 } catch { append(fixture.runID, fixture.fixtureID, .scheduleFailed) }
+                if persistenceWarning != nil { break }
             }
-            message = "\(accepted)/\(plan.notifications.count) solicitudes aceptadas. Bloquea el iPhone; la entrega aún debe observarse."
-        } catch { message = "Usa un ID de 1 a 64 letras, números, guion o guion bajo." }
+            if accepted > 0 { lastBatchID = runID }
+            message = "Lote \(runID): \(accepted)/\(plan.notifications.count) solicitudes aceptadas. Bloquea el iPhone; la entrega aún debe observarse."
+            return accepted == plan.notifications.count && persistenceWarning == nil
+        } catch {
+            message = "Revisa el ID, la cantidad y la espera del lote. El ID permite 1 a 64 letras, números, guion o guion bajo."
+            return false
+        }
     }
 
     func observeDelivered() async {
@@ -130,14 +145,45 @@ final class NotificationFixtureAdapter: NSObject, ObservableObject, UNUserNotifi
         return String(decoding: data, as: UTF8.self)
     }
 
+    func applyRetention(days: Int) {
+        guard ledgerWritable else { return }
+        let bounded = [7, 30, 90].contains(days) ? days : 30
+        records.removeAll { $0.recordedAt < Date().addingTimeInterval(-Double(bounded) * 86400) }
+        persistRecords()
+    }
+
+    func deleteLocalData() async {
+        guard !busy else { return }
+        busy = true
+        defer { busy = false }
+        let pending = await center.pendingNotificationRequests()
+        let delivered = await center.deliveredNotifications()
+        center.removePendingNotificationRequests(withIdentifiers: pending.filter { $0.identifier.hasPrefix("wristbridge.") }.map(\.identifier))
+        center.removeDeliveredNotifications(withIdentifiers: delivered.filter { $0.request.identifier.hasPrefix("wristbridge.") }.map { $0.request.identifier })
+        do {
+            if FileManager.default.fileExists(atPath: ledgerURL.path) { try FileManager.default.removeItem(at: ledgerURL) }
+            records = []; lastBatchID = nil; ledgerWritable = true; persistenceWarning = nil
+            message = "Se borró el registro local y se solicitó retirar los avisos de prueba de WristBridge."
+        } catch { persistenceWarning = "No se pudo borrar el registro local. Vuelve a intentarlo." }
+    }
+
     private func append(_ runID: String, _ fixtureID: String, _ observation: FixtureObservation) {
+        guard ledgerWritable else { return }
         records.append(FixtureRecord(runID: runID, fixtureID: fixtureID, observation: observation))
         records = Array(records.suffix(1000))
+        persistRecords()
+    }
+
+    private func persistRecords() {
+        guard ledgerWritable else { return }
         do {
             try FileManager.default.createDirectory(at: ledgerURL.deletingLastPathComponent(),
                                                     withIntermediateDirectories: true)
             let data = try JSONEncoder().encode(records)
             try data.write(to: ledgerURL, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
+            var resource = ledgerURL
+            var values = URLResourceValues(); values.isExcludedFromBackup = true
+            try resource.setResourceValues(values)
         } catch {
             persistenceWarning = "No se pudo guardar el registro de pruebas. Expórtalo antes de cerrar la app."
         }

@@ -1,0 +1,105 @@
+{
+  "date": "2026-10-18",
+  "branch": "development_codex",
+  "integratedBase": "0abcd517bc71dc703d9b6181fc424374f725e573",
+  "scope": "Apple P2 first recovery/local-settings increment; no wire/security changes",
+  "tools": {
+    "Xcode": "27.1 (27A9275)",
+    "iOSSDK": "27.1"
+  },
+  "checks": {
+    "appleCheckScript": {
+      "status": "PASS",
+      "command": "WRISTBRIDGE_TEST_DESTINATION=<iPhone simulator> bash scripts/apple/check.sh"
+    },
+    "originalDocumentationHashes": {
+      "status": "PASS"
+    },
+    "sharedProfileConsistency": {
+      "status": "PASS",
+      "revision": "p1-lab-1"
+    },
+    "packageTests": {
+      "status": "PASS",
+      "testFunctions": 11
+    },
+    "simulatorBuild": {
+      "status": "PASS"
+    },
+    "uiTests": {
+      "status": "PASS",
+      "tests": 3,
+      "simulator": "iPhone 17 / iOS 26.2"
+    },
+    "releaseDeviceBuildWithoutSigning": {
+      "status": "PASS",
+      "architecture": "arm64"
+    },
+    "debugSignedDeviceBuild": {
+      "status": "PASS"
+    },
+    "physicalInstallation": {
+      "status": "PASS"
+    },
+    "physicalLaunch": {
+      "status": "PASS"
+    },
+    "physicalScreenInspection": {
+      "status": "PASS",
+      "provenance": "user-provided-screenshot-inspected-by-agent",
+      "artifact": "physical-configuration-timeout.jpg",
+      "scope": "Screen state only, not successful configuration discovery."
+    },
+    "physicalP2RecoveryCampaign": {
+      "status": "NOT_RUN"
+    },
+    "newBuildANCSRegression": {
+      "status": "PASS",
+      "provenance": "user-report-in-chat-after-update",
+      "scope": "Basic receipt still works after this installation; counts, latency and background recovery not measured."
+    },
+    "24h72hCampaign": {
+      "status": "NOT_RUN"
+    },
+    "wireFormatAndSecurity": {
+      "status": "BLOCKED",
+      "reason": "Joint P2 contract and vectors are not frozen."
+    },
+    "simulatorVisualInspection": {
+      "status": "PASS",
+      "artifact": "simulator-recovery.png",
+      "note": "Own app recovery controls; does not represent physical iPhone."
+    },
+    "physicalConfigurationServiceDiscovery": {
+      "status": "FAIL",
+      "provenance": "user-provided-screenshot-inspected-by-agent",
+      "observation": "Accesorio autorizado; Configuración Desconectado; discovery timeout message.",
+      "reason": "Local service-discovery deadline expired; root cause not yet established.",
+      "artifact": "physical-configuration-timeout.jpg"
+    }
+  },
+  "buildIdentity": {
+    "version": "0.1.0",
+    "build": "1",
+    "note": "Existing laboratory version retained; exact source and binary hashes distinguish this update.",
+    "debugDylibSHA256": "59bcc55a77a2d22c254d01d15f2acb7aeed1c7652d129b7611ba3eb3dff35ead",
+    "sourceManifestSHA256": "c7768b17dfe027813063a3ecc5d5fc793b194039b034c89718a461ab08393379"
+  },
+  "validationHistory": [
+    {
+      "status": "FAIL",
+      "case": "First recovery UI test tapped the containing SwiftUI row; no value change."
+    },
+    {
+      "status": "PASS",
+      "case": "Test targets nested switch, waits for value change and verifies persistence after relaunch; final three UI tests pass."
+    }
+  ],
+  "notes": [
+    "Physical notification observations for the earlier installed app are in user-validation.json.",
+    "Raw Xcode/device logs and signing artifacts remain outside the repository.",
+    "No formal G1/G2 acceptance is inferred from simulator or launch success.",
+    "Clarification: user confirms notifications after update but has not verified the configuration-service label. The earlier combined confirmation was interpreted too broadly; service discovery is NOT_RUN.",
+    "Later screenshot establishes configuration discovery FAIL for this attempt, superseding NOT_RUN. Notification delivery remains PASS by user report. No inference about watch-side root cause or automatic ANCS status is made."
+  ]
+}

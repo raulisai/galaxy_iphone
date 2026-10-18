@@ -28,6 +28,14 @@ reserved = re.findall(r"`(6f06b8b1-[a-f0-9-]+)`", contract)
 swift = (ROOT / "packages/WristBridgeProtocol/Sources/WristBridgeProtocol/BLEProfile.swift").read_text()
 check(len(reserved) == 4 and all(swift.count(value) == 1 for value in reserved),
       "Swift UUID constants match the documented reservation")
+profile = json.loads((ROOT / "contracts/ble-profile.json").read_text())
+own = profile["ownService"]
+check([own["service"], *[own["reservedCharacteristics"][key]
+      for key in ["capabilities", "requests", "events"]]] == reserved,
+      "Shared BLE profile and Apple reserved UUIDs agree")
+check(profile["advertising"]["serviceUuidInAdvertisement"] == reserved[0]
+      and profile["advertising"]["localName"] == "WristBridge",
+      "Shared advertisement agrees with ASK laboratory filters")
 matrix = (ROOT / "Doc/04_MATRIZ_60_TAREAS.md").read_text()
 check(len(set(re.findall(r"\| (P[1-8]-\d{2}) \|", matrix))) == 60, "60 unique tasks in ownership matrix")
 info = plistlib.loads((ROOT / "apps/ios/WristBridge/Info.plist").read_bytes())

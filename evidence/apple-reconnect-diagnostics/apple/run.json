@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-18",
+  "candidate": {
+    "version": "0.1.1",
+    "build": "4"
+  },
+  "checks": {
+    "structureAndOriginalManifest": "PASS",
+    "packageTests": {
+      "status": "PASS",
+      "testFunctions": 14
+    },
+    "simulatorBuild": "PASS",
+    "signedDeviceBuild": "PASS",
+    "uiRegressionBeforeFinalOrderingChange": {
+      "status": "PASS",
+      "tests": 3
+    },
+    "finalCandidatePhysicalInstall": "PASS",
+    "finalCandidatePhysicalReconnect": "BLOCKED",
+    "finalCandidateNormalLaunch": {
+      "status": "BLOCKED",
+      "reason": "iPhone locked; SpringBoard denied launch.",
+      "errorDomain": "FBSOpenApplicationErrorDomain",
+      "errorCode": 7
+    }
+  },
+  "diagnosis": "Restored connected peripheral started discovery before radio-ready callback; poweredOn did not resume discovery because peripheral already existed. Fixed by deferring and serializing discovery until radio-ready. Root-cause attribution to the user-visible timeout remains a hypothesis until physical regression of candidate 4.",
+  "limits": [
+    "No watch/contract changes. No sensitive commands.",
+    "Trace retains at most 64 typed events, timestamps, counts/states and numeric error codes; no peer IDs or notification content.",
+    "Single-cycle --lab-reconnect-once is Debug-only and requires an explicit launch argument. Normal UI and Release do not initiate that test.",
+    "Build 4 installed; laboratory and normal launches could not proceed while the iPhone was locked. No successful final-candidate physical recovery is claimed."
+  ]
+}

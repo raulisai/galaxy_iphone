@@ -1,0 +1,18 @@
+{
+  "version": "0.2.1",
+  "build": "6",
+  "configuration": "Release",
+  "signedBuild": "PASS",
+  "signatureVerification": "PASS",
+  "profileExpiresAt": "2026-10-24T06:30:31+00:00",
+  "debugLabHookAbsent": true,
+  "installation": "NOT_RUN",
+  "physicalAcceptance": "NOT_RUN",
+  "binarySHA256": "0d94b5ec2aec25ff3d9e22112eab6e8c0ae5ee82f7f56cf262a6bedc1faf10d7",
+  "sourceManifestSHA256": "b239692b41cd260bfd6162e930d96c0325da68e356aaee6245e8869261f67190",
+  "baseCommit": "41809955f6e35340e464ca1f1d52f0e9c987075e",
+  "workspaceChangesPresent": false,
+  "toolchain": "Xcode 27.1\nBuild version 27A9275",
+  "deploymentTarget": "iOS 26.0",
+  "profileRevision": "p1-lab-1"
+}

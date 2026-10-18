@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-18",
+  "branch": "development_codex",
+  "candidate": {
+    "version": "0.2.0",
+    "build": "5",
+    "configuration": "Release"
+  },
+  "scope": "All iPhone work currently permitted by shared contract/gates; completion of all product gates is not claimed.",
+  "checks": {
+    "originalDocumentationIntact": "PASS",
+    "profileConsistency": "PASS",
+    "packageTests": {
+      "status": "PASS",
+      "tests": 18
+    },
+    "uiTests": {
+      "status": "PASS",
+      "tests": 4,
+      "device": "iPhone 17 simulator / iOS 26.2"
+    },
+    "simulatorBuild": "PASS",
+    "releaseSignedBuild": "PASS",
+    "signatureVerification": "PASS",
+    "debugLabHookAbsentFromRelease": "PASS",
+    "sourceManifestMatchesCandidate": "PASS",
+    "simulatorVisualInspection": {
+      "status": "PASS",
+      "artifacts": [
+        "simulator-connection.png",
+        "simulator-tests.png",
+        "simulator-settings.png"
+      ]
+    },
+    "latestCandidateInstallation": {
+      "status": "NOT_RUN",
+      "reason": "Offline delivery requested; phone disconnected. Last known installed version is 0.1.1 (4)."
+    },
+    "hardwareRestorationAndANCS": "NOT_RUN",
+    "battery24h72hAnd7days": "NOT_RUN",
+    "allGatesG1ThroughG8": {
+      "status": "BLOCKED",
+      "reason": "Joint BLE wire/security contracts, watch capabilities, physical campaigns and remaining gate evidence."
+    },
+    "cleanCommitSignedBuild": "PASS",
+    "signingProfileExpirationRecorded": "PASS"
+  },
+  "privacy": {
+    "rawSigningOrDeviceLogsCommitted": false,
+    "privateAccessoryIDExported": false,
+    "sensitivePermissionsEnabled": false,
+    "thirdPartyRuntimeDependencies": 0
+  },
+  "limits": [
+    "Manual reports do not turn ANCS readiness on.",
+    "P6 is a separate Mac app, outside this iPhone request.",
+    "P4/P5 require iPhone code only if a joint ADR assigns it; no mandatory iPhone AI/audio proxy.",
+    "P7 and sensitive transfer remain gated; no fake health/contact sync.",
+    "VoiceOver/physical accessibility audit NOT_RUN; simulator screenshots are local layout evidence only."
+  ],
+  "sourceCommit": "e9ee4a5d2e4e528bb65e97fc89ca8c11beba4aec"
+}

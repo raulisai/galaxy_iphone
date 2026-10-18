@@ -1,5 +1,7 @@
 # Handoff Apple · G0 y preparación P1
 
+**Estado posterior, 18 de octubre:** el usuario ya reporta enlace y recepción de avisos, incluso con el iPhone suspendido y después de cerrar la app deslizando. La antigua dependencia de instalación Watch7 está superada según su reporte. Consultar [handoff P2](handoff-P2.md) para estado vigente; las entradas del 17 de octubre de abajo conservan la secuencia histórica.
+
 Actualizado el 17 de octubre de 2026, America/Mexico_City. El código Apple de `7585f8c` (`version ios`) quedó integrado en `main` sin conflictos ni reescritura de historial. La única rama de trabajo Apple es `development_codex`, creada desde esa base integrada; sustituye a `feat/ios/xcode-validation`. No se modificó código Windows. La evidencia de compilación está en `evidence/apple-xcode-validation/apple`, la instalación y apertura físicas en `evidence/apple-physical-install/apple`, y `evidence/apple-initial` conserva la primera sesión.
 
 Actualización física posterior: iPhone 15 detectado por cable, emparejado, iOS 26.6.2 (23G90). Se resolvió la falta de detección. El preflight de `evidence/apple-physical-setup/apple` aún bloquea instalación por Modo de desarrollador desactivado y firma/cuenta Apple pendientes. El inventario y las limitaciones de la campaña con Xcode de abajo son históricos donde mencionan falta de detección; no se ejecutó todavía la campaña ANCS.

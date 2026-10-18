@@ -9,17 +9,30 @@ final class BridgeModel: ObservableObject {
     @Published private(set) var pickerAvailable = false
     @Published private(set) var radio = "Sin comprobar"
     @Published private(set) var lastCheck: Date?
+    @Published private(set) var authorizedChoices: [UUID] = []
     @Published private(set) var stopped = false
+    @Published private(set) var automaticRecovery = true
+    @Published private(set) var settingsWarning: String?
+    @Published private(set) var retentionDays = 30
     let isDemo: Bool
     private let setup = AccessorySetupAdapter()
     private let transport = BluetoothCentralAdapter()
-    private var authorizedID: UUID?
-    private let preferences: UserDefaults
+    @Published private(set) var authorizedID: UUID?
+    #if DEBUG
+    private var exercisedLabReconnect = false
+    #endif
+    private let settingsStore: LocalSettingsStore?
 
     init(isDemo: Bool = false, preferences: UserDefaults = .standard) {
         self.isDemo = isDemo
-        self.preferences = preferences
-        stopped = preferences.bool(forKey: "bridgeStopped")
+        settingsStore = isDemo ? nil : LocalSettingsStore(defaults: preferences)
+        stopped = settingsStore?.settings.stopped ?? false
+        automaticRecovery = settingsStore?.settings.automaticRecovery ?? true
+        retentionDays = settingsStore?.settings.retentionDays ?? 30
+        settingsWarning = settingsStore?.warning
+        transport.automaticRecovery = automaticRecovery
+        setup.onChoices = { [weak self] in self?.authorizedChoices = $0 }
+        setup.onUnresolvedAuthorization = { [weak self] in self?.transport.rejectRestoration() }
         setup.onEvent = { [weak self] in self?.apply($0) }
         setup.onMessage = { [weak self] in self?.message = $0 }
         setup.onAvailability = { [weak self] in self?.pickerAvailable = $0 }
@@ -27,6 +40,7 @@ final class BridgeModel: ObservableObject {
             guard let self else { return }
             self.authorizedID = identifier
             if !self.stopped { self.transport.authorizeAndConnect(identifier) }
+            else { self.transport.rejectRestoration() }
         }
         setup.onRemoved = { [weak self] in
             self?.authorizedID = nil
@@ -45,6 +59,15 @@ final class BridgeModel: ObservableObject {
         }
     }
 
+    func prepareForBluetoothRestoration() {
+        guard !isDemo else { return }
+        if stopped { transport.rejectRestoration() }
+        transport.prepareForRestoration()
+    }
+
+    func refreshAuthorization() { if !isDemo { setup.activate() } }
+    func selectAuthorized(_ identifier: UUID) { if !isDemo { setup.selectAuthorized(identifier) } }
+
     func selectWatch() {
         guard pickerAvailable else { return }
         if isDemo {
@@ -59,14 +82,15 @@ final class BridgeModel: ObservableObject {
 
     func reconnect() {
         stopped = false
-        if !isDemo { preferences.set(false, forKey: "bridgeStopped") }
+        settingsStore?.update(stopped: false)
         if isDemo { selectWatch() }
         else if let authorizedID { transport.authorizeAndConnect(authorizedID) }
+        else { message = "No hay un reloj autorizado disponible. Espera a que termine la autorización o vuelve a seleccionarlo." }
     }
 
     func stop() {
         stopped = true
-        if !isDemo { preferences.set(true, forKey: "bridgeStopped") }
+        settingsStore?.update(stopped: true)
         transport.stop()
         apply(.stopped)
         message = "Canal de configuración detenido. Esto no confirma que ANCS se haya detenido en el reloj."
@@ -76,16 +100,53 @@ final class BridgeModel: ObservableObject {
         if isDemo { apply(.authorizationRemoved) }
         else {
             stopped = true
-            preferences.set(true, forKey: "bridgeStopped")
+            settingsStore?.update(stopped: true)
             authorizedID = nil
             transport.revoke()
             setup.forget()
         }
     }
 
+    func setRetentionDays(_ days: Int) {
+        guard [7, 30, 90].contains(days) else { return }
+        retentionDays = days
+        settingsStore?.update(retentionDays: days)
+    }
+
+    func resetLocalSettings() {
+        stop()
+        settingsStore?.reset()
+        automaticRecovery = true
+        transport.automaticRecovery = true
+        retentionDays = 30
+        settingsWarning = nil
+        transport.clearDiagnostics()
+    }
+
+    func setAutomaticRecovery(_ enabled: Bool) {
+        automaticRecovery = enabled
+        settingsStore?.update(automaticRecovery: enabled)
+        transport.automaticRecovery = enabled
+    }
+
     private func apply(_ event: BridgeEvent) {
         state.apply(event)
         lastCheck = Date()
+        #if DEBUG
+        // Explicit, single-cycle physical regression of stop -> reconnect while
+        // cancellation is pending. Never enabled by the normal UI or Release.
+        if case .serviceFound = event, !isDemo, !exercisedLabReconnect,
+           ProcessInfo.processInfo.arguments.contains("--lab-reconnect-once") {
+            exercisedLabReconnect = true
+            Task { [weak self] in
+                do { try await Task.sleep(for: .seconds(1)) } catch { return }
+                guard let self, !self.stopped, self.state.channel == .serviceFound,
+                      let identifier = self.authorizedID else { return }
+                self.transport.stop()
+                self.transport.authorizeAndConnect(identifier)
+            }
+        }
+        #endif
     }
 
     var authorizationText: String {
@@ -113,12 +174,18 @@ final class BridgeModel: ObservableObject {
 
     var diagnosticSummary: String {
         """
-        WristBridge 0.1.0 (1)
+        WristBridge \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown") (\(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "unknown"))
         demo=\(isDemo)
         role=path-A-experiment
         accessory=\(state.authorization.rawValue)
         configuration=\(state.channel.rawValue)
         radio=\(radio)
+        automatic-recovery=\(automaticRecovery)
+        recovery-attempts=\(transport.retryAttempts)
+        restored-peripherals=\(transport.restoredPeripheralCount)
+        settings-persistence=\(settingsWarning == nil ? "available" : "preserved-unreadable")
+        trace-persistence=\(transport.tracePersistenceAvailable)
+        bluetooth-trace=\(transport.diagnosticTrace)
         ancs=not-verified
         sensitive-channel=disabled
         last-local-check=\(lastCheck?.ISO8601Format() ?? "none")

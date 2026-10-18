@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-18",
+  "version": "0.2.1",
+  "build": "6",
+  "workingBranch": "development_codex",
+  "integrationTarget": "developer",
+  "checks": {
+    "originalDocumentationIntact": "PASS",
+    "sharedProfileConsistency": "PASS",
+    "packageTests": {
+      "status": "PASS",
+      "tests": 18
+    },
+    "uiTests": {
+      "status": "PASS",
+      "tests": 5
+    },
+    "simulatorBuild": "PASS",
+    "releaseSignedBuild": "PASS",
+    "signatureVerification": "PASS",
+    "debugLabHookAbsent": "PASS",
+    "physicalInstallation": "PASS",
+    "physicalLaunch": "PASS",
+    "physicalNotificationAndRecoveryCampaign": "NOT_RUN",
+    "cleanCommitSignedBuild": "PASS",
+    "physicalRestoredConfigurationService": {
+      "status": "PASS",
+      "provenance": "own-app trace copied from newly installed app after launch",
+      "artifact": "physical-restoration-trace.json",
+      "scope": "One restored connection waited for radio-ready then verified the expected service. Not a background-system-relaunch or twenty-cycle campaign."
+    }
+  },
+  "scope": "Guided synthetic batches, unique next-run IDs, stale accessory choice cleanup. No new wire protocol, sensitive commands or permissions.",
+  "quickstart": "test/hil/apple/quickstart-0.2.1.md",
+  "limits": [
+    "Scheduled does not mean delivered to watch.",
+    "Manual observations do not set automatic ANCS readiness.",
+    "P2 wire/security and later joint gates remain blocked by existing shared dependencies."
+  ],
+  "sourceCommit": "41809955f6e35340e464ca1f1d52f0e9c987075e"
+}
