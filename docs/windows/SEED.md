@@ -1,6 +1,6 @@
 # SEED · estado y continuación del lado Windows/Kotlin
 
-Archivo de relevo para cualquier agente (Claude, Codex u otro) que continúe el trabajo del reloj. **Léelo primero, actualízalo al terminar cada bloque de trabajo y no lo uses para secretos ni datos personales.** Última actualización: 18 de octubre de 2026 (build 0.2.0-lab (4)), America/Mexico_City.
+Archivo de relevo para cualquier agente (Claude, Codex u otro) que continúe el trabajo del reloj. **Léelo primero, actualízalo al terminar cada bloque de trabajo y no lo uses para secretos ni datos personales.** Última actualización: 18 de octubre de 2026 (build 0.2.1-lab (5)), America/Mexico_City.
 
 Lectura obligatoria previa: `AGENTS.md`, `Doc/00_LEEME_Y_COORDINACION.md`, `Doc/01_CONTRATO_COMPARTIDO.md`, `Doc/02_WINDOWS_KOTLIN.md`, `docs/windows/handoff-G0.md`.
 
@@ -28,6 +28,7 @@ Lectura obligatoria previa: `AGENTS.md`, `Doc/00_LEEME_Y_COORDINACION.md`, `Doc/
 | Arreglo de vínculo (BondWait) e instalación de la build 0.1.1-lab (2) | PASS; aceptación funcional del usuario | `docs/windows/release-0.1.1-lab.md` |
 | Identificación de app (nombre, color, monograma) y llamadas diferenciadas, build 0.1.2-lab (3) | PASS en JVM/lint/assemble; instalación y pruebas físicas NOT_RUN | `docs/windows/release-0.1.2-lab.md`, `evidence/windows-p1-update-3/` |
 | Prototipo 0.2.0-lab (4): acciones ANCS (aceptar/rechazar/borrar), música AMS, descarte sincronizado opcional, pantalla renovada | PASS en JVM (70), lint, assemble e instalación con checksum; casos físicos NOT_RUN | `docs/windows/release-0.2.0-lab.md`, `evidence/windows-p1-update-4/` |
+| 0.2.1-lab (5) en el reloj: reanuda solo tras actualizar/reiniciar; ANCS y AMS listos; backlog silencioso; corrige «Recuperar» sin reenvío de avisos y Service Changed atascado | PASS observado por logcat; repetir Recuperar y R03 NOT_RUN | `release-0.2.0-lab.md` (sección 0.2.1), `evidence/windows-p1-update-5/` |
 | Avisos reales de otras apps, iPhone bloqueado, UI cerrada, 30 min (H05) | NOT_RUN | pendiente |
 | R01–R04 (reconexión, Bluetooth off/on, Service Changed, corte durante consulta) | NOT_RUN | pendiente |
 | ADR-001 (elegir A o B) | Pendiente de redactar con la evidencia anterior | `docs/adr/ADR-001-roles-ble.md` |
@@ -35,13 +36,15 @@ Lectura obligatoria previa: `AGENTS.md`, `Doc/00_LEEME_Y_COORDINACION.md`, `Doc/
 
 ## Estado del código
 
-0.2.0-lab (4) está instalada en el Watch7 (checksum verificado) y en el commit que acompaña a este SEED. Tras instalar, el reloj estaba bloqueado: hay que abrir WristBridge e iniciar el puente si aparece detenido.
+0.2.1-lab (5) está instalada en el Watch7 (checksum verificado) y en el commit que acompaña a este SEED. El puente se reanuda solo tras `adb install -r` (`StartupReceiver`, MY_PACKAGE_REPLACED/BOOT_COMPLETED), aunque el reloj esté bloqueado: ya no hace falta abrir la app después de actualizar.
+
+Lecciones del reloj real: (1) cerrar y reabrir el cliente GATT no corta el enlace físico, así que iOS mantiene el CCCD activo y no repite PreExisting; por eso con peer vinculado se escribe disable→enable en Notification Source y en AMS. (2) Service Changed puede llegar con el MTU en curso y el redescubrimiento en el mismo cliente queda sin respuesta; por eso se rehace el enlace cliente (máx. 3 automáticos hasta READY). (3) Con el reproductor del iPhone inactivo, AMS solo anuncia VOLUME_UP/DOWN.
 
 Arquitectura añadida: `core/protocol-kotlin/.../ams` (codec y `MediaState`), `AncsSessionEngine.performAction` + `SessionEffect.ActionResult`, `AmsSession` (comparte la cola GATT; solo arranca con ANCS listo; sus fallos no tocan ANCS), `CardPresenter` (botones con etiquetas del iPhone, timbre que se corta al pulsar, descarte sincronizado solo en avisos que no son llamadas), `MediaPresenter`, `CommandReceiver` (botones y descartes por broadcast interno al servicio en marcha), `SharedState.kt` (`ActiveCards`, `MediaStatus`) y la UI en `ui/` (`MainActivity`, `Sections`, `StatusText`).
 
 ## Qué sigue, en orden
 
-1. **Prueba conjunta de golpe** con la sección «Prototipo 0.2.0-lab» de `test/hil/windows/p1-campaign.md` (UI01, N10–N18, M01–M06), registrando logcat y resultados reales. Vigilar: corte del timbre al pulsar, descarte sincronizado con el reloj inactivo y que AMS aparezca tras «Listo».
+1. **Prueba conjunta de golpe** con la sección «Prototipo 0.2.0-lab» de `test/hil/windows/p1-campaign.md` (UI01, N10–N18, M01–M06), registrando logcat y resultados reales. Vigilar: corte del timbre al pulsar, descarte sincronizado con el reloj inactivo, controles de música con reproducción activa, y repetir «Recuperar conexión» y R03 con 0.2.1.
 2. **Perfiles de app**: si el usuario aporta logotipos con derecho de uso, sustituir los monogramas.
 3. **Tile/complicación**: requiere añadir `androidx.wear.tiles`/`protolayout`, que no están en la caché offline de esta PC; descargarlos con red antes de implementarlos.
 4. **Pruebas físicas con avisos reales**: Telegram, Netflix, Spotify, Gmail y una llamada real; registrar cada caso en `test/hil/windows/p1-campaign.md` y en `evidence/<run>/windows/`.

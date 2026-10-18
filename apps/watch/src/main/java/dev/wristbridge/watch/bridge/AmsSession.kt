@@ -93,6 +93,10 @@ class AmsSession(
         if (gatt == null) return true
         if (uuid == AmsUuids.REMOTE_COMMAND) {
             val supported = AmsCodec.parseSupportedCommands(value)
+            // Command names only (no content): explains which controls the watch can offer.
+            if (supported != MediaStatus.state.value.media.supportedCommands) {
+                BridgeStatus.event("AMS comandos: ${supported.joinToString(",") { it.name }.ifEmpty { "ninguno" }}")
+            }
             publish { it.copy(media = it.media.withSupportedCommands(supported)) }
         } else {
             onEntityUpdate(value)
@@ -142,6 +146,11 @@ class AmsSession(
             fail("Falta CCCD de AMS")
             return
         }
+        // Like ANCS: on a link that stayed up the CCCD may still be enabled and the iPhone would not resend
+        // the current player and track. Disable first (outcome ignored) so registration starts fresh.
+        enqueue("desc:${ch.uuid}", WRITE_TIMEOUT_MS, {
+            g.writeDescriptor(cccd, BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE) == BluetoothStatusCodes.SUCCESS
+        }) {}
         enqueue("desc:${ch.uuid}", SUBSCRIBE_TIMEOUT_MS, {
             g.setCharacteristicNotification(ch, true) &&
                 g.writeDescriptor(cccd, BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE) == BluetoothStatusCodes.SUCCESS

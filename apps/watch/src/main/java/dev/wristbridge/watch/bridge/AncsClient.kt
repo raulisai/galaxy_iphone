@@ -52,6 +52,9 @@ class AncsClient(
     private var controlPoint: BluetoothGattCharacteristic? = null
     private val bondWait = BondWait(clock)
     private var stopped = true
+
+    /** Automatic link rebuilds (Service Changed, failed discovery) since ANCS was last READY. */
+    private var autoRebuilds = 0
     private val ams = AmsSession(clock, ::enqueueOnLink, media)
 
     private val tick = Runnable {
@@ -100,6 +103,7 @@ class AncsClient(
             return
         }
         BridgeStatus.event("Recuperación manual solicitada")
+        autoRebuilds = 0
         connect(d, autoConnect = false)
     }
 
@@ -147,6 +151,19 @@ class AncsClient(
         }
     }
 
+    /**
+     * Replaces the client link with a fresh one to the same iPhone, at most [MAX_AUTO_REBUILDS] times until
+     * ANCS is READY again so a misbehaving peer cannot cause a reconnection loop. False when the budget is spent.
+     */
+    private fun rebuildLink(why: String): Boolean {
+        val peer = device ?: return false
+        if (stopped || autoRebuilds >= MAX_AUTO_REBUILDS) return false
+        autoRebuilds++
+        BridgeStatus.event("$why: nuevo enlace ANCS (intento $autoRebuilds)")
+        handler.postDelayed({ if (!stopped && device?.address == peer.address) connect(peer, autoConnect = false) }, REBUILD_DELAY_MS)
+        return true
+    }
+
     private fun closeLink(reason: String) {
         handler.removeCallbacks(tick)
         engine.endSession(engine.generation)
@@ -192,7 +209,8 @@ class AncsClient(
         val q = queue ?: return
         BridgeStatus.update { it.copy(ancs = AncsState.DISCOVERING) }
         enqueue(q, "discover", 15_000, { g.discoverServices() }) { outcome ->
-            if (outcome == GattOutcome.Success) setupAncs(g) else {
+            if (outcome == GattOutcome.Success) setupAncs(g)
+            else if (!rebuildLink("descubrimiento sin respuesta ($outcome)")) {
                 BridgeStatus.update { it.copy(ancs = AncsState.FAILED, ancsDetail = "Descubrimiento falló: $outcome") }
             }
         }
@@ -222,6 +240,7 @@ class AncsClient(
             BridgeStatus.event("Data Source confirmado")
             subscribe(g, ns) {
                 val effects = engine.startSession(Pseudonym.of(peer))
+                autoRebuilds = 0
                 BridgeStatus.update { it.copy(ancs = AncsState.READY, ancsDetail = "", generation = engine.generation) }
                 BridgeStatus.event("ANCS listo gen=${engine.generation}")
                 apply(effects)
@@ -237,6 +256,15 @@ class AncsClient(
         val cccd = ch.getDescriptor(AncsUuids.CCCD) ?: run {
             BridgeStatus.update { it.copy(ancs = AncsState.FAILED, ancsDetail = "Falta CCCD") }
             return
+        }
+        // iOS replays existing notifications (PreExisting) only on a fresh Notification Source subscription.
+        // A recovery or Service Changed on a link that stayed up finds the CCCD still enabled, so a bonded peer
+        // gets disable-then-enable; its outcome is irrelevant (the enable below decides). Unbonded peers skip
+        // it so the pairing path is unchanged.
+        if (ch.uuid == AncsUuids.NOTIFICATION_SOURCE && device?.bondState == BluetoothDevice.BOND_BONDED) {
+            enqueue(q, "desc:${ch.uuid}", 5_000, {
+                g.writeDescriptor(cccd, BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE) == BluetoothStatusCodes.SUCCESS
+            }) {}
         }
         enqueue(q, "desc:${ch.uuid}", 10_000, {
             g.setCharacteristicNotification(ch, true) &&
@@ -376,20 +404,19 @@ class AncsClient(
 
         override fun onServiceChanged(g: BluetoothGatt) {
             if (!current(g)) return
-            // R03: close the session generation, rediscover and confirm subscriptions again.
-            // AMS is set up again once ANCS is ready on the rediscovered services.
-            BridgeStatus.event("Service Changed: nueva generación y redescubrimiento")
-            engine.endSession(engine.generation)
-            ams.reset()
-            detachQueue()
-            queue = GattOperationQueue(clock)
-            controlPoint = null
-            BridgeStatus.update { it.copy(counters = engine.counters) }
-            discover(g)
+            // R03: a new GATT client link gives a new generation, a clean discovery and fresh subscriptions
+            // (and the PreExisting replay). Rediscovering on the same client is not enough: an operation
+            // already in flight there (MTU, write) can swallow the discovery callback, observed on Watch7.
+            if (!rebuildLink("Service Changed")) {
+                BridgeStatus.update { it.copy(ancs = AncsState.FAILED, ancsDetail = "Service Changed repetido: pulsa Recuperar conexión") }
+            }
         }
     }
 
     companion object {
+        private const val MAX_AUTO_REBUILDS = 3
+        private const val REBUILD_DELAY_MS = 500L
+
         /** Insufficient authentication / encryption / auth failure. */
         private val AUTH_STATUSES = setOf(5, 15, 137)
 

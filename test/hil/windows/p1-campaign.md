@@ -66,3 +66,14 @@ Build 0.2.0-lab (4): perfiles de app, llamadas, acciones ANCS, música AMS y pan
 | M04 | Cambiar de pista desde el iPhone | Título y duración nuevos en el reloj | NOT_RUN |
 | M05 | Cerrar la app de música en el iPhone | La sección y la notificación de música desaparecen | NOT_RUN |
 | M06 | iPhone sin música / AMS no disponible | Los avisos siguen funcionando; Música muestra su estado sin afectar a ANCS | NOT_RUN |
+
+### Resultados observados en el reloj · 18 de octubre (0.2.0/0.2.1-lab)
+
+| Caso | Resultado | Nota |
+|---|---|---|
+| UI01 | PASS parcial | Lista de avisos activos con botón de acción del iPhone; cabecera y música no capturadas (el reloj se bloqueó) |
+| N09 (backlog silencioso) | PASS | 11 tarjetas reconstruidas con `alerta=false` tras actualizar |
+| Recuperar con enlace abierto | FAIL en 0.2.0 → corregido en 0.2.1; repetir NOT_RUN | iOS no reenviaba PreExisting con el CCCD ya activo |
+| R03 durante MTU | FAIL en build intermedia → corregido en 0.2.1; repetir NOT_RUN | Descubrimiento sin respuesta tras Service Changed |
+| Reanudar tras actualizar | PASS | `Puente reanudado tras actualización`, cuatro instalaciones |
+| M06 (iPhone sin reproducción) | PASS | AMS listo; solo volumen anunciado; los avisos no se ven afectados |

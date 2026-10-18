@@ -46,7 +46,9 @@ class MediaPresenter(private val context: Context) {
     fun render(state: MediaUiState) {
         val media = state.media
         val enabled = prefs.getBoolean(WristBridgeApp.PREF_MEDIA_NOTIFICATION, true)
-        if (!enabled || state.ams != AmsState.READY || !media.hasPlayer) {
+        // An idle player (nothing loaded, not playing) only offers volume: no ongoing notice for it.
+        val active = media.hasPlayer && (media.isPlaying || media.title.isNotBlank())
+        if (!enabled || state.ams != AmsState.READY || !active) {
             clear()
             return
         }
@@ -62,13 +64,16 @@ class MediaPresenter(private val context: Context) {
             hidden = hidden,
         )
         if (visible == last) return
-        val first = last == null
+        val previous = last
+        val first = previous == null
         // Cached before posting: a denied post is retried on the next visible change, not on every update.
         last = visible
         maybeStale = false
         try {
             manager.notify(NOTIFICATION_TAG, NOTIFICATION_ID, build(visible))
-            if (first) BridgeStatus.event("Aviso de música mostrado controles=${visible.controls.size}")
+            if (first || visible.controls != previous?.controls) {
+                BridgeStatus.event("Aviso de música ${if (first) "mostrado" else "actualizado"} controles=${visible.controls.size}")
+            }
         } catch (e: SecurityException) {
             BridgeStatus.event("Permiso de notificaciones denegado: aviso de música no mostrado")
             Log.w(TAG, "media notify denied", e)

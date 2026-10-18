@@ -1,0 +1,28 @@
+{
+  "applicationId": "dev.wristbridge.watch",
+  "versionName": "0.2.1-lab",
+  "versionCode": 5,
+  "apk": "build/releases/wristbridge-watch-0.2.1-lab-5.apk",
+  "sha256": "811371a0cb4a8277ea9b10e364d4987de2573559fce05640e89a52ab11133ece",
+  "bytes": 35801261,
+  "build": "PASS",
+  "lint": { "status": "PASS", "errors": 0, "warnings": 2, "warningRules": ["DataExtractionRules", "UseKtx"] },
+  "jvmTests": { "status": "PASS", "total": 70, "failures": 0 },
+  "installation": "PASS",
+  "installMethod": "adb install -r --no-streaming; app data and bond preserved",
+  "installedSha256Matches": true,
+  "deviceModel": "SM-L300",
+  "observedOnDevice": {
+    "source": "adb logcat -s WristBridge, ids and counts only",
+    "bridgeAutoResumeAfterUpdate": "PASS (MY_PACKAGE_REPLACED; observed on 4 consecutive installs, watch locked)",
+    "ancsReadyAfterUpdate": "PASS (Data Source confirmed, ANCS listo gen=1)",
+    "preExistingBacklogSilent": "PASS (11 cards rebuilt, all alerta=false; 3 recognised as missed calls)",
+    "amsReady": "PASS (AMS listo; iPhone idle, supported commands VOLUME_DOWN,VOLUME_UP)",
+    "uiRendersCardsWithActions": "PASS (screenshot of the active-cards list with the iPhone-provided action button; screenshot kept out of the repo because it shows real content)",
+    "manualRecoverOn0_2_0": "FAIL then fixed: link stayed up, CCCD still enabled, iOS did not replay PreExisting; 0.2.1 disables then re-enables NS/AMS CCCDs on bonded peers. Re-test NOT_RUN",
+    "serviceChangedDuringMtu": "FAIL then fixed: discovery callback swallowed while MTU was in flight, ANCS stuck; 0.2.1 rebuilds the client link (max 3 automatic rebuilds until READY). Re-test NOT_RUN"
+  },
+  "physicalChecks": "NOT_RUN for N10-N18, M01-M05 (need real notifications, calls and music on the iPhone)",
+  "G1": "NOT_RUN",
+  "iphoneUpdateRequired": false
+}

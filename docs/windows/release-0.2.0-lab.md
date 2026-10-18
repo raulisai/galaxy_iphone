@@ -44,3 +44,20 @@ APK: `build/releases/wristbridge-watch-0.2.0-lab-4.apk` (35 624 638 bytes, ignor
 ## Prueba física
 
 Guion completo en `test/hil/windows/p1-campaign.md`, sección «Prototipo 0.2.0-lab» (UI01, N10–N18, M01–M06). Puntos a vigilar: que el timbre se corte al pulsar una acción (depende de volver a publicar en el canal silencioso), que el descarte sincronizado llegue con el reloj inactivo y que AMS aparezca tras «Listo» (si el iPhone no lo expone, Música lo indica y los avisos siguen).
+
+## Actualización 0.2.1-lab (5) · misma tarde
+
+Instalada en el Watch7 tras revisar 0.2.0-lab en el reloj. SHA-256 `811371a0cb4a8277ea9b10e364d4987de2573559fce05640e89a52ab11133ece` (35 801 261 bytes); checksum en el reloj idéntico. 70 tests JVM, lint (0 errores) y assembleDebug PASS. Evidencia en `evidence/windows-p1-update-5/windows/`.
+
+Observado en el reloj con 0.2.0-lab: puente, ANCS y AMS listos; 11 avisos previos reconstruidos en silencio (3 reconocidos como llamadas perdidas); la lista de avisos activos se dibuja con el botón de acción del iPhone. Dos fallos encontrados y corregidos:
+
+- **«Recuperar conexión» dejaba el reloj sin avisos.** El enlace físico seguía abierto y el CCCD de Notification Source seguía activo, así que iOS no repetía los avisos existentes: se retiraban las 11 tarjetas y no volvían. Ahora, con el iPhone ya vinculado, la suscripción se desactiva y se reactiva (también en AMS) para que iOS los reenvíe.
+- **Service Changed durante la petición de MTU dejaba ANCS atascado.** El redescubrimiento en el mismo enlace nunca recibía respuesta. Ahora Service Changed, o un descubrimiento sin respuesta, rehace el enlace cliente, con un máximo de 3 intentos automáticos hasta volver a «Listo».
+
+Mejoras:
+
+- El puente se reanuda solo tras una actualización de la app o un reinicio del reloj, si el usuario lo dejó activo (`StartupReceiver`). Observado en cuatro instalaciones seguidas con el reloj bloqueado.
+- La notificación persistente de música solo aparece si hay pista o reproducción; con el reproductor inactivo, el iPhone solo ofrece volumen.
+- Diagnóstico: el log indica qué comandos de música anuncia el iPhone (solo nombres de comando).
+
+Repetir «Recuperar conexión» y R03 en la prueba física: los arreglos no se han vuelto a ejecutar en el reloj.
