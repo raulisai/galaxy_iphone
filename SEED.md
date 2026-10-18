@@ -26,7 +26,7 @@ App iPhone (Swift) que configura el accesorio y genera avisos de prueba para un 
 | Código 0.3.0 (7) | Ensayo de reconexión (`cef2c29`), rediseño UI (`71c32b6`) y pase de animaciones (sin commit) | §4 |
 | Pruebas del paquete Swift | PASS, 23 pruebas (2026-10-18) | `scripts/apple/test-package.sh` |
 | Compilación + UI tests simulador | PASS build; PASS 6/6 UI tests en iPhone 17 Pro iOS 26.2 (`WRISTBRIDGE_TEST_DESTINATION=id=<sim>`) | 2026-10-18 |
-| 0.3.0 en iPhone físico | **NOT_RUN** (no firmado ni instalado) | — |
+| 0.3.0 en iPhone físico | Firmado y **instalado: PASS**; apertura **BLOCKED** (iPhone bloqueado); ensayo de 20 reconexiones y aceptación **NOT_RUN** | `evidence/apple-0.3.0/apple/run.json` |
 | Campaña P2 20 ciclos / 19-de-20 en 30 s | **NOT_RUN** física | `test/hil/apple/p2-recovery.md` |
 | Gates G1/G2 y campaña conjunta | **PENDIENTES** (necesitan reloj + Windows) | `docs/apple/iphone-phases.md` |
 | Wire format / seguridad / propiedades BLE | **Bloqueado**: contrato conjunto `p1-lab-1` no congelado | `Doc/01_CONTRATO_COMPARTIDO.md` |
@@ -43,7 +43,7 @@ Fases P1–P8: ver tabla en `docs/apple/iphone-phases.md` (no se duplica aquí).
 | 2026-10-18 | Codex | 0.2.1: lotes 10/25/50, instalación firmada, traza física | HECHO, commit `8b066f2` | `docs/apple/handoff-0.2.1.md` |
 
 ## 5. Siguiente trabajo, por prioridad
-1. **(usuario + iPhone)** `bash scripts/apple/prepare-release.sh /tmp/WristBridge-iPhone-0.3.0` y `python3 scripts/apple/install-candidate.py /tmp/WristBridge-iPhone-0.3.0 --launch`; ejecutar el ensayo de 20 reconexiones y compartir el informe. Registrar PASS/FAIL en `evidence/apple-0.3.0/apple/run.json` (carpeta aún inexistente; no inventar resultados).
+1. **(usuario + iPhone)** 0.3.0 (7) ya está instalado (2026-10-18). Desbloquear el iPhone, abrir la app, conectar el reloj y ejecutar el ensayo de 20 reconexiones y compartir el informe. Registrar PASS/FAIL en `evidence/apple-0.3.0/apple/run.json` (no inventar resultados).
 2. Actualizar `docs/provenance/apple-inventory.json` y `evidence/**` al generar el candidato 0.3.0 (hoy menciona 0.2.1).
 3. Quitar la entrada de `README.md` "Candidato actual 0.2.1" cuando 0.3.0 se instale y pruebe; hasta entonces dice 0.2.1 por ser lo verificado en dispositivo.
 4. P3 local: revisar Dynamic Type y Reducir movimiento del rediseño; medir CPU del fondo `LivingBackground` en iPhone físico. P8 empaquetado autorizado.
