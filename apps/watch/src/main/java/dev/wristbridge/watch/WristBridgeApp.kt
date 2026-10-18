@@ -34,6 +34,8 @@ class WristBridgeApp : Application() {
     }
 
     companion object {
+        /** Boolean extra: MainActivity opens directly on the call screen (from the call notification). */
+        const val EXTRA_OPEN_CALL = "open_call"
         const val CHANNEL_SERVICE = "bridge_service"
         const val CHANNEL_ALERTS = "iphone_alerts"
         const val CHANNEL_CALLS = "iphone_calls"

@@ -1,6 +1,7 @@
 package dev.wristbridge.watch.ui
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -45,10 +48,29 @@ internal enum class Screen(val parent: Screen?) {
     DIAGNOSTICS(SETTINGS),
 }
 
+
 class MainActivity : ComponentActivity() {
+    /** Incremented per call-tap launch; the composition reacts to every change (also when already open). */
+    private var openCallRequest by mutableIntStateOf(0)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { MaterialTheme { AppScaffold { WatchApp() } } }
+        // After a configuration change/process restore the extra is stale: the saved UI state wins.
+        if (savedInstanceState == null) consumeOpenCall(intent)
+        setContent { MaterialTheme { AppScaffold { WatchApp(openCallRequest) } } }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        consumeOpenCall(intent)
+    }
+
+    private fun consumeOpenCall(source: Intent?) {
+        if (source?.getBooleanExtra(WristBridgeApp.EXTRA_OPEN_CALL, false) == true) {
+            source.removeExtra(WristBridgeApp.EXTRA_OPEN_CALL)
+            openCallRequest++
+        }
     }
 }
 
@@ -58,7 +80,7 @@ class MainActivity : ComponentActivity() {
  * Card and track content is only rendered, never logged.
  */
 @Composable
-private fun WatchApp() {
+private fun WatchApp(openCallRequest: Int) {
     val context = LocalContext.current
     val widthDp = LocalConfiguration.current.screenWidthDp
     val metrics = remember(widthDp) { Metrics((widthDp / 192f).coerceIn(0.78f, 1.3f)) }
@@ -107,6 +129,15 @@ private fun WatchApp() {
     val callTag = call?.active?.card?.key?.tag
     val showCall = call != null && callTag != minimizedCall
 
+    // Tap on the call notification: un-minimize and leave sub-screens so the call shows first. If the call
+    // is no longer ringing `call` is null and Home is shown.
+    LaunchedEffect(openCallRequest) {
+        if (openCallRequest > 0) {
+            minimizedCall = null
+            screen = Screen.HOME
+        }
+    }
+
     BackHandler(enabled = screen.parent != null) { screen = screen.parent ?: Screen.HOME }
     BackHandler(enabled = showCall) { minimizedCall = callTag }
 
@@ -117,8 +148,10 @@ private fun WatchApp() {
             if (showCall && call != null) {
                 CallScreen(
                     call = call,
+                    music = music,
                     actionsEnabled = model.actionsEnabled,
                     onAction = { action -> BridgeService.sendCardAction(context, call.active.card.key, action) },
+                    onMedia = { command -> BridgeService.sendMedia(context, command) },
                     onMinimize = { minimizedCall = callTag },
                 )
             } else {

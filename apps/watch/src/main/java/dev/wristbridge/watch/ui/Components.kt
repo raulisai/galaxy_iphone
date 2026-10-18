@@ -127,8 +127,8 @@ internal fun Tile(
     val m = LocalMetrics.current
     Tappable(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth().heightIn(min = m.dp(56)),
-        shape = RoundedCornerShape(m.dp(24)),
+        modifier = modifier.fillMaxWidth().heightIn(min = m.dp(60)),
+        shape = RoundedCornerShape(m.dp(26)),
         container = container,
         pressed = pressed,
         contentAlignment = Alignment.CenterStart,
@@ -193,7 +193,7 @@ internal fun Pill(
     val m = LocalMetrics.current
     Tappable(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth().heightIn(min = m.dp(44)),
+        modifier = modifier.fillMaxWidth().heightIn(min = m.dp(48)),
         shape = RoundedCornerShape(percent = 50),
         container = container,
         pressed = pressed,
@@ -333,12 +333,12 @@ internal fun ListScreen(content: ScalingLazyListScope.() -> Unit) {
             modifier = Modifier.fillMaxSize(),
             state = state,
             contentPadding = PaddingValues(
-                start = m.dp(8),
-                end = m.dp(8),
+                start = m.dp(14),
+                end = m.dp(14),
                 top = padding.calculateTopPadding(),
                 bottom = padding.calculateBottomPadding(),
             ),
-            verticalArrangement = Arrangement.spacedBy(m.dp(6)),
+            verticalArrangement = Arrangement.spacedBy(m.dp(8)),
             autoCentering = null,
             content = content,
         )

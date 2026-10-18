@@ -4,7 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.wear.compose.material3.ScreenScaffold
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,7 +35,10 @@ import dev.wristbridge.protocol.ams.formatMediaTime
 import dev.wristbridge.watch.R
 import dev.wristbridge.watch.bridge.AmsState
 
-/** Now playing: artwork-like badge, title/artist, progress, transport and volume. */
+/**
+ * Now playing: title/artist, progress, transport and volume. The screen is a plain scrolling column (not a
+ * ScalingLazyColumn) so the crown is free to drive the iPhone volume instead of scrolling the list.
+ */
 @Composable
 internal fun MusicScreen(model: UiModel, onCommand: (RemoteCommand) -> Unit) {
     val m = LocalMetrics.current
@@ -36,47 +46,51 @@ internal fun MusicScreen(model: UiModel, onCommand: (RemoteCommand) -> Unit) {
     val media = music.media
     val playerVisible = music.ams == AmsState.READY && media.hasPlayer
     val hiddenText = stringResource(R.string.card_hidden)
+    val crown = rememberCrownVolume(music, onCommand)
+    val scroll = rememberScrollState()
 
-    ListScreen {
-        if (!playerVisible) {
-            item(key = "empty") {
-                Column(
-                    modifier = Modifier.fillMaxWidth().padding(top = m.dp(10)),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(m.dp(8)),
-                ) {
+    ScreenScaffold(scrollState = scroll) { padding ->
+        BoxWithConstraints(Modifier.fillMaxSize().then(crown.modifier)) {
+            // Round bezel: keep content out of the corners, a little wider than the scaffold's own inset.
+            val side = maxWidth * 0.08f
+            val tall = maxHeight >= m.dp(230)
+            Column(
+                modifier = Modifier.fillMaxWidth().heightIn(min = maxHeight).verticalScroll(scroll)
+                    .padding(padding).padding(horizontal = side, vertical = m.dp(6)),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(m.dp(10), Alignment.CenterVertically),
+            ) {
+                if (!playerVisible) {
                     Glyph(GlyphKind.NOTE, WbColors.Fill, Modifier.size(m.dp(44)))
                     WbText("Música", style = MaterialTheme.typography.titleSmall, weight = FontWeight.SemiBold, align = TextAlign.Center)
                     Caption(musicUnavailableLine(music))
-                }
-            }
-            return@ListScreen
-        }
-
-        item(key = "art") { Artwork() }
-        item(key = "info") {
-            Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                if (model.hidePreview) {
-                    WbText(hiddenText, style = MaterialTheme.typography.titleSmall, weight = FontWeight.Bold, align = TextAlign.Center, maxLines = 2)
                 } else {
-                    if (media.title.isNotBlank()) {
-                        WbText(media.title, style = MaterialTheme.typography.titleSmall, weight = FontWeight.Bold, align = TextAlign.Center, maxLines = 2)
+                    if (tall) Artwork()
+                    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(m.dp(2))) {
+                        if (model.hidePreview) {
+                            WbText(hiddenText, style = MaterialTheme.typography.titleSmall, weight = FontWeight.Bold, align = TextAlign.Center, maxLines = 2)
+                        } else {
+                            if (media.title.isNotBlank()) {
+                                WbText(media.title, style = MaterialTheme.typography.titleSmall, weight = FontWeight.Bold, align = TextAlign.Center, maxLines = 2)
+                            }
+                            if (media.artist.isNotBlank()) {
+                                WbText(media.artist, style = MaterialTheme.typography.bodySmall, color = WbColors.Pink, align = TextAlign.Center, maxLines = 1)
+                            }
+                        }
+                        WbText(media.playerName, style = MaterialTheme.typography.labelSmall, color = WbColors.Secondary, align = TextAlign.Center, maxLines = 1)
                     }
-                    if (media.artist.isNotBlank()) {
-                        WbText(media.artist, style = MaterialTheme.typography.bodySmall, color = WbColors.Pink, align = TextAlign.Center, maxLines = 1)
+                    Progress(media)
+                    Transport(media, onCommand)
+                    if (showVolume(media)) {
+                        VolumeBar(media, onCommand)
+                    } else {
+                        media.volume?.let { Caption("Volumen ${volumePercent(it)}") }
                     }
+                    if (crown.active) Caption("Gira la corona para el volumen", maxLines = 2)
                 }
-                WbText(media.playerName, style = MaterialTheme.typography.labelSmall, color = WbColors.Secondary, align = TextAlign.Center, maxLines = 1)
+                Spacer(Modifier.height(m.dp(14)))
             }
-        }
-        item(key = "progress") { Progress(media) }
-        item(key = "transport") { Transport(media, onCommand) }
-        item(key = "volume") {
-            if (showVolume(media)) {
-                VolumeBar(media, onCommand)
-            } else {
-                media.volume?.let { Caption("Volumen ${volumePercent(it)}") }
-            }
+            VolumeOverlay(crown, Modifier.align(Alignment.BottomCenter).padding(bottom = maxHeight * 0.12f))
         }
     }
 }
@@ -85,7 +99,7 @@ internal fun MusicScreen(model: UiModel, onCommand: (RemoteCommand) -> Unit) {
 private fun Artwork() {
     val m = LocalMetrics.current
     Box(
-        modifier = Modifier.size(m.dp(72)).clip(RoundedCornerShape(m.dp(18)))
+        modifier = Modifier.size(m.dp(64)).clip(RoundedCornerShape(m.dp(16)))
             .background(Brush.linearGradient(listOf(WbColors.Pink, Color(0xFF7D2AE8)))),
         contentAlignment = Alignment.Center,
     ) {
@@ -95,9 +109,9 @@ private fun Artwork() {
 
 /** Thin rounded bar; [fraction] is clamped to 0..1. */
 @Composable
-private fun LevelBar(fraction: Float, fill: Color, modifier: Modifier = Modifier) {
+internal fun LevelBar(fraction: Float, fill: Color, modifier: Modifier = Modifier) {
     val m = LocalMetrics.current
-    Box(modifier.fillMaxWidth().height(m.dp(4)).clip(CircleShape).background(WbColors.Fill)) {
+    Box(modifier.height(m.dp(5)).clip(CircleShape).background(WbColors.Fill)) {
         Box(Modifier.fillMaxWidth(fraction.coerceIn(0f, 1f)).fillMaxHeight().background(fill))
     }
 }
@@ -109,8 +123,8 @@ private fun Progress(media: MediaState) {
     val elapsed = rememberElapsedSeconds(media)
     val duration = media.durationSeconds
     val fraction = if (elapsed != null && duration != null && duration > 0.0) (elapsed / duration).toFloat() else 0f
-    Column(Modifier.fillMaxWidth().padding(horizontal = m.dp(8)), verticalArrangement = Arrangement.spacedBy(m.dp(3))) {
-        LevelBar(fraction, Color.White)
+    Column(Modifier.fillMaxWidth().padding(horizontal = m.dp(4)), verticalArrangement = Arrangement.spacedBy(m.dp(4))) {
+        LevelBar(fraction, Color.White, Modifier.fillMaxWidth())
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             WbText(formatMediaTime(elapsed), style = MaterialTheme.typography.labelSmall, color = WbColors.Secondary, maxLines = 1)
             if (elapsed != null && duration != null) {
@@ -130,19 +144,19 @@ private fun Transport(media: MediaState, onCommand: (RemoteCommand) -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         CircleButton(
-            GlyphKind.PREVIOUS, { onCommand(RemoteCommand.PREVIOUS_TRACK) }, m.dp(46), "Anterior",
+            GlyphKind.PREVIOUS, { onCommand(RemoteCommand.PREVIOUS_TRACK) }, m.dp(52), "Anterior",
             enabled = canSend(media, RemoteCommand.PREVIOUS_TRACK),
         )
         CircleButton(
             if (media.isPlaying) GlyphKind.PAUSE else GlyphKind.PLAY,
             { playPause?.let(onCommand) },
-            m.dp(60),
+            m.dp(64),
             if (media.isPlaying) "Pausar" else "Reproducir",
             container = Color.White, pressed = WbColors.Secondary, tint = Color.Black,
             enabled = playPause != null,
         )
         CircleButton(
-            GlyphKind.NEXT, { onCommand(RemoteCommand.NEXT_TRACK) }, m.dp(46), "Siguiente",
+            GlyphKind.NEXT, { onCommand(RemoteCommand.NEXT_TRACK) }, m.dp(52), "Siguiente",
             enabled = canSend(media, RemoteCommand.NEXT_TRACK),
         )
     }
@@ -157,17 +171,17 @@ private fun VolumeBar(media: MediaState, onCommand: (RemoteCommand) -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         CircleButton(
-            GlyphKind.MINUS, { onCommand(RemoteCommand.VOLUME_DOWN) }, m.dp(40), "Bajar volumen",
+            GlyphKind.MINUS, { onCommand(RemoteCommand.VOLUME_DOWN) }, m.dp(48), "Bajar volumen",
             enabled = media.supports(RemoteCommand.VOLUME_DOWN),
         )
         Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(m.dp(3))) {
-            LevelBar((media.volume ?: 0.0).toFloat(), WbColors.Label)
+            LevelBar((media.volume ?: 0.0).toFloat(), WbColors.Label, Modifier.fillMaxWidth())
             media.volume?.let {
                 WbText(volumePercent(it), style = MaterialTheme.typography.labelSmall, color = WbColors.Secondary, align = TextAlign.Center, maxLines = 1)
             }
         }
         CircleButton(
-            GlyphKind.PLUS, { onCommand(RemoteCommand.VOLUME_UP) }, m.dp(40), "Subir volumen",
+            GlyphKind.PLUS, { onCommand(RemoteCommand.VOLUME_UP) }, m.dp(48), "Subir volumen",
             enabled = media.supports(RemoteCommand.VOLUME_UP),
         )
     }

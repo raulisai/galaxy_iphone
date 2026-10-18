@@ -3,6 +3,7 @@ package dev.wristbridge.watch.bridge
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.Person
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -105,16 +106,33 @@ class CardPresenter(private val context: Context) {
         // A call card also stays bounded after an action result, in case ANCS Removed is lost with the link.
         val bounded = ringing || (kind == CallKind.INCOMING && feedback != null)
 
-        val open = PendingIntent.getActivity(
-            context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE,
-        )
+        val incoming = kind == CallKind.INCOMING
+        val open = if (incoming) {
+            // Straight onto the call screen. No full-screen intent, Telecom or keyguard handling (project rule).
+            PendingIntent.getActivity(
+                context, REQUEST_OPEN_CALL,
+                Intent(context, MainActivity::class.java)
+                    .putExtra(WristBridgeApp.EXTRA_OPEN_CALL, true)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP),
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+            )
+        } else {
+            PendingIntent.getActivity(
+                context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE,
+            )
+        }
+        // The native call template needs both answer and decline offered by the iPhone; otherwise keep the
+        // plain style with whatever buttons exist.
+        val callStyle = incoming && feedback == null && withActions &&
+            card.positiveActionLabel != null && card.negativeActionLabel != null
+        val accent = if (incoming) CALL_GREEN else presentation.source.accentArgb
         val n: Notification = NotificationCompat.Builder(context, channel)
             .setSmallIcon(smallIcon)
             .setContentTitle(presentation.title)
             .setContentText(body)
             .setStyle(NotificationCompat.BigTextStyle().bigText(body))
             .setLargeIcon(badges.icon(presentation.source))
-            .setColor(presentation.source.accentArgb)
+            .setColor(accent)
             .setSubText(presentation.source.label)
             .setCategory(
                 when (kind) {
@@ -126,10 +144,11 @@ class CardPresenter(private val context: Context) {
             .setOnlyAlertOnce(true)
             .setSilent(!alert)
             .setAutoCancel(false)
+            .setOngoing(incoming)
             .setContentIntent(open)
             .setGroup("wb-${card.key.sessionGeneration}-${presentation.source.groupKey}")
             .apply {
-                if (withActions) {
+                if (withActions && !callStyle) {
                     // Labels are the iPhone's own ("Aceptar", "Rechazar", "Borrar"); positive first.
                     card.positiveActionLabel?.let {
                         addAction(
@@ -155,12 +174,31 @@ class CardPresenter(private val context: Context) {
                 if (bounded) setTimeoutAfter(RING_TIMEOUT_MS)
             }
             .build()
+            .let { if (callStyle) withCallStyle(it, card, presentation, hidePreview) else it }
         // Insistent until ANCS Removed (answered, declined or missed) cancels it; the timeout above
         // bounds the ring if that event is lost with the link. Updates never restart the ring, and any
         // silent re-post (update or action result) on the quiet channel stops it.
         if (ringing) n.flags = n.flags or Notification.FLAG_INSISTENT
         manager.notify(card.key.tag, CARD_ID, n)
         return presentation
+    }
+
+    /**
+     * Re-styles [base] with the framework incoming-call template (API 31+): caller name, Answer/Decline buttons
+     * wired to the existing card action broadcasts. NotificationCompat has no hook for the framework style, so
+     * the built notification is recovered into a framework builder; every other field is preserved.
+     * With hide-preview on, the caller is never shown: a generic name is used instead.
+     */
+    private fun withCallStyle(
+        base: Notification, card: NotificationCard, presentation: CardPresentation, hidePreview: Boolean,
+    ): Notification {
+        val name = if (hidePreview) presentation.source.label.ifBlank { GENERIC_CALLER } else presentation.title
+        val caller = Person.Builder().setName(name.ifBlank { GENERIC_CALLER }).setImportant(true).build()
+        val answer = actionIntent(card.key, BridgeService.ACTION_CARD_ACTION, ActionId.POSITIVE, REQUEST_POSITIVE)
+        val decline = actionIntent(card.key, BridgeService.ACTION_CARD_ACTION, ActionId.NEGATIVE, REQUEST_NEGATIVE)
+        return Notification.Builder.recoverBuilder(context, base)
+            .setStyle(Notification.CallStyle.forIncomingCall(caller, decline, answer))
+            .build()
     }
 
     private fun label(fromIphone: String, fallback: Int): String =
@@ -220,10 +258,13 @@ class CardPresenter(private val context: Context) {
     companion object {
         const val CARD_ID = 1
         private const val RING_TIMEOUT_MS = 90_000L
+        private const val CALL_GREEN = 0xFF34A853.toInt()
+        private const val GENERIC_CALLER = "Llamada entrante"
 
         // Request-code kinds for BridgeService.requestCode(key, kind); distinct per card and per intent.
         private const val REQUEST_POSITIVE = 1
         private const val REQUEST_NEGATIVE = 2
         private const val REQUEST_DISMISS = 3
+        private const val REQUEST_OPEN_CALL = 4
     }
 }
