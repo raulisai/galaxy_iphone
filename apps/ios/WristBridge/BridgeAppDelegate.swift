@@ -9,6 +9,9 @@ enum BridgeRuntime {
 final class BridgeAppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        // Ensure the notification delegate exists even when iOS launches us for a notification action.
+        _ = NotificationFixtureAdapter.shared
+        _ = FindViaNotifications.shared
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("--demo") { return true }
         #endif
