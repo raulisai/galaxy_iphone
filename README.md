@@ -8,12 +8,15 @@ El usuario reportó recepción de avisos en Watch7 incluso con iPhone suspendido
 
 Ramas: `developer` es la integración solicitada por el usuario; `development_codex` es la rama de trabajo Apple. `main` conserva su historia anterior. Los avances de `feat/ios/xcode-validation` ya están incorporados.
 
+- [**SEED.md**: estado vivo del proyecto y protocolo multiagente](SEED.md).
+- [Ensayo de reconexión 0.3.0 (sin instalar aún)](docs/apple/handoff-0.3.0.md).
 - [Pruebas rápidas de la versión 0.2.1](test/hil/apple/quickstart-0.2.1.md).
 - [Integración y entrega 0.2.1](docs/apple/handoff-0.2.1.md).
 - [Estado actual y entrega P2 Apple](docs/apple/handoff-P2.md).
 - [Revisión del plan y decisiones](docs/apple/review.md).
 - [Entorno y restricciones reales](docs/apple/environment.md).
 - [Instalación y prueba iPhone](docs/apple/installation.md).
+- [Propuesta de salud P7 (en revisión)](docs/apple/health-sync-proposal.md).
 - [Entrega al equipo del reloj](docs/apple/handoff-G0.md).
 - [Validación con Xcode y resultados](docs/apple/validation-xcode.md).
 - [Instalación física y confianza del perfil](docs/apple/physical-installation.md).

@@ -1,5 +1,7 @@
 # WristBridge Apple workspace
 
+**Start with `SEED.md`**: live project status and the multi-agent protocol (claim work, update status, hand off). Update it before finishing any task.
+
 Read `Doc/00_LEEME_Y_COORDINACION.md`, `Doc/01_CONTRATO_COMPARTIDO.md`, `Doc/03_MAC_SWIFT.md` and `docs/apple/handoff-G0.md` before changes. For current Apple work also read `docs/apple/iphone-phases.md`, `docs/apple/handoff-P2.md` and `docs/apple/handoff-0.2.1.md`.
 
 - Work on `development_codex`, the single Apple working branch requested by the user. Use `developer` as the integrated branch explicitly requested by the user; preserve the existing `main` history; do not create extra task branches unless requested. The previous `feat/ios/xcode-validation` work has been integrated.

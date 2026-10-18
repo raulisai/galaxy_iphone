@@ -1,0 +1,22 @@
+{
+  "version": "0.3.0",
+  "build": "7",
+  "configuration": "Release",
+  "signedBuild": "PASS",
+  "signatureVerification": "PASS",
+  "profileExpiresAt": "2026-10-24T06:30:31+00:00",
+  "debugLabHookAbsent": true,
+  "installation": "PASS",
+  "physicalAcceptance": "NOT_RUN",
+  "binarySHA256": "58be7f73c5f3237650e543804dc91e2f1bded275ddc87ba9656782307770026b",
+  "sourceManifestSHA256": "a2bed4c179fb868a3fccf6cd4ff5d07ead7a899efdd607237b7122a6f85ff869",
+  "baseCommit": "d9fe2e8557a92642a949aefee9e81b8d9639d59b",
+  "workspaceChangesPresent": false,
+  "toolchain": "Xcode 27.1\nBuild version 27A9275",
+  "deploymentTarget": "iOS 26.0",
+  "profileRevision": "p1-lab-1",
+  "launch": "BLOCKED",
+  "launchReason": "device locked",
+  "uiTestsSimulator": "PASS 6/6 (simulator, not a gate)",
+  "packageTests": "PASS 23/23"
+}

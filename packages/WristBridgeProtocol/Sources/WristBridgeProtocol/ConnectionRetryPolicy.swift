@@ -13,3 +13,20 @@ public struct ConnectionRetryPolicy: Sendable {
         return delay
     }
 }
+
+/// Decides when the app should quietly re-request the link on its own (on
+/// foreground and on a slow heartbeat) because the radio path went idle without
+/// the operator asking for it. Never overrides Detener, a running campaign or a
+/// missing authorization, and never treats a pending connection as stale.
+public enum LinkResumePolicy {
+    public static func shouldResume(stopped: Bool, authorized: Bool, automaticRecovery: Bool,
+                                    campaignRunning: Bool, radioOn: Bool,
+                                    channel: ConfigurationChannel) -> Bool {
+        guard !stopped, authorized, automaticRecovery, !campaignRunning else { return false }
+        switch channel {
+        case .idle, .disconnected: return true
+        case .unavailable: return radioOn
+        case .connecting, .connected, .serviceFound: return false
+        }
+    }
+}
