@@ -2,20 +2,21 @@
 
 Base Apple para conectar un iPhone con Galaxy Watch7. El reloj consume ANCS directamente; la app iPhone configura el accesorio y genera pruebas propias. La implementación Kotlin del equipo Windows ya está integrada en este checkout.
 
-Candidato actual **0.2.1 (6)**: Conexión, Pruebas y Ajustes, recuperación/restauración, resultados propios persistentes y controles de privacidad. El Release firmado 0.2.1 (6) está instalado y abrió en el iPhone. La traza física confirmó el servicio de configuración tras esperar disponibilidad Bluetooth; la campaña completa de avisos/recuperación sigue pendiente.
+Código actual **0.3.3 (10)**: Reloj, Notificaciones y Ajustes, recuperación/restauración, ensayo de 20 reconexiones, pantallas de funciones y controles de privacidad. [Entrega y pruebas pendientes](docs/apple/handoff-0.3.3.md); [estado de validación e instalación](evidence/apple-0.3.3/apple/run.json). La evidencia histórica 0.2.1 confirmó apertura y servicio restaurado; no demuestra aceptación física de versiones posteriores.
 
 El usuario reportó recepción de avisos en Watch7 incluso con iPhone suspendido/app cerrada deslizando; el fallo anterior del canal de configuración se conserva en la evidencia. **No están cerradas todas las fases**: canal seguro/contratos, extensiones de salud/contactos y campañas conjuntas siguen pendientes. Ver [estado de las ocho fases iPhone](docs/apple/iphone-phases.md).
 
 Ramas: `developer` es la integración solicitada por el usuario; `development_codex` es la rama de trabajo Apple. `main` conserva su historia anterior. Los avances de `feat/ios/xcode-validation` ya están incorporados.
 
 - [**SEED.md**: estado vivo del proyecto y protocolo multiagente](SEED.md).
-- [Ensayo de reconexión 0.3.0 (sin instalar aún)](docs/apple/handoff-0.3.0.md).
+- [Historial del ensayo de reconexión 0.3.0](docs/apple/handoff-0.3.0.md).
 - [Pruebas rápidas de la versión 0.2.1](test/hil/apple/quickstart-0.2.1.md).
 - [Integración y entrega 0.2.1](docs/apple/handoff-0.2.1.md).
 - [Estado actual y entrega P2 Apple](docs/apple/handoff-P2.md).
 - [Revisión del plan y decisiones](docs/apple/review.md).
 - [Entorno y restricciones reales](docs/apple/environment.md).
 - [Instalación y prueba iPhone](docs/apple/installation.md).
+- [Salud y Buscar iPhone: estado e integración](docs/apple/health-find-integration-status.md).
 - [Propuesta de salud P7 (en revisión)](docs/apple/health-sync-proposal.md).
 - [Entrega al equipo del reloj](docs/apple/handoff-G0.md).
 - [Validación con Xcode y resultados](docs/apple/validation-xcode.md).

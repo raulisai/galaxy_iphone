@@ -10,10 +10,11 @@ enum Motion {
 
 /// Scales and dims slightly while pressed, like system tiles.
 struct PressableStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var scale: CGFloat = 0.96
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .scaleEffect(configuration.isPressed ? scale : 1)
+            .scaleEffect(configuration.isPressed && !reduceMotion ? scale : 1)
             .opacity(configuration.isPressed ? 0.85 : 1)
             .animation(Motion.snappy, value: configuration.isPressed)
     }
@@ -58,10 +59,11 @@ extension View {
 /// Slowly drifting mesh gradient tinted by the link state.
 struct LivingBackground: View {
     let tone: LinkTone
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion)) { context in
+        TimelineView(.animation(minimumInterval: 1 / 15, paused: reduceMotion || scenePhase != .active)) { context in
             let t = Float(context.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 3600))
             let drift: Float = reduceMotion ? 0 : 1
             let cx: Float = 0.5 + 0.12 * sin(t * 0.35) * drift

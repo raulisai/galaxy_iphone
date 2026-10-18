@@ -11,6 +11,7 @@ struct WatchHeroView: View {
     let status: String
     var size: CGFloat = 190
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.scenePhase) private var scenePhase
     @State private var tilt: CGSize = .zero
     @State private var appeared = false
     @State private var celebrations = 0
@@ -25,12 +26,12 @@ struct WatchHeroView: View {
             watchCase
             WatchFace(tone: tone, size: size * 0.86)
             crystalReflection
-            successRipple
+            if !reduceMotion { successRipple }
         }
         .frame(width: size, height: size * 1.5)
-        .rotation3DEffect(.degrees(Double(tilt.width) / 9), axis: (x: 0, y: 1, z: 0), perspective: 0.6)
-        .rotation3DEffect(.degrees(Double(-tilt.height) / 12), axis: (x: 1, y: 0, z: 0), perspective: 0.6)
-        .scaleEffect(appeared ? 1 : 0.82)
+        .rotation3DEffect(.degrees(reduceMotion ? 0 : Double(tilt.width) / 9), axis: (x: 0, y: 1, z: 0), perspective: 0.6)
+        .rotation3DEffect(.degrees(reduceMotion ? 0 : Double(-tilt.height) / 12), axis: (x: 1, y: 0, z: 0), perspective: 0.6)
+        .scaleEffect(appeared || reduceMotion ? 1 : 0.82)
         .opacity(appeared ? 1 : 0)
         .simultaneousGesture(DragGesture(minimumDistance: 4)
             .onChanged { value in
@@ -52,7 +53,7 @@ struct WatchHeroView: View {
         let glow = Circle().fill(tone.glow.opacity(tone == .idle ? 0.25 : 0.45))
             .frame(width: size * 1.05, height: size * 1.05)
             .blur(radius: size * 0.22)
-        if reduceMotion { glow } else {
+        if reduceMotion || scenePhase != .active { glow } else {
             glow.phaseAnimator([false, true]) { view, phase in
                 view.scaleEffect(phase ? 1.1 : 0.9).opacity(phase ? 1 : 0.65)
             } animation: { _ in Motion.gentle }
@@ -138,8 +139,9 @@ private struct RippleFrame {
 private struct RadarRings: View {
     let color: Color
     let diameter: CGFloat
+    @Environment(\.scenePhase) private var scenePhase
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1 / 30)) { context in
+        TimelineView(.animation(minimumInterval: 1 / 30, paused: scenePhase != .active)) { context in
             let t = context.date.timeIntervalSinceReferenceDate
             ZStack {
                 ForEach(0..<3, id: \.self) { index in
@@ -160,12 +162,13 @@ private struct WatchFace: View {
     let tone: LinkTone
     let size: CGFloat
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         ZStack {
             RadialGradient(colors: [Color(red: 0.07, green: 0.11, blue: 0.24), .black],
                            center: .center, startRadius: 2, endRadius: size * 0.55)
-            TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion)) { context in
+            TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion || scenePhase != .active)) { context in
                 Canvas { canvas, area in draw(in: &canvas, area: area, date: context.date) }
             }
             centerContent

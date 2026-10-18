@@ -12,7 +12,10 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
     var onMessage: ((String) -> Void)?
     var onRadio: ((String) -> Void)?
     private let diagnostics = BluetoothDiagnostics()
-    func clearDiagnostics() { diagnostics.clear() }
+    func clearDiagnostics() {
+        diagnostics.clear()
+        attCapacity = "not-measured"
+    }
     var diagnosticTrace: String { diagnostics.summary }
     var tracePersistenceAvailable: Bool { diagnostics.persistenceAvailable }
     private var central: CBCentralManager?
@@ -25,6 +28,9 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
     private var retryTask: Task<Void, Never>?
     private var retryPolicy = ConnectionRetryPolicy()
     private(set) var restoredPeripheralCount = 0
+    /// Read-only lab measurement for the P2 draft (Q-A5): values CoreBluetooth reports
+    /// for the current link. Measured, never assumed; no data is written to the watch.
+    private(set) var attCapacity: String = "not-measured"
     var retryAttempts: Int { retryPolicy.attempts }
     var automaticRecovery = true {
         didSet {
@@ -227,6 +233,11 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
         if error == nil,
            peripheral.services?.contains(where: { $0.uuid == CBUUID(nsuuid: BLEProfile.service) }) == true {
             retryPolicy.reset()
+            let withResponse = peripheral.maximumWriteValueLength(for: .withResponse)
+            let withoutResponse = peripheral.maximumWriteValueLength(for: .withoutResponse)
+            attCapacity = "write-with-response=\(withResponse) write-without-response=\(withoutResponse)"
+            diagnostics.record(.writeWithResponseCapacity, value: withResponse)
+            diagnostics.record(.writeWithoutResponseCapacity, value: withoutResponse)
             diagnostics.record(.serviceVerified)
             onEvent?(.serviceFound)
             onMessage?("Se encontró el servicio de configuración. Los avisos del reloj siguen sin comprobarse.")

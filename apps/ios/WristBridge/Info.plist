@@ -14,7 +14,7 @@
     <key>NSAccessorySetupKitSupports</key><array><string>Bluetooth</string></array>
     <key>NSAccessorySetupBluetoothServices</key><array><string>6F06B8B1-21D9-4C65-9D7E-118880E36A01</string></array>
     <key>NSAccessorySetupBluetoothNames</key><array><string>WristBridge</string></array>
-    <key>UIBackgroundModes</key><array><string>bluetooth-central</string></array>
+    <key>UIBackgroundModes</key><array><string>bluetooth-central</string><string>audio</string></array>
     <key>UIApplicationSceneManifest</key><dict>
         <key>UIApplicationSupportsMultipleScenes</key><false/>
     </dict>

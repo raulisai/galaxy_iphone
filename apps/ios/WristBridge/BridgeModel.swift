@@ -33,6 +33,14 @@ final class BridgeModel: ObservableObject {
         return controller
     }
 
+    private var healthStore: HealthStore?
+    var health: HealthStore {
+        if let healthStore { return healthStore }
+        let store = HealthStore(isDemo: isDemo, retentionDays: retentionDays)
+        healthStore = store
+        return store
+    }
+
     func beginRecoveryProbe(accessory: UUID) -> Bool {
         guard !isDemo, !stopped, state.authorization == .authorized, authorizedID == accessory else { return false }
         transport.stop()
@@ -148,6 +156,7 @@ final class BridgeModel: ObservableObject {
 
     func setRetentionDays(_ days: Int) {
         guard [7, 30, 90].contains(days) else { return }
+        healthStore?.applyRetention(days: days)
         retentionDays = days
         settingsStore?.update(retentionDays: days)
     }
@@ -161,6 +170,7 @@ final class BridgeModel: ObservableObject {
         settingsWarning = nil
         transport.clearDiagnostics()
         campaignController?.delete()
+        health.delete()
         lastLinkedAt = nil
         preferences.removeObject(forKey: Self.lastLinkedKey)
     }
@@ -234,6 +244,7 @@ final class BridgeModel: ObservableObject {
         settings-persistence=\(settingsWarning == nil ? "available" : "preserved-unreadable")
         trace-persistence=\(transport.tracePersistenceAvailable)
         bluetooth-trace=\(transport.diagnosticTrace)
+        last-verified-link-att-capacity=\(transport.attCapacity)
         ancs=not-verified
         sensitive-channel=disabled
         last-local-check=\(lastCheck?.ISO8601Format() ?? "none")

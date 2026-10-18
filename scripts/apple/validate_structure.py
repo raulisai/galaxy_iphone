@@ -41,7 +41,7 @@ check(len(set(re.findall(r"\| (P[1-8]-\d{2}) \|", matrix))) == 60, "60 unique ta
 info = plistlib.loads((ROOT / "apps/ios/WristBridge/Info.plist").read_bytes())
 check(info["NSAccessorySetupBluetoothServices"] == [reserved[0].upper()], "Picker service matches contract")
 check(info["NSAccessorySetupBluetoothNames"] == ["WristBridge"], "Picker name proposal declared")
-check(info["UIBackgroundModes"] == ["bluetooth-central"], "Only implemented background role enabled")
+check(info["UIBackgroundModes"] == ["bluetooth-central", "audio"], "Only implemented background roles enabled (Bluetooth link, find-iPhone alarm)")
 check(not any(key in info for key in ["NSMicrophoneUsageDescription", "NSContactsUsageDescription",
                                      "NSHealthShareUsageDescription", "NSHealthUpdateUsageDescription",
                                      "NSLocationAlwaysUsageDescription"]), "No premature sensitive permissions")

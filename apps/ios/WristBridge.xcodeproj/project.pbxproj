@@ -35,6 +35,26 @@
 			"isa" = "PBXBuildFile";
 			"fileRef" = "AA8CD307583B5FD1AA71D7C6";
 		};
+		"9BA60330377DBE33A1995371" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Adapters/FindPhoneAlarm.swift";
+			"sourceTree" = "<group>";
+		};
+		"F0C6743C1BF22EF8A8B0058E" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "9BA60330377DBE33A1995371";
+		};
+		"DE88106DFF69BF899E68C2B3" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Adapters/HealthStore.swift";
+			"sourceTree" = "<group>";
+		};
+		"5B10366625876F0ACE6790FE" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "DE88106DFF69BF899E68C2B3";
+		};
 		"BCB868EE79AEF1CC2FD808F1" = {
 			"isa" = "PBXFileReference";
 			"lastKnownFileType" = "sourcecode.swift";
@@ -211,6 +231,8 @@
 				"AE65CDDE9CEEFEEB75842E7E",
 				"24082B447A58C4FF09767EB0",
 				"AA8CD307583B5FD1AA71D7C6",
+				"9BA60330377DBE33A1995371",
+				"DE88106DFF69BF899E68C2B3",
 				"BCB868EE79AEF1CC2FD808F1",
 				"D2B7B488D37F2345D55D6DD5",
 				"81B290D9AF4A9A537E658BCB",
@@ -283,6 +305,8 @@
 				"6A51C2756EF03A404A9DB54F",
 				"7000C944555CB835C740AB82",
 				"2045991E0281BA76CD10E189",
+				"F0C6743C1BF22EF8A8B0058E",
+				"5B10366625876F0ACE6790FE",
 				"C0273F6AB0DD76A6DD9BFF25",
 				"2A50B4455A619DD5B9D0F101",
 				"D0F8527FFEF38285D53E68CA",
@@ -351,8 +375,8 @@
 				"PRODUCT_BUNDLE_IDENTIFIER" = "$(WRISTBRIDGE_APP_BUNDLE_ID)";
 				"INFOPLIST_FILE" = "WristBridge/Info.plist";
 				"GENERATE_INFOPLIST_FILE" = "NO";
-				"MARKETING_VERSION" = "0.3.1";
-				"CURRENT_PROJECT_VERSION" = "8";
+				"MARKETING_VERSION" = "0.3.3";
+				"CURRENT_PROJECT_VERSION" = "10";
 				"LD_RUNPATH_SEARCH_PATHS" = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -381,8 +405,8 @@
 				"PRODUCT_BUNDLE_IDENTIFIER" = "$(WRISTBRIDGE_APP_BUNDLE_ID)";
 				"INFOPLIST_FILE" = "WristBridge/Info.plist";
 				"GENERATE_INFOPLIST_FILE" = "NO";
-				"MARKETING_VERSION" = "0.3.1";
-				"CURRENT_PROJECT_VERSION" = "8";
+				"MARKETING_VERSION" = "0.3.3";
+				"CURRENT_PROJECT_VERSION" = "10";
 				"LD_RUNPATH_SEARCH_PATHS" = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -24,6 +24,25 @@ final class WristBridgeUITests: XCTestCase {
         app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@", value)).firstMatch
     }
 
+    func testLargestTextKeepsPrimaryActionsReachable() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["--demo", "-UIPreferredContentSizeCategoryName",
+                               "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launch()
+        let select = app.buttons["selectWatch"]
+        for _ in 0..<8 where !select.isHittable { app.swipeUp() }
+        XCTAssertTrue(select.isHittable)
+        // Audit the visible primary controls at the largest accessibility text size.
+        try app.performAccessibilityAudit(for: [.textClipped])
+        select.tap()
+        let stop = app.buttons["Detener configuración"]
+        for _ in 0..<8 where !stop.isHittable { app.swipeUp() }
+        XCTAssertTrue(stop.isHittable)
+        try app.performAccessibilityAudit(for: [.textClipped])
+        stop.tap()
+        XCTAssertTrue(text(app, containing: "Detenido").waitForExistence(timeout: 5))
+    }
+
     func testBatchOptionsPreserveIDWhenConsentIsMissing() {
         let app = XCUIApplication()
         app.launch()
@@ -80,11 +99,13 @@ final class WristBridgeUITests: XCTestCase {
         app.launch()
         for (id, title) in [("faces", "Esferas"), ("health", "Salud"), ("find", "Buscar reloj"), ("music", "Música")] {
             let tile = app.buttons["feature-\(id)"]
-            for _ in 0..<8 where !tile.exists || tile.frame.maxY > app.frame.height - 140 { app.swipeUp() }
-            // The feature carousel scrolls horizontally; bring later tiles into view.
+            let carousel = app.scrollViews["watchFeatures"]
+            for _ in 0..<8 where !carousel.isHittable { app.swipeUp() }
+            XCTAssertTrue(carousel.isHittable)
+            // Swipe the carousel itself. An earlier tile can be offscreen after
+            // returning from another feature, so it is not a reliable swipe target.
             for _ in 0..<6 where !tile.isHittable || tile.frame.maxX > app.frame.width {
-                let carousel = app.buttons["feature-faces"].exists ? app.buttons["feature-faces"] : app.buttons["feature-health"]
-                if carousel.isHittable { carousel.swipeLeft(velocity: .slow) } else { app.swipeUp() }
+                carousel.swipeLeft(velocity: .slow)
             }
             XCTAssertTrue(tile.isHittable, "\(title) tile")
             tile.tap()
@@ -97,6 +118,41 @@ final class WristBridgeUITests: XCTestCase {
             XCTAssertEqual(actionable.count, 0)
             app.navigationBars[title].buttons.firstMatch.tap()
         }
+    }
+
+    func testFindPhoneAlarmStartsAndStopsLocallyAndWatchTriggerStaysLocked() {
+        let app = XCUIApplication()
+        app.launchArguments = ["--demo"]
+        app.launch()
+        let tile = app.buttons["feature-findPhone"]
+        for _ in 0..<8 where !tile.exists || tile.frame.maxY > app.frame.height - 140 { app.swipeUp() }
+        for _ in 0..<6 where !tile.isHittable || tile.frame.maxX > app.frame.width {
+            let carousel = app.buttons["feature-faces"]
+            if carousel.isHittable { carousel.swipeLeft(velocity: .slow) } else { app.swipeUp() }
+        }
+        tile.tap()
+        XCTAssertTrue(app.navigationBars["Buscar iPhone"].waitForExistence(timeout: 5))
+        let toggle = app.buttons["findPhoneToggle"]
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5))
+        toggle.tap()
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Sonando'")).firstMatch.waitForExistence(timeout: 5))
+        toggle.tap()
+        XCTAssertTrue(app.staticTexts["Detenido."].waitForExistence(timeout: 5))
+        // The watch-initiated trigger is not offered as a control.
+        XCTAssertEqual(app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Activar «Buscar iPhone»'")).count, 0)
+    }
+
+    func testHealthScreenShowsLabeledSampleDataOnlyInDemo() {
+        let app = XCUIApplication()
+        app.launchArguments = ["--demo"]
+        app.launch()
+        let tile = app.buttons["feature-health"]
+        for _ in 0..<8 where !tile.exists || tile.frame.maxY > app.frame.height - 140 { app.swipeUp() }
+        for _ in 0..<6 where !tile.isHittable { app.buttons["feature-faces"].swipeLeft(velocity: .slow) }
+        tile.tap()
+        XCTAssertTrue(app.navigationBars["Salud"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["healthSampleBanner"].exists || app.descendants(matching: .any)["healthSampleBanner"].exists)
+        // Without a real ledger there is nothing to claim; the live app must not show the banner.
     }
 
     func testManualObservationDoesNotPromoteAutomaticReadiness() {

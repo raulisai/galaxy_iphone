@@ -8,6 +8,7 @@ public enum BluetoothTraceStep: String, Codable, Sendable {
     case discoveryCompleted, serviceVerified, discoveryTimedOut, connectionFailed, disconnected
     case cancellationSubmitted, cancellationCompleted, recoveryScheduled, retryExhausted
     case servicesInvalidated, restorationReceived
+    case writeWithResponseCapacity, writeWithoutResponseCapacity
 }
 
 public struct BluetoothTraceEntry: Codable, Sendable {
