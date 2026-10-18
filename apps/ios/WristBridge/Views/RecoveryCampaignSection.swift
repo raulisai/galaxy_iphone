@@ -18,6 +18,23 @@ struct RecoveryCampaignSection: View {
                     .accessibilityIdentifier("stopRecoveryCampaign")
             }
             if let campaign = controller.campaign {
+                HStack(spacing: 16) {
+                    ZStack {
+                        Circle().stroke(Color.secondary.opacity(0.2), lineWidth: 8)
+                        Circle().trim(from: 0, to: Double(campaign.trials.count) / Double(RecoveryCampaign.target))
+                            .stroke(Color.green, style: StrokeStyle(lineWidth: 8, lineCap: .round))
+                            .rotationEffect(.degrees(-90))
+                            .animation(.smooth, value: campaign.trials.count)
+                        Text("\(campaign.trials.count)").font(.title3.bold().monospacedDigit())
+                    }
+                    .frame(width: 64, height: 64)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("\(campaign.withinDeadlineCount) verificados en 30 s").font(.headline)
+                        Text("de \(RecoveryCampaign.target) intentos · solo configuración").font(.caption).foregroundStyle(.secondary)
+                    }
+                }
+                .padding(.vertical, 4)
+                .accessibilityHidden(true)
                 LabeledContent("Intentos registrados", value: "\(campaign.trials.count)/20")
                 LabeledContent("Servicio verificado en 30 s", value: "\(campaign.withinDeadlineCount)")
                 if let trial = campaign.pendingTrial { Text("Comprobando intento \(trial) de 20…") }

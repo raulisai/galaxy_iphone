@@ -20,26 +20,51 @@ struct ContentView: View {
         _observations = StateObject(wrappedValue: LabJournalStore(isDemo: model.isDemo))
     }
 
+    private enum Tab: Hashable { case watch, notifications, settings }
+    @State private var tab: Tab = .watch
+
     var body: some View {
-        TabView {
-            NavigationStack { connectionList.navigationTitle("WristBridge") }
-                .tabItem { Label("Conexión", systemImage: "applewatch.radiowaves.left.and.right") }
+        TabView(selection: $tab) {
+            NavigationStack {
+                HomeView(model: model, observations: observations, campaign: model.recoveryCampaign,
+                         showForgetConfirmation: $showForgetConfirmation) { tab = .notifications }
+            }
+            .tabItem { Label("Reloj", systemImage: "watch.analog") }
+            .tag(Tab.watch)
             NavigationStack {
                 List {
                     if !model.isDemo { fixtureSection }
-                    RecoveryCampaignSection(bridge: model, controller: model.recoveryCampaign)
                     observationSection
                     if !observations.journal.entries.isEmpty { historySection }
                 }
-                .navigationTitle("Pruebas")
+                .navigationTitle("Notificaciones")
             }
-            .tabItem { Label("Pruebas", systemImage: "checklist") }
+            .tabItem { Label("Notificaciones", systemImage: "bell.badge") }
+            .tag(Tab.notifications)
             NavigationStack {
-                List { recoverySection; diagnosticsSection; privacySection }
-                    .navigationTitle("Ajustes")
+                List {
+                    settingsHeader
+                    recoverySection
+                    Section {
+                        NavigationLink {
+                            RecoveryCampaignScreen(model: model, controller: model.recoveryCampaign)
+                        } label: {
+                            IconRow(symbol: "arrow.triangle.2.circlepath", color: .green, title: "Ensayo de reconexión",
+                                    subtitle: "20 intentos del canal de configuración")
+                        }
+                        NavigationLink { SetupGuideScreen() } label: {
+                            IconRow(symbol: "book.fill", color: .blue, title: "Guía de configuración")
+                        }
+                    }
+                    DiagnosticsSection(model: model)
+                    privacySection
+                }
+                .navigationTitle("Ajustes")
             }
             .tabItem { Label("Ajustes", systemImage: "gearshape") }
+            .tag(Tab.settings)
         }
+        .tint(Theme.accent)
         .confirmationDialog("¿Quitar la autorización del accesorio?", isPresented: $showForgetConfirmation,
                             titleVisibility: .visible) {
             Button("Quitar accesorio", role: .destructive, action: model.forget)
@@ -75,86 +100,36 @@ struct ContentView: View {
         }
     }
 
-    private var connectionList: some View {
-        List {
-            if model.isDemo {
-                Section {
-                    Label("Demostración · sin conexión real", systemImage: "testtube.2")
-                        .font(.headline).foregroundStyle(.orange).accessibilityIdentifier("demoBanner")
-                }
-            }
-            Section {
-                VStack(alignment: .leading, spacing: 12) {
-                    Image(systemName: "applewatch.radiowaves.left.and.right")
-                        .font(.largeTitle).foregroundStyle(.tint).accessibilityHidden(true)
-                    Text("Tu iPhone y tu reloj").font(.title2.bold())
-                    Text("Configura el enlace y comprueba cada paso. Los avisos viajan directamente del iPhone al reloj.")
-                        .foregroundStyle(.secondary)
-                }.padding(.vertical, 8)
-            }
-            Section("Estado del enlace") {
-                statusRow("Accesorio", value: model.authorizationText)
-                statusRow("Configuración", value: model.channelText)
-                statusRow("Avisos · comprobación automática", value: "Sin comprobar")
-                    .accessibilityIdentifier("ancsStatus")
-                if let identifier = model.authorizedID,
-                   let entry = observations.journal.latest(for: identifier) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Última observación tuya").font(.caption).foregroundStyle(.secondary)
-                        Text("\(entry.condition.title): \(entry.outcome.title)")
-                        Text(entry.date, style: .date).font(.caption)
-                        Text("Reporte manual; no confirma el estado actual automáticamente.").font(.caption)
-                    }
-                }
-                Text(model.message).font(.callout).foregroundStyle(.secondary)
-                if model.state.authorization != .authorized {
-                    Button("Seleccionar reloj", systemImage: "plus.circle", action: model.selectWatch)
-                        .disabled(!model.pickerAvailable).accessibilityIdentifier("selectWatch")
-                } else {
-                    Button("Reconectar", systemImage: "arrow.clockwise", action: model.reconnect)
-                        .disabled(model.state.channel == .connecting)
-                    Button("Detener configuración", systemImage: "pause.circle", action: model.stop)
-                    Button("Quitar accesorio", role: .destructive) { showForgetConfirmation = true }
-                }
-                if model.authorizedChoices.count > 1 {
-                    ForEach(Array(model.authorizedChoices.enumerated()), id: \.element) { index, identifier in
-                        Button("Usar reloj autorizado \(index + 1)") { model.selectAuthorized(identifier) }
-                    }
-                }
-            }
-            Section("Comprobar los avisos") {
-                Text("Los avisos y el canal de configuración se comprueban por separado. En Pruebas puedes registrar lo que recibes en el reloj.")
-                Text("Si iOS ofrece Compartir notificaciones del sistema en Ajustes → Bluetooth para el accesorio, comprueba esa opción. Enfoque y la privacidad de previsualizaciones pueden cambiar lo que llega.")
-                Button("Abrir Ajustes", systemImage: "gear") {
-                    if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
-                }
-            }
-        }
-    }
-
     private var recoverySection: some View {
-        Section("Recuperación") {
-            Toggle("Recuperar configuración automáticamente", isOn: Binding(
-                get: { model.automaticRecovery }, set: model.setAutomaticRecovery))
-                .accessibilityIdentifier("automaticRecovery")
+        Section {
+            Toggle(isOn: Binding(get: { model.automaticRecovery }, set: model.setAutomaticRecovery)) {
+                IconRow(symbol: "arrow.clockwise.circle.fill", color: .green, title: "Recuperar configuración automáticamente")
+            }
+            .accessibilityIdentifier("automaticRecovery")
             if let warning = model.settingsWarning { Label(warning, systemImage: "exclamationmark.triangle").foregroundStyle(.orange) }
-            Text("Tras una desconexión se solicita de nuevo el enlace al reloj autorizado. Hay hasta tres intentos de recuperación. Detener configuración los cancela.")
-            Text("Dejar la app en segundo plano y bloquear el iPhone es distinto de cerrarla deslizando fuera del selector. La recuperación depende de iOS y se prueba por separado de los avisos.")
+        } header: { Text("Recuperación") } footer: {
+            Text("Tras una desconexión se solicita de nuevo el enlace al reloj autorizado, con hasta tres intentos. Detener configuración los cancela. Bloquear el iPhone es distinto de cerrar la app deslizando; la recuperación depende de iOS y se prueba por separado de los avisos.")
         }
     }
 
-    private var diagnosticsSection: some View {
-        Section("Diagnóstico") {
-            statusRow("Bluetooth", value: model.radio)
-            if let date = model.lastCheck {
-                LabeledContent("Última comprobación local") { Text(date, style: .time) }
+    private var settingsHeader: some View {
+        Section {
+            HStack(spacing: 14) {
+                ZStack {
+                    Circle().fill(LinearGradient(colors: [Theme.heroTop, Theme.heroBottom], startPoint: .top, endPoint: .bottom))
+                    Image(systemName: "watch.analog").font(.title2).foregroundStyle(.white)
+                }
+                .frame(width: 56, height: 56)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(model.state.authorization == .authorized ? "Galaxy Watch" : "Añade tu reloj").font(.headline)
+                    HStack(spacing: 6) {
+                        Circle().fill(model.linkTone.color).frame(width: 8, height: 8)
+                        Text(model.headline).font(.subheadline).foregroundStyle(.secondary)
+                    }
+                }
             }
-            Text("La app todavía no recibe un estado automático de avisos desde el reloj. El intercambio de datos sensibles permanece desactivado.")
-                .font(.footnote).foregroundStyle(.secondary)
-            ShareLink(item: model.diagnosticSummary) {
-                Label("Compartir diagnóstico sin mensajes", systemImage: "square.and.arrow.up")
-            }
-            LabeledContent("Versión", value: "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—") (\(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "—"))")
+            .padding(.vertical, 4)
+            .accessibilityElement(children: .combine)
         }
     }
 
@@ -199,10 +174,14 @@ struct ContentView: View {
     private var historySection: some View {
         Section("Resultados registrados") {
             ForEach(Array(observations.journal.entries.suffix(20).reversed())) { entry in
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(entry.condition.title)
-                    Text("\(entry.outcome.title) · observado por ti").foregroundStyle(.secondary)
-                    Text(entry.date, style: .date).font(.caption)
+                HStack(spacing: 12) {
+                    Image(systemName: entry.outcome.symbol).font(.title3).foregroundStyle(entry.outcome.color)
+                        .accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(entry.condition.title)
+                        Text("\(entry.outcome.title) · observado por ti").font(.subheadline).foregroundStyle(.secondary)
+                        Text(entry.date, style: .date).font(.caption).foregroundStyle(.secondary)
+                    }
                 }
             }
             Text("Se muestran los últimos 20; el registro conserva como máximo 500 dentro del plazo elegido.")
@@ -215,8 +194,8 @@ struct ContentView: View {
 
     private var fixtureSection: some View {
         Section("Avisos de prueba") {
+            IconRow(symbol: "bell.badge.fill", color: .orange, title: "Permiso de esta app", subtitle: fixtures.permission)
             Text("Solo se generan avisos sintéticos de WristBridge.").font(.footnote).foregroundStyle(.secondary)
-            statusRow("Permiso de esta app", value: fixtures.permission)
             Button("Autorizar avisos de prueba") { Task { await fixtures.requestPermission() } }
             TextField("ID de ejecución", text: $runID).textInputAutocapitalization(.never)
                 .autocorrectionDisabled().disabled(fixtures.busy).accessibilityIdentifier("runID")
@@ -243,8 +222,10 @@ struct ContentView: View {
             if let lastBatchID = fixtures.lastBatchID { LabeledContent("ID del último lote", value: lastBatchID) }
             Text(fixtures.message).font(.callout)
             if let warning = fixtures.persistenceWarning { Label(warning, systemImage: "exclamationmark.triangle").foregroundStyle(.orange) }
-            statusRow("Programación aceptada", value: "\(fixtures.records.filter { $0.observation == .scheduleAccepted }.count)")
-            statusRow("Observados en el centro", value: "\(fixtures.records.filter { $0.observation == .deliveredSnapshot }.count)")
+            HStack(spacing: 12) {
+                counter("Programación aceptada", fixtures.records.filter { $0.observation == .scheduleAccepted }.count, .blue)
+                counter("Observados en el centro", fixtures.records.filter { $0.observation == .deliveredSnapshot }.count, .orange)
+            }
             Text("Contadores de hasta 1000 registros locales dentro del plazo elegido. Programado no equivale a entregado ni recibido por el reloj.")
                 .font(.footnote).foregroundStyle(.secondary)
             ShareLink(item: fixtures.exportMetadata()) { Label("Compartir registro de pruebas", systemImage: "square.and.arrow.up") }
@@ -255,15 +236,18 @@ struct ContentView: View {
         "run-\(Int(Date().timeIntervalSince1970))-\(UUID().uuidString.prefix(8))"
     }
 
-    private func statusRow(_ title: String, value: String) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+    private func counter(_ title: String, _ value: Int, _ color: Color) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text("\(value)").font(.title2.bold().monospacedDigit()).foregroundStyle(color)
             Text(title).font(.caption).foregroundStyle(.secondary)
-            Text(value).font(.body)
-        }.accessibilityElement(children: .combine)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
     }
+
 }
 
-private extension LabCase {
+extension LabCase {
     var title: String {
         switch self {
         case .notificationsForeground: "Avisos con la app abierta"
@@ -277,8 +261,14 @@ private extension LabCase {
         }
     }
 }
-private extension LabOutcome {
+extension LabOutcome {
     var title: String {
         switch self { case .pass: "Funcionó"; case .fail: "Falló"; case .blocked: "No se pudo probar" }
+    }
+    var symbol: String {
+        switch self { case .pass: "checkmark.circle.fill"; case .fail: "xmark.circle.fill"; case .blocked: "minus.circle.fill" }
+    }
+    var color: Color {
+        switch self { case .pass: .green; case .fail: .red; case .blocked: .gray }
     }
 }

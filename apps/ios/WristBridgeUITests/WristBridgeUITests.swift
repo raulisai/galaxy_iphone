@@ -20,10 +20,14 @@ final class WristBridgeUITests: XCTestCase {
         super.tearDown()
     }
 
+    private func text(_ app: XCUIApplication, containing value: String) -> XCUIElement {
+        app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@", value)).firstMatch
+    }
+
     func testBatchOptionsPreserveIDWhenConsentIsMissing() {
         let app = XCUIApplication()
         app.launch()
-        app.tabBars.buttons["Pruebas"].tap()
+        app.tabBars.buttons["Notificaciones"].tap()
         app.buttons["fixtureCount"].tap()
         app.buttons["50 avisos"].tap()
         app.buttons["fixtureDelay"].tap()
@@ -47,17 +51,17 @@ final class WristBridgeUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.staticTexts["Demostración · sin conexión real"].waitForExistence(timeout: 5))
         app.buttons["selectWatch"].tap()
-        XCTAssertTrue(app.staticTexts["Servicio de configuración encontrado"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["Sin comprobar"].exists)
+        XCTAssertTrue(text(app, containing: "Servicio de configuración encontrado").waitForExistence(timeout: 5))
+        XCTAssertTrue(text(app, containing: "Sin comprobar").exists)
         app.buttons["Detener configuración"].tap()
-        XCTAssertTrue(app.staticTexts["Detenido"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["Sin comprobar"].exists)
+        XCTAssertTrue(text(app, containing: "Detenido").waitForExistence(timeout: 5))
+        XCTAssertTrue(text(app, containing: "Sin comprobar").exists)
     }
 
     func testManualObservationDoesNotPromoteAutomaticReadiness() {
         let app = XCUIApplication()
         app.launch()
-        app.tabBars.buttons["Pruebas"].tap()
+        app.tabBars.buttons["Notificaciones"].tap()
         let save = app.buttons["saveObservation"]
         for _ in 0..<8 where !save.isHittable { app.swipeUp() }
         XCTAssertTrue(save.isHittable)
@@ -68,8 +72,8 @@ final class WristBridgeUITests: XCTestCase {
         let feedback = app.staticTexts["Observación guardada como reporte tuyo; no es una comprobación automática del reloj."]
         for _ in 0..<3 where !feedback.exists { app.swipeUp() }
         XCTAssertTrue(feedback.waitForExistence(timeout: 5))
-        app.tabBars.buttons["Conexión"].tap()
-        XCTAssertTrue(app.staticTexts["Sin comprobar"].exists)
+        app.tabBars.buttons["Reloj"].tap()
+        XCTAssertTrue(text(app, containing: "Sin comprobar").exists)
     }
 
     func testRecoveryPreferenceSurvivesRelaunch() {
@@ -106,7 +110,7 @@ final class WristBridgeUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.navigationBars["WristBridge"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.staticTexts["Demostración · sin conexión real"].exists)
-        app.tabBars.buttons["Pruebas"].tap()
+        app.tabBars.buttons["Notificaciones"].tap()
         let schedule = app.buttons["Programar 10 avisos"]
         for _ in 0..<6 where !schedule.isHittable { app.swipeUp() }
         XCTAssertTrue(schedule.isHittable)

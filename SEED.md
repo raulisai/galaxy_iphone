@@ -4,7 +4,7 @@
 > Contiene el estado vivo del proyecto para que cualquier agente continúe sin perder contexto.
 > Si algo aquí contradice un documento antiguo, esto se verifica con `git log` y se corrige aquí.
 
-Última actualización: 2026-10-18 · por: Claude (Sonnet 5.5) · rama: `development_codex`
+Última actualización: 2026-10-18 · por: Claude (Opus 5.5) · rama: `development_codex`
 
 ## 1. Qué es
 App iPhone (Swift) que configura el accesorio y genera avisos de prueba para un Galaxy Watch7 (Kotlin, equipo Windows). El reloj consume ANCS directamente. Tres productos: iPhone (este repo, Apple), reloj (Windows), Mac (P6, futuro).
@@ -23,9 +23,9 @@ App iPhone (Swift) que configura el accesorio y genera avisos de prueba para un 
 | Área | Estado | Evidencia |
 |---|---|---|
 | Candidato firmado instalado en iPhone | 0.2.1 (6): PASS instalación y servicio restaurado | `evidence/apple-0.2.1/apple/` |
-| Código en árbol de trabajo | **0.3.0 (7)**: ensayo de reconexión de 20 intentos (sin commit) | §4 |
+| Código 0.3.0 (7) | Ensayo de reconexión de 20 intentos (commit `cef2c29`) + rediseño UI estilo Galaxy Wearable/iOS 26 (sin commit) | §4 |
 | Pruebas del paquete Swift | PASS, 23 pruebas (2026-10-18) | `scripts/apple/test-package.sh` |
-| Compilación simulador (`check.sh`) | PASS build; UI tests NOT_RUN (falta `WRISTBRIDGE_TEST_DESTINATION`) | 2026-10-18 |
+| Compilación + UI tests simulador | PASS build; PASS 5/5 UI tests en iPhone 17 Pro iOS 26.2 (`WRISTBRIDGE_TEST_DESTINATION=id=<sim>`) | 2026-10-18 |
 | 0.3.0 en iPhone físico | **NOT_RUN** (no firmado ni instalado) | — |
 | Campaña P2 20 ciclos / 19-de-20 en 30 s | **NOT_RUN** física | `test/hil/apple/p2-recovery.md` |
 | Gates G1/G2 y campaña conjunta | **PENDIENTES** (necesitan reloj + Windows) | `docs/apple/iphone-phases.md` |
@@ -36,6 +36,7 @@ Fases P1–P8: ver tabla en `docs/apple/iphone-phases.md` (no se duplica aquí).
 ## 4. Registro de trabajo (más reciente arriba)
 | Fecha | Agente | Tarea | Estado | Notas / qué falta |
 |---|---|---|---|---|
+| 2026-10-18 | Claude | Rediseño UI: pestañas Reloj/Notificaciones/Ajustes, reloj redondo vectorial con estado, acciones rápidas en vidrio (Liquid Glass), tarjetas de funciones, hoja "Próximamente" bloqueada (esferas, salud, buscar, música) | HECHO (sin commit) | Revisado en simulador en modo demo. Falta verlo en iPhone físico y modo oscuro. Funciones bloqueadas NO se simulan: esperan contrato/gates. |
 | 2026-10-18 | Claude | Terminar ensayo de reconexión 0.3.0 + crear SEED | HECHO (código y docs) | Revisado: compila y pasa pruebas. Falta firmar/instalar 0.3.0 y ejecutarlo en el iPhone físico (requiere usuario con iPhone desbloqueado). Sin commit. |
 | 2026-10-18 | Codex | Ensayo de reconexión: `RecoveryCampaign`, repositorio, controlador, sección UI, pruebas, integración en `BridgeModel`/`ContentView`, bump 0.3.0 | PARCIAL → cerrado arriba | Dejó sin commit ni docs ni evidencia. |
 | 2026-10-18 | Codex | 0.2.1: lotes 10/25/50, instalación firmada, traza física | HECHO, commit `8b066f2` | `docs/apple/handoff-0.2.1.md` |
@@ -44,8 +45,9 @@ Fases P1–P8: ver tabla en `docs/apple/iphone-phases.md` (no se duplica aquí).
 1. **(usuario + iPhone)** `bash scripts/apple/prepare-release.sh /tmp/WristBridge-iPhone-0.3.0` y `python3 scripts/apple/install-candidate.py /tmp/WristBridge-iPhone-0.3.0 --launch`; ejecutar el ensayo de 20 reconexiones y compartir el informe. Registrar PASS/FAIL en `evidence/apple-0.3.0/apple/run.json` (carpeta aún inexistente; no inventar resultados).
 2. Actualizar `docs/provenance/apple-inventory.json` y `evidence/**` al generar el candidato 0.3.0 (hoy menciona 0.2.1).
 3. Quitar la entrada de `README.md` "Candidato actual 0.2.1" cuando 0.3.0 se instale y pruebe; hasta entonces dice 0.2.1 por ser lo verificado en dispositivo.
-4. P3 local (UI/privacidad) y P8 empaquetado: autorizados, sin gates nuevos pendientes de código conocidos.
+4. P3 local: revisar modo oscuro y Dynamic Type del rediseño; añadir prueba UI de la pantalla Reconexión. P8 empaquetado autorizado.
 5. Esperar a Windows: wire format, seguridad, UUID/propiedades finales, nombre anunciado `WristBridge` (propuesta Apple pendiente de confirmar).
+6. Cuando exista el canal seguro: convertir las tarjetas "Próximamente" de `Views/HomeView.swift` en funciones reales, una por gate aprobado.
 
 ## 6. Decisiones firmes (no reabrir)
 - ANCS lo consume el reloj; el iPhone no puede tratar su autorización de notificaciones ni un enlace CoreBluetooth como "ANCS listo".
@@ -56,7 +58,7 @@ Fases P1–P8: ver tabla en `docs/apple/iphone-phases.md` (no se duplica aquí).
 - Sin identificadores personales, certificados, tokens ni contenido real de notificaciones en Git.
 
 ## 7. Mapa mínimo del repo
-- `apps/ios/` app SwiftUI + proyecto Xcode generado (`scripts/apple/generate_project.py`).
+- `apps/ios/` app SwiftUI (`Views/HomeView.swift` pestaña Reloj, `WatchHeroView.swift` reloj dibujado, `Theme.swift` estilos y estado visual) + proyecto Xcode generado (`scripts/apple/generate_project.py`).
 - `packages/WristBridgeProtocol/` modelos y repositorios Swift con pruebas.
 - `scripts/apple/` check, test-package, prepare-release, install-candidate, validate_structure.
 - `docs/apple/` handoffs y revisión · `test/hil/apple/` guías de pruebas físicas · `evidence/` resultados.

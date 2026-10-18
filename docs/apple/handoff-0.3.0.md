@@ -7,10 +7,13 @@ Sección «Ensayo de reconexión» en Conexión: 20 desconexiones/reconexiones d
 
 Código: `RecoveryCampaign` y `RecoveryCampaignRepository` (paquete), `RecoveryCampaignController`, `RecoveryCampaignSection`, enganches en `BridgeModel`/`ContentView`.
 
+## Rediseño de interfaz
+Tres pestañas inspiradas en Galaxy Wearable con lenguaje iOS 26: **Reloj** (reloj redondo dibujado en SwiftUI cuya esfera refleja el estado local, píldora de estado, acciones rápidas en vidrio, estado del enlace, accesos a Notificaciones/Reconexión/Diagnóstico/Guía), **Notificaciones** (antes Pruebas) y **Ajustes** (cabecera del reloj, recuperación, ensayo, diagnóstico, privacidad). «Próximamente» lista esferas, salud, buscar reloj y música como bloqueadas: no se simulan datos sin canal seguro ni gates. La comprobación automática de avisos sigue mostrando «Sin comprobar».
+
 ## Límites
 Mide solo el servicio propio. El informe exportado declara `ancsVerified=false` y `jointGateApproved=false`; no aprueba entrega de avisos, P2 ni gates. Los 20 ciclos y las 24/72 h físicas siguen NOT_RUN.
 
 ## Validación (2026-10-18)
 - `bash scripts/apple/test-package.sh`: PASS, 23 pruebas.
-- `bash scripts/apple/check.sh`: build de simulador PASS; UI tests NOT_RUN (sin `WRISTBRIDGE_TEST_DESTINATION`).
+- `bash scripts/apple/check.sh` con `WRISTBRIDGE_TEST_DESTINATION` (iPhone 17 Pro, iOS 26.2): build PASS, UI tests PASS 5/5. Simulador no aprueba G1.
 - iPhone físico con 0.3.0: NOT_RUN (no firmado ni instalado).
