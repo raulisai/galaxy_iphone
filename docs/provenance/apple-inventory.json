@@ -1,8 +1,8 @@
 {
   "schema": "wristbridge.apple-inventory.v1",
   "product": "WristBridge iPhone",
-  "version": "0.2.0",
-  "build": "5",
+  "version": "0.2.1",
+  "build": "6",
   "firstPartyPackages": [
     {
       "name": "WristBridgeProtocol",

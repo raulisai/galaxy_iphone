@@ -7,7 +7,9 @@ struct ContentView: View {
     @ObservedObject var fixtures: NotificationFixtureAdapter
     @StateObject private var observations: LabJournalStore
     @Environment(\.scenePhase) private var scenePhase
-    @State private var runID = "run-\(Int(Date().timeIntervalSince1970))"
+    @State private var runID = Self.newRunID()
+    @State private var fixtureCount = 10
+    @State private var fixtureDelay = 30.0
     @State private var condition: LabCase = .notificationsLocked
     @State private var outcome: LabOutcome = .pass
     @State private var showForgetConfirmation = false
@@ -213,12 +215,28 @@ struct ContentView: View {
             statusRow("Permiso de esta app", value: fixtures.permission)
             Button("Autorizar avisos de prueba") { Task { await fixtures.requestPermission() } }
             TextField("ID de ejecución", text: $runID).textInputAutocapitalization(.never)
-                .autocorrectionDisabled().accessibilityIdentifier("runID")
-            Button("Programar 10 avisos") { Task { await fixtures.schedule(runID: runID) } }.disabled(fixtures.busy)
-            Text("Primera solicitud dentro de 10 segundos; después una cada 3 segundos. Usa un ID nuevo por lote.")
+                .autocorrectionDisabled().disabled(fixtures.busy).accessibilityIdentifier("runID")
+            Picker("Cantidad", selection: $fixtureCount) {
+                ForEach([10, 25, 50], id: \.self) { Text("\($0) avisos").tag($0) }
+            }.disabled(fixtures.busy).accessibilityIdentifier("fixtureCount")
+            Picker("Espera para bloquear", selection: $fixtureDelay) {
+                ForEach([10.0, 30.0, 60.0], id: \.self) { Text("\(Int($0)) segundos").tag($0) }
+            }.disabled(fixtures.busy).accessibilityIdentifier("fixtureDelay")
+            Button("Programar \(fixtureCount) avisos") {
+                let submittedID = runID
+                let submittedCount = fixtureCount
+                let submittedDelay = fixtureDelay
+                Task {
+                    if await fixtures.schedule(runID: submittedID, count: submittedCount, initialDelay: submittedDelay) {
+                        runID = Self.newRunID()
+                    }
+                }
+            }.disabled(fixtures.busy)
+            Text("Primera solicitud dentro de \(Int(fixtureDelay)) segundos; después una cada 3 segundos. Un lote completo prepara un ID nuevo para la siguiente prueba.")
                 .font(.footnote).foregroundStyle(.secondary)
             Button("Observar avisos entregados") { Task { await fixtures.observeDelivered() } }.disabled(fixtures.busy)
             Button("Cancelar avisos pendientes", role: .destructive) { Task { await fixtures.cancelPending() } }.disabled(fixtures.busy)
+            if let lastBatchID = fixtures.lastBatchID { LabeledContent("ID del último lote", value: lastBatchID) }
             Text(fixtures.message).font(.callout)
             if let warning = fixtures.persistenceWarning { Label(warning, systemImage: "exclamationmark.triangle").foregroundStyle(.orange) }
             statusRow("Programación aceptada", value: "\(fixtures.records.filter { $0.observation == .scheduleAccepted }.count)")
@@ -227,6 +245,10 @@ struct ContentView: View {
                 .font(.footnote).foregroundStyle(.secondary)
             ShareLink(item: fixtures.exportMetadata()) { Label("Compartir registro de pruebas", systemImage: "square.and.arrow.up") }
         }
+    }
+
+    private static func newRunID() -> String {
+        "run-\(Int(Date().timeIntervalSince1970))-\(UUID().uuidString.prefix(8))"
     }
 
     private func statusRow(_ title: String, value: String) -> some View {

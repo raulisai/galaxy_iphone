@@ -9,6 +9,7 @@ final class NotificationFixtureAdapter: NSObject, ObservableObject, UNUserNotifi
     @Published private(set) var records: [FixtureRecord] = []
     @Published private(set) var message = "Los avisos de prueba pertenecen únicamente a esta app."
     @Published private(set) var busy = false
+    @Published private(set) var lastBatchID: String?
     @Published private(set) var persistenceWarning: String?
     private let center = UNUserNotificationCenter.current()
     private let ledgerURL: URL
@@ -28,6 +29,7 @@ final class NotificationFixtureAdapter: NSObject, ObservableObject, UNUserNotifi
                 persistenceWarning = "No se pudo recuperar el registro anterior. No uses estos contadores para cerrar una campaña."
             }
         }
+        lastBatchID = records.last(where: { $0.observation == .scheduleAccepted })?.runID
         center.delegate = self
     }
 
@@ -50,20 +52,21 @@ final class NotificationFixtureAdapter: NSObject, ObservableObject, UNUserNotifi
         } catch { message = "No se pudo solicitar el permiso. Revisa Ajustes." }
     }
 
-    func schedule(runID: String) async {
-        guard !busy else { return }
+    @discardableResult
+    func schedule(runID: String, count: Int = 10, initialDelay: TimeInterval = 10) async -> Bool {
+        guard !busy else { return false }
         guard ledgerWritable, persistenceWarning == nil else {
             message = "Resuelve el aviso del registro antes de programar otro lote. Puedes borrar los datos locales desde Ajustes."
-            return
+            return false
         }
         busy = true
         defer { busy = false }
         do {
-            let plan = try FixturePlan(runID: runID)
+            let plan = try FixturePlan(runID: runID, count: count, initialDelay: initialDelay)
             let settings = await center.notificationSettings()
             guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else {
                 message = "Autoriza primero los avisos de prueba."
-                return
+                return false
             }
             let pending = await center.pendingNotificationRequests()
             let identifiers = Set(plan.notifications.map(\.id))
@@ -71,11 +74,11 @@ final class NotificationFixtureAdapter: NSObject, ObservableObject, UNUserNotifi
             guard !records.contains(where: { $0.runID == runID }),
                   !pending.contains(where: { identifiers.contains($0.identifier) }) else {
                 message = "Ese ID de ejecución ya se usó. Elige uno nuevo."
-                return
+                return false
             }
             guard pending.count + plan.notifications.count <= 60 else {
                 message = "Hay demasiados avisos pendientes. Cancela el lote anterior o espera."
-                return
+                return false
             }
             var accepted = 0
             // Anchor deadlines once so sequential add calls don't stretch the intended spacing.
@@ -97,8 +100,13 @@ final class NotificationFixtureAdapter: NSObject, ObservableObject, UNUserNotifi
                 } catch { append(fixture.runID, fixture.fixtureID, .scheduleFailed) }
                 if persistenceWarning != nil { break }
             }
-            message = "\(accepted)/\(plan.notifications.count) solicitudes aceptadas. Bloquea el iPhone; la entrega aún debe observarse."
-        } catch { message = "Usa un ID de 1 a 64 letras, números, guion o guion bajo." }
+            if accepted > 0 { lastBatchID = runID }
+            message = "Lote \(runID): \(accepted)/\(plan.notifications.count) solicitudes aceptadas. Bloquea el iPhone; la entrega aún debe observarse."
+            return accepted == plan.notifications.count && persistenceWarning == nil
+        } catch {
+            message = "Revisa el ID, la cantidad y la espera del lote. El ID permite 1 a 64 letras, números, guion o guion bajo."
+            return false
+        }
     }
 
     func observeDelivered() async {
@@ -154,7 +162,7 @@ final class NotificationFixtureAdapter: NSObject, ObservableObject, UNUserNotifi
         center.removeDeliveredNotifications(withIdentifiers: delivered.filter { $0.request.identifier.hasPrefix("wristbridge.") }.map { $0.request.identifier })
         do {
             if FileManager.default.fileExists(atPath: ledgerURL.path) { try FileManager.default.removeItem(at: ledgerURL) }
-            records = []; ledgerWritable = true; persistenceWarning = nil
+            records = []; lastBatchID = nil; ledgerWritable = true; persistenceWarning = nil
             message = "Se borró el registro local y se solicitó retirar los avisos de prueba de WristBridge."
         } catch { persistenceWarning = "No se pudo borrar el registro local. Vuelve a intentarlo." }
     }

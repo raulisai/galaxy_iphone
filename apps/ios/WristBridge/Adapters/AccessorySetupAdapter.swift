@@ -121,6 +121,9 @@ final class AccessorySetupAdapter {
             onMessage?("La autorización no se completó. Revisa que WristBridge esté abierto en el reloj.")
         case .invalidated:
             session = nil
+            selected = nil
+            pendingSelection = nil
+            onChoices?([])
             onAvailability?(false)
             onRemoved?()
             onEvent?(.authorizationRemoved)

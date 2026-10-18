@@ -20,6 +20,27 @@ final class WristBridgeUITests: XCTestCase {
         super.tearDown()
     }
 
+    func testBatchOptionsPreserveIDWhenConsentIsMissing() {
+        let app = XCUIApplication()
+        app.launch()
+        app.tabBars.buttons["Pruebas"].tap()
+        app.buttons["fixtureCount"].tap()
+        app.buttons["50 avisos"].tap()
+        app.buttons["fixtureDelay"].tap()
+        app.buttons["60 segundos"].tap()
+        let runID = app.textFields["runID"]
+        let original = runID.value as? String
+        let schedule = app.buttons["Programar 50 avisos"]
+        for _ in 0..<4 where !schedule.isHittable { app.swipeUp() }
+        schedule.tap()
+        let feedback = app.staticTexts["Autoriza primero los avisos de prueba."]
+        for _ in 0..<4 where !feedback.exists { app.swipeUp() }
+        XCTAssertTrue(feedback.waitForExistence(timeout: 5))
+        for _ in 0..<4 where !runID.exists { app.swipeDown() }
+        XCTAssertEqual(runID.value as? String, original)
+        XCTAssertFalse(app.alerts.firstMatch.exists)
+    }
+
     func testDemoDoesNotClaimANCSReadiness() {
         let app = XCUIApplication()
         app.launchArguments = ["--demo"]

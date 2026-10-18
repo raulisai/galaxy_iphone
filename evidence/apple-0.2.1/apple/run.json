@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-18",
+  "version": "0.2.1",
+  "build": "6",
+  "workingBranch": "development_codex",
+  "integrationTarget": "developer",
+  "checks": {
+    "originalDocumentationIntact": "PASS",
+    "sharedProfileConsistency": "PASS",
+    "packageTests": {
+      "status": "PASS",
+      "tests": 18
+    },
+    "uiTests": {
+      "status": "PASS",
+      "tests": 5
+    },
+    "simulatorBuild": "PASS",
+    "releaseSignedBuild": "PASS",
+    "signatureVerification": "PASS",
+    "debugLabHookAbsent": "PASS",
+    "physicalInstallation": "NOT_RUN",
+    "physicalLaunch": "NOT_RUN",
+    "physicalNotificationAndRecoveryCampaign": "NOT_RUN"
+  },
+  "scope": "Guided synthetic batches, unique next-run IDs, stale accessory choice cleanup. No new wire protocol, sensitive commands or permissions.",
+  "quickstart": "test/hil/apple/quickstart-0.2.1.md",
+  "limits": [
+    "Scheduled does not mean delivered to watch.",
+    "Manual observations do not set automatic ANCS readiness.",
+    "P2 wire/security and later joint gates remain blocked by existing shared dependencies."
+  ]
+}

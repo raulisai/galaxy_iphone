@@ -1,6 +1,8 @@
 # Entrega iPhone y estado de todas las fases
 
-18 de octubre de 2026 · `development_codex` · candidato **0.2.0 (5)**. Alcance autorizado: completar el trabajo iPhone que permita el plan mientras el teléfono está desconectado. El paquete firmado está preparado; no se declara instalado ni aceptado físicamente por haber compilado. No se editó Kotlin, Gradle, contratos compartidos ni documentos originales.
+18 de octubre de 2026 · `development_codex` · candidato **0.2.1 (6)**. Alcance autorizado: completar el trabajo iPhone que permita el plan mientras el teléfono está desconectado. El paquete firmado está preparado; no se declara instalado ni aceptado físicamente por haber compilado. No se editó Kotlin, Gradle, contratos compartidos ni documentos originales.
+
+Actualización 0.2.1: lotes 10/25/50, espera para bloquear y próxima ID tras aceptación completa. [Pruebas rápidas](../../test/hil/apple/quickstart-0.2.1.md) y [handoff de integración](handoff-0.2.1.md). Los resultados anteriores de 0.2.0 conservan su evidencia histórica.
 
 ## Entregado en la app
 
@@ -31,7 +33,7 @@ El archivo `evidence/apple-offline-completion/apple/task-status.json` conserva l
 Preparar desde Xcode/firma local ya configurada:
 
 ```sh
-bash scripts/apple/prepare-release.sh /tmp/WristBridge-iPhone-0.2.0
+bash scripts/apple/prepare-release.sh /tmp/WristBridge-iPhone-0.2.1
 ```
 
 El directorio externo contiene el `.app` firmado y logs locales. No se suben perfiles, identidades o registros de firma a Git. `candidate.json` y `source-manifest.json` sí son informes sin identificadores personales.
@@ -39,7 +41,7 @@ El directorio externo contiene el `.app` firmado y logs locales. No se suben per
 Cuando el iPhone vuelva a estar conectado y desbloqueado:
 
 ```sh
-python3 scripts/apple/install-candidate.py /tmp/WristBridge-iPhone-0.2.0 --launch
+python3 scripts/apple/install-candidate.py /tmp/WristBridge-iPhone-0.2.1 --launch
 ```
 
 El instalador verifica firma y huella antes de instalar, no publica ni borra datos automáticamente. La actualización conserva preferencias y migra v1 a v2; desde Privacidad se puede reiniciar el almacenamiento propio. La app 0.1.1 (4) previamente instalada no se convierte en 0.2.0 porque exista este paquete.
