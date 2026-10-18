@@ -41,7 +41,9 @@
     "allGatesG1ThroughG8": {
       "status": "BLOCKED",
       "reason": "Joint BLE wire/security contracts, watch capabilities, physical campaigns and remaining gate evidence."
-    }
+    },
+    "cleanCommitSignedBuild": "PASS",
+    "signingProfileExpirationRecorded": "PASS"
   },
   "privacy": {
     "rawSigningOrDeviceLogsCommitted": false,
@@ -55,5 +57,6 @@
     "P4/P5 require iPhone code only if a joint ADR assigns it; no mandatory iPhone AI/audio proxy.",
     "P7 and sensitive transfer remain gated; no fake health/contact sync.",
     "VoiceOver/physical accessibility audit NOT_RUN; simulator screenshots are local layout evidence only."
-  ]
+  ],
+  "sourceCommit": "e9ee4a5d2e4e528bb65e97fc89ca8c11beba4aec"
 }
