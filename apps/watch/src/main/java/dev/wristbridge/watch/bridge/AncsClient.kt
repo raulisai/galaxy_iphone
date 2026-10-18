@@ -57,6 +57,7 @@ class AncsClient(
     private var controlPoint: BluetoothGattCharacteristic? = null
     private val bondWait = BondWait(clock)
     private var stopped = true
+    private val campaign = CampaignRecorder.get(context)
 
     /** Automatic link rebuilds (Service Changed, failed discovery) since ANCS was last READY. */
     private var autoRebuilds = 0
@@ -124,12 +125,13 @@ class AncsClient(
      * P2-07: requests [action] on the card (generation, uid) from a button, the app or a dismissal. The
      * engine answers UNAVAILABLE for a stale generation, an inactive session or an action not offered.
      */
-    fun performAction(generation: Long, uid: Long, action: ActionId) {
+    fun performAction(generation: Long, uid: Long, action: ActionId, dismissed: Boolean = false) {
         BridgeStatus.event("Acción ${action.name} solicitada gen=$generation uid=$uid")
         if (uid !in 0L..AncsUid.MAX) {
             BridgeStatus.event("Acción descartada: uid fuera de rango")
             return
         }
+        if (dismissed) campaign.cardDismissed(generation, uid)
         val key = NotificationKey(engine.sourceDeviceId.orEmpty(), generation, AncsUid(uid))
         apply(engine.performAction(key, action))
     }
@@ -171,6 +173,7 @@ class AncsClient(
 
     private fun closeLink(reason: String) {
         handler.removeCallbacks(tick)
+        campaign.sessionEnd(engine.generation, reason)
         engine.endSession(engine.generation)
         ams.reset()
         detachQueue()
@@ -247,6 +250,7 @@ class AncsClient(
                 val effects = engine.startSession(Pseudonym.of(peer))
                 prefs.edit { putLong(WristBridgeApp.PREF_LAST_GENERATION, engine.generation) }
                 autoRebuilds = 0
+                campaign.sessionStart(engine.generation)
                 BridgeStatus.update { it.copy(ancs = AncsState.READY, ancsDetail = "", generation = engine.generation) }
                 BridgeStatus.event("ANCS listo gen=${engine.generation}")
                 apply(effects)
@@ -312,6 +316,7 @@ class AncsClient(
     }
 
     private fun apply(effects: List<SessionEffect>) {
+        campaign.effects(effects)
         for (e in effects) {
             when (e) {
                 is SessionEffect.WriteControlPoint -> writeControlPoint(e)
@@ -355,12 +360,14 @@ class AncsClient(
             }
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 linkConnected = true
+                campaign.linkUp()
                 val q = GattOperationQueue(clock)
                 queue = q
                 BridgeStatus.event("Enlace cliente ANCS conectado estado=$status")
                 enqueue(q, "mtu", 5_000, { g.requestMtu(517) }) { discover(g) }
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 val peer = device
+                campaign.linkDown("gatt=$status")
                 BridgeStatus.update { it.copy(ancs = AncsState.IDLE, ancsDetail = "Desconectado ($status)", lastGattStatus = status) }
                 closeLink("desconexión estado=$status")
                 // R01: once bonded, wait in the background for the iPhone instead of a rapid retry loop.

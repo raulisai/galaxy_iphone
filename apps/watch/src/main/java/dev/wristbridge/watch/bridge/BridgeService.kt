@@ -161,7 +161,7 @@ class BridgeService : Service() {
         }
         val generation = intent.getLongExtra(EXTRA_GENERATION, 0)
         val uid = intent.getLongExtra(EXTRA_UID, -1)
-        return Runnable { ancs.performAction(generation, uid, action) }
+        return Runnable { ancs.performAction(generation, uid, action, dismissed) }
     }
 
     /** Notification commands relayed by [CommandReceiver]; never starts a bridge the user stopped. */
