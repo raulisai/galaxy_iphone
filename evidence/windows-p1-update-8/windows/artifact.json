@@ -5,8 +5,17 @@
   "apk": "build/releases/wristbridge-watch-0.4.0-lab-9.apk",
   "sha256": "f305b40f2ce33bfac36cfba577500fb228b4f0962224dedb0ab20f9fef230ae8",
   "bytes": 35870526,
-  "build": "PASS", "lint": "PASS", "jvmTests": "PASS (88 tests, 18 new campaign journal)",
-  "installation": "NOT_RUN: wireless ADB to the watch dropped before the install completed",
-  "physicalChecks": "NOT_RUN",
-  "G1": "NOT_RUN"
+  "build": "PASS",
+  "lint": "PASS",
+  "jvmTests": "PASS (88 tests, 18 new campaign journal)",
+  "installation": "PASS (installedSha256Matches true; adb install -r, data and bond preserved)",
+  "physicalChecks": "NOT_RUN for calls, native player and crown volume",
+  "G1": "NOT_RUN",
+  "installedSha256Matches": true,
+  "onDevice": {
+    "bridgeAutoResume": "PASS",
+    "ancsReady": "PASS (gen=8)",
+    "amsReady": "PASS",
+    "campaignJournal": "PASS: journal.jsonl created with LINK_UP, SESSION_START and CARD_RECEIVED/UPDATED events; only ids, category, byte counts and times, no titles or bodies"
+  }
 }
