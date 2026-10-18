@@ -8,6 +8,8 @@ Pruebas iPhone con lotes de 10/25/50 y espera inicial de 10/30/60 segundos (30 p
 
 También se limpian selecciones antiguas de accesorios cuando ASK invalida la sesión. Se mantiene el código de recuperación/restauración 0.2.0 y las guardas de autorización/radio. No se crean características BLE ni mensajes propios sin contrato.
 
+Instalación y apertura en iPhone: PASS. La traza propia capturada después de abrir muestra `restorationReceived → waitingForRadio → radioChanged(5) → discoverySubmitted(5) → discoveryCompleted → serviceVerified`: PASS del servicio propio restaurado en ese intento. No prueba recepción ANCS ni relanzamiento en segundo plano por el sistema.
+
 ## Qué probar
 
 [Guía rápida para el usuario](../../test/hil/apple/quickstart-0.2.1.md): versión, servicio propio, diez avisos bloqueado, otro lote tras cerrar deslizando y detener/reconectar. Solo después, lote de 25/50. Registrar observaciones honestas y compartir el diagnóstico si no recupera el servicio.

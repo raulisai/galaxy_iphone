@@ -1,6 +1,6 @@
 # Entrega iPhone y estado de todas las fases
 
-18 de octubre de 2026 · `development_codex` · candidato **0.2.1 (6)**. Alcance autorizado: completar el trabajo iPhone que permita el plan mientras el teléfono está desconectado. El paquete firmado está preparado; no se declara instalado ni aceptado físicamente por haber compilado. No se editó Kotlin, Gradle, contratos compartidos ni documentos originales.
+18 de octubre de 2026 · `development_codex` · candidato **0.2.1 (6)**. Alcance autorizado: completar el trabajo iPhone que permita el plan mientras el teléfono está desconectado. El paquete firmado 0.2.1 (6) se instaló y abrió en el iPhone. La traza propia confirmó un descubrimiento de servicio restaurado; esto no cierra los gates físicos completos. No se editó Kotlin, Gradle, contratos compartidos ni documentos originales.
 
 Actualización 0.2.1: lotes 10/25/50, espera para bloquear y próxima ID tras aceptación completa. [Pruebas rápidas](../../test/hil/apple/quickstart-0.2.1.md) y [handoff de integración](handoff-0.2.1.md). Los resultados anteriores de 0.2.0 conservan su evidencia histórica.
 
@@ -44,7 +44,7 @@ Cuando el iPhone vuelva a estar conectado y desbloqueado:
 python3 scripts/apple/install-candidate.py /tmp/WristBridge-iPhone-0.2.1 --launch
 ```
 
-El instalador verifica firma y huella antes de instalar, no publica ni borra datos automáticamente. La actualización conserva preferencias y migra v1 a v2; desde Privacidad se puede reiniciar el almacenamiento propio. La app 0.1.1 (4) previamente instalada no se convierte en 0.2.0 porque exista este paquete.
+El instalador verifica firma y huella antes de instalar, no publica ni borra datos automáticamente. La actualización conserva preferencias y migra v1 a v2; desde Privacidad se puede reiniciar el almacenamiento propio. Esta sesión instaló 0.2.1 (6). Las builds anteriores conservan sus reportes históricos; el estado de instalación se obtiene del informe de esta versión, no de la mera existencia de un paquete.
 
 ## Aceptación que sigue siendo física
 
