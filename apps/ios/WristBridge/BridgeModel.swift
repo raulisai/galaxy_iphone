@@ -234,6 +234,7 @@ final class BridgeModel: ObservableObject {
         settings-persistence=\(settingsWarning == nil ? "available" : "preserved-unreadable")
         trace-persistence=\(transport.tracePersistenceAvailable)
         bluetooth-trace=\(transport.diagnosticTrace)
+        att-capacity=\(transport.attCapacity)
         ancs=not-verified
         sensitive-channel=disabled
         last-local-check=\(lastCheck?.ISO8601Format() ?? "none")
