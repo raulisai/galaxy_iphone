@@ -1,6 +1,7 @@
 package dev.wristbridge.watch.bridge
 
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
@@ -13,6 +14,7 @@ import androidx.core.content.edit
 import dev.wristbridge.watch.WristBridgeApp
 import android.os.Handler
 import android.os.SystemClock
+import dev.wristbridge.notification.LinkRecovery
 import dev.wristbridge.notification.BondWait
 import dev.wristbridge.notification.AncsSessionEngine
 import dev.wristbridge.notification.NotificationKey
@@ -59,11 +61,18 @@ class AncsClient(
     private var stopped = true
     private val campaign = CampaignRecorder.get(context)
 
-    /** Automatic link rebuilds (Service Changed, failed discovery) since ANCS was last READY. */
-    private var autoRebuilds = 0
+    /** Paced recovery across connection failures; reset only after ANCS is READY. */
+    private val recovery = LinkRecovery(clock)
     private val ams = AmsSession(clock, ::enqueueOnLink, media)
 
     private val tick = Runnable {
+        when (recovery.takeDue()) {
+            LinkRecovery.Due.CONNECT_TIMEOUT -> retryLink("Tiempo de conexión agotado")
+            LinkRecovery.Due.RETRY -> device?.let { peer ->
+                if (!stopped && peer.bondState == BluetoothDevice.BOND_BONDED) connect(peer, autoConnect = true)
+            }
+            null -> Unit
+        }
         if (bondWait.expire()) {
             failPairing("El emparejamiento no se completó. Vuelve a intentarlo desde el iPhone.")
         } else {
@@ -74,12 +83,28 @@ class AncsClient(
 
     fun start() {
         stopped = false
+        if (gatt != null || device != null) return
+        // Restore only the exact previously authorized bond. Never select an arbitrary bonded device.
+        try {
+            val adapter = context.getSystemService(BluetoothManager::class.java)?.adapter ?: return
+            if (!adapter.isEnabled) return
+            val address = prefs.getString(PREF_PEER, null) ?: return
+            val peer = adapter.bondedDevices.firstOrNull { it.address == address } ?: run {
+                prefs.edit { remove(PREF_PEER) }
+                return
+            }
+            connect(peer, autoConnect = true)
+        } catch (_: SecurityException) {
+            BridgeStatus.event("No se pudo restaurar el enlace: permiso Bluetooth")
+        }
     }
 
     /** The iPhone connected to our GATT server (path A): consume ANCS over that link. */
     fun onPeerConnected(peer: BluetoothDevice) {
         if (stopped) return
         if (device?.address == peer.address && gatt != null && linkConnected) return
+        // A fresh central connection makes path A available now. Promote an outstanding background
+        // wait to a direct client connection instead of waiting for peripheral advertisements.
         connect(peer, autoConnect = false)
     }
 
@@ -96,8 +121,10 @@ class AncsClient(
         if (bond == BondState.BONDED && bondWait.finish()) {
             // A timed-out descriptor can still call back. A fresh GATT generation prevents that
             // callback from confirming a new subscription on the same characteristic.
+            prefs.edit { putString(PREF_PEER, peer.address) }
             connect(peer, autoConnect = false)
-        } else if (bond == BondState.NONE && (bondWait.waiting || gatt != null)) {
+        } else if (bond == BondState.NONE) {
+            prefs.edit { remove(PREF_PEER) }
             failPairing("Vínculo rechazado o retirado. Autoriza de nuevo el reloj en el iPhone.")
         }
     }
@@ -109,7 +136,7 @@ class AncsClient(
             return
         }
         BridgeStatus.event("Recuperación manual solicitada")
-        autoRebuilds = 0
+        recovery.ready()
         connect(d, autoConnect = false)
     }
 
@@ -143,6 +170,8 @@ class AncsClient(
 
     private fun connect(peer: BluetoothDevice, autoConnect: Boolean) {
         closeLink("nuevo enlace")
+        if (stopped) return
+        recovery.connecting(autoConnect)
         val myGen = ++linkGen
         device = peer
         BridgeStatus.update {
@@ -156,23 +185,24 @@ class AncsClient(
             BridgeStatus.update { it.copy(ancs = AncsState.FAILED, ancsDetail = "Sin permiso Bluetooth") }
             null
         }
+        if (gatt == null) retryLink("El sistema no inició la conexión")
+        scheduleTick()
     }
 
-    /**
-     * Replaces the client link with a fresh one to the same iPhone, at most [MAX_AUTO_REBUILDS] times until
-     * ANCS is READY again so a misbehaving peer cannot cause a reconnection loop. False when the budget is spent.
-     */
-    private fun rebuildLink(why: String): Boolean {
-        val peer = device ?: return false
-        if (stopped || autoRebuilds >= MAX_AUTO_REBUILDS) return false
-        autoRebuilds++
-        BridgeStatus.event("$why: nuevo enlace ANCS (intento $autoRebuilds)")
-        handler.postDelayed({ if (!stopped && device?.address == peer.address) connect(peer, autoConnect = false) }, REBUILD_DELAY_MS)
-        return true
+    /** Invalidate callbacks immediately; the next attempt is paced, cancellable and bounded. */
+    private fun retryLink(why: String) {
+        val peer = device ?: return
+        closeLink(why)
+        if (stopped || peer.bondState != BluetoothDevice.BOND_BONDED) return
+        recovery.failed()
+        BridgeStatus.update { it.copy(ancs = AncsState.CONNECTING, ancsDetail = "Reintentando conexión") }
+        BridgeStatus.event("$why; recuperación automática programada")
+        scheduleTick()
     }
 
     private fun closeLink(reason: String) {
         handler.removeCallbacks(tick)
+        recovery.cancel()
         campaign.sessionEnd(engine.generation, reason)
         engine.endSession(engine.generation)
         ams.reset()
@@ -202,7 +232,18 @@ class AncsClient(
     private fun enqueue(q: GattOperationQueue, key: String, timeoutMs: Long, execute: () -> Boolean, done: (GattOutcome) -> Unit) {
         q.enqueue(GattOperation(key, timeoutMs * 1_000_000, execute) { outcome ->
             // Outcomes from a replaced queue (Service Changed, reconnection) never act on the new session.
-            if (queue === q) done(outcome)
+            if (queue === q) {
+                if (outcome == GattOutcome.TimedOut) {
+                    // Android callbacks have no operation ID. Reusing the queue after a timeout could
+                    // mistake a late callback for the next write to the same characteristic.
+                    if (key.startsWith("desc:") && device?.bondState != BluetoothDevice.BOND_BONDED) {
+                        detachQueue()
+                        device?.let { requestBond(it, "Esperando que aceptes el emparejamiento") }
+                    } else {
+                        retryLink("Operación Bluetooth sin respuesta")
+                    }
+                } else done(outcome)
+            }
         })
         scheduleTick()
     }
@@ -218,9 +259,7 @@ class AncsClient(
         BridgeStatus.update { it.copy(ancs = AncsState.DISCOVERING) }
         enqueue(q, "discover", 15_000, { g.discoverServices() }) { outcome ->
             if (outcome == GattOutcome.Success) setupAncs(g)
-            else if (!rebuildLink("descubrimiento sin respuesta ($outcome)")) {
-                BridgeStatus.update { it.copy(ancs = AncsState.FAILED, ancsDetail = "Descubrimiento falló: $outcome") }
-            }
+            else retryLink("Descubrimiento falló: $outcome")
         }
     }
 
@@ -229,8 +268,9 @@ class AncsClient(
         val peer = device ?: return
         if (service == null) {
             if (peer.bondState != BluetoothDevice.BOND_BONDED) requestBond(peer, "ANCS oculto hasta vincular")
-            else BridgeStatus.update {
-                it.copy(ancs = AncsState.NOT_FOUND, ancsDetail = "El iPhone no expone ANCS: revisa permiso de compartir avisos")
+            else {
+                retryLink("El iPhone no expone ANCS")
+                BridgeStatus.update { it.copy(ancsDetail = "Revisa Compartir notificaciones; se reintentará") }
             }
             return
         }
@@ -238,7 +278,7 @@ class AncsClient(
         val ds = service.getCharacteristic(AncsUuids.DATA_SOURCE)
         val cp = service.getCharacteristic(AncsUuids.CONTROL_POINT)
         if (ns == null || ds == null || cp == null) {
-            BridgeStatus.update { it.copy(ancs = AncsState.FAILED, ancsDetail = "Servicio ANCS incompleto") }
+            retryLink("Servicio ANCS incompleto")
             return
         }
         controlPoint = cp
@@ -249,7 +289,8 @@ class AncsClient(
             subscribe(g, ns) {
                 val effects = engine.startSession(Pseudonym.of(peer))
                 prefs.edit { putLong(WristBridgeApp.PREF_LAST_GENERATION, engine.generation) }
-                autoRebuilds = 0
+                recovery.ready()
+                prefs.edit { putString(PREF_PEER, peer.address) }
                 campaign.sessionStart(engine.generation)
                 BridgeStatus.update { it.copy(ancs = AncsState.READY, ancsDetail = "", generation = engine.generation) }
                 BridgeStatus.event("ANCS listo gen=${engine.generation}")
@@ -264,7 +305,7 @@ class AncsClient(
     private fun subscribe(g: BluetoothGatt, ch: BluetoothGattCharacteristic, onConfirmed: () -> Unit) {
         val q = queue ?: return
         val cccd = ch.getDescriptor(AncsUuids.CCCD) ?: run {
-            BridgeStatus.update { it.copy(ancs = AncsState.FAILED, ancsDetail = "Falta CCCD") }
+            retryLink("Falta CCCD")
             return
         }
         // iOS replays existing notifications (PreExisting) only on a fresh Notification Source subscription.
@@ -293,6 +334,7 @@ class AncsClient(
                             lastGattStatus = (outcome as? GattOutcome.Failed)?.status)
                     }
                     BridgeStatus.event("Suscripción ANCS falló $outcome")
+                    retryLink("No se confirmó la suscripción ANCS")
                 }
             }
         }
@@ -345,7 +387,7 @@ class AncsClient(
 
     private fun scheduleTick() {
         handler.removeCallbacks(tick)
-        val next = listOfNotNull(engine.nextDeadlineNanos(), queue?.nextDeadlineNanos(), bondWait.nextDeadlineNanos()).minOrNull() ?: return
+        val next = listOfNotNull(engine.nextDeadlineNanos(), queue?.nextDeadlineNanos(), bondWait.nextDeadlineNanos(), recovery.nextDeadlineNanos()).minOrNull() ?: return
         val delayMs = ((next - clock.nowNanos()) / 1_000_000).coerceAtLeast(0) + 1
         handler.postDelayed(tick, delayMs)
     }
@@ -359,6 +401,12 @@ class AncsClient(
                 return
             }
             if (newState == BluetoothProfile.STATE_CONNECTED) {
+                if (status != BluetoothGatt.GATT_SUCCESS) {
+                    retryLink("Conexión rechazada estado=$status")
+                    return
+                }
+                if (linkConnected) return
+                recovery.cancel()
                 linkConnected = true
                 campaign.linkUp()
                 val q = GattOperationQueue(clock)
@@ -369,11 +417,7 @@ class AncsClient(
                 val peer = device
                 campaign.linkDown("gatt=$status")
                 BridgeStatus.update { it.copy(ancs = AncsState.IDLE, ancsDetail = "Desconectado ($status)", lastGattStatus = status) }
-                closeLink("desconexión estado=$status")
-                // R01: once bonded, wait in the background for the iPhone instead of a rapid retry loop.
-                if (!stopped && peer != null && peer.bondState == BluetoothDevice.BOND_BONDED) {
-                    handler.post { if (!stopped && gatt == null) connect(peer, autoConnect = true) }
-                }
+                if (peer != null) retryLink("Desconexión estado=$status")
             }
         }
 
@@ -420,15 +464,12 @@ class AncsClient(
             // R03: a new GATT client link gives a new generation, a clean discovery and fresh subscriptions
             // (and the PreExisting replay). Rediscovering on the same client is not enough: an operation
             // already in flight there (MTU, write) can swallow the discovery callback, observed on Watch7.
-            if (!rebuildLink("Service Changed")) {
-                BridgeStatus.update { it.copy(ancs = AncsState.FAILED, ancsDetail = "Service Changed repetido: pulsa Recuperar conexión") }
-            }
+            retryLink("Service Changed")
         }
     }
 
     companion object {
-        private const val MAX_AUTO_REBUILDS = 3
-        private const val REBUILD_DELAY_MS = 500L
+        private const val PREF_PEER = "ancs_authorized_peer"
 
         /** Insufficient authentication / encryption / auth failure. */
         private val AUTH_STATUSES = setOf(5, 15, 137)

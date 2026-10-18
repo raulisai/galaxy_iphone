@@ -120,6 +120,13 @@ internal fun HomeScreen(
             }
         }
 
+        item(key = "health") {
+            Tile(
+                onClick = { onOpen(Screen.HEALTH) }, glyph = GlyphKind.PHONE,
+                accent = WbColors.Green, title = "Salud", subtitle = "Pasos y pulso del reloj",
+            )
+        }
+
         item(key = "connection") {
             Tile(
                 onClick = { onOpen(Screen.CONNECTION) },

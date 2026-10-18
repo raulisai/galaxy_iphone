@@ -1,0 +1,105 @@
+INSTRUMENTATION_STATUS: class=dev.wristbridge.watch.bridge.IncomingCallTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=
+dev.wristbridge.watch.bridge.IncomingCallTest:
+INSTRUMENTATION_STATUS: test=incomingTelegramCardPostsWithoutCallStyleOrBridgeCrash
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=dev.wristbridge.watch.bridge.IncomingCallTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at dev.wristbridge.watch.bridge.IncomingCallTest.incomingTelegramCardPostsWithoutCallStyleOrBridgeCrash(IncomingCallTest.kt:39)
+
+INSTRUMENTATION_STATUS: stream=
+Error in incomingTelegramCardPostsWithoutCallStyleOrBridgeCrash(dev.wristbridge.watch.bridge.IncomingCallTest):
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at dev.wristbridge.watch.bridge.IncomingCallTest.incomingTelegramCardPostsWithoutCallStyleOrBridgeCrash(IncomingCallTest.kt:39)
+
+INSTRUMENTATION_STATUS: test=incomingTelegramCardPostsWithoutCallStyleOrBridgeCrash
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=dev.wristbridge.watch.health.HealthCapabilitiesTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=
+dev.wristbridge.watch.health.HealthCapabilitiesTest:
+INSTRUMENTATION_STATUS: test=queryPassiveCapabilitiesWithoutReadingSensorData
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=dev.wristbridge.watch.health.HealthCapabilitiesTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=queryPassiveCapabilitiesWithoutReadingSensorData
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=dev.wristbridge.watch.health.HealthStoreTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=
+dev.wristbridge.watch.health.HealthStoreTest:
+INSTRUMENTATION_STATUS: test=duplicateBatchAndOutOfOrderSamplesDoNotInflateCountOrReplaceLatest
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=dev.wristbridge.watch.health.HealthStoreTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=duplicateBatchAndOutOfOrderSamplesDoNotInflateCountOrReplaceLatest
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=dev.wristbridge.watch.health.HealthStoreTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=duplicateSensorIdentitySurvivesWallClockAdjustment
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=dev.wristbridge.watch.health.HealthStoreTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=duplicateSensorIdentitySurvivesWallClockAdjustment
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=dev.wristbridge.watch.health.HealthStoreTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=retentionAndEraseAreVisibleAndInvalidValuesAreIgnored
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=dev.wristbridge.watch.health.HealthStoreTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=retentionAndEraseAreVisibleAndInvalidValuesAreIgnored
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: stream=
+
+Time: 0.877
+There was 1 failure:
+1) incomingTelegramCardPostsWithoutCallStyleOrBridgeCrash(dev.wristbridge.watch.bridge.IncomingCallTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at dev.wristbridge.watch.bridge.IncomingCallTest.incomingTelegramCardPostsWithoutCallStyleOrBridgeCrash(IncomingCallTest.kt:39)
+
+FAILURES!!!
+Tests run: 5,  Failures: 1
+
+
+INSTRUMENTATION_CODE: -1

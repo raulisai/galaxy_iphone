@@ -1,0 +1,138 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.8.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Shared read-only dependency cache is an incubating feature.
+> Task :core:protocol-kotlin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:protocol-kotlin:compileKotlin FROM-CACHE
+> Task :core:protocol-kotlin:compileJava NO-SOURCE
+> Task :core:protocol-kotlin:processResources NO-SOURCE
+> Task :core:protocol-kotlin:classes UP-TO-DATE
+> Task :core:protocol-kotlin:jar
+> Task :core:protocol-kotlin:compileTestKotlin FROM-CACHE
+> Task :core:protocol-kotlin:compileTestJava NO-SOURCE
+> Task :core:protocol-kotlin:processTestResources NO-SOURCE
+> Task :core:protocol-kotlin:testClasses UP-TO-DATE
+> Task :core:protocol-kotlin:test FROM-CACHE
+> Task :core:notification-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:notification-domain:processResources NO-SOURCE
+> Task :core:notification-domain:processTestResources NO-SOURCE
+> Task :core:assistant-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:assistant-domain:compileKotlin FROM-CACHE
+> Task :core:assistant-domain:compileJava NO-SOURCE
+> Task :core:assistant-domain:processResources NO-SOURCE
+> Task :core:assistant-domain:classes UP-TO-DATE
+> Task :core:assistant-domain:jar
+> Task :core:assistant-domain:compileTestKotlin FROM-CACHE
+> Task :core:assistant-domain:compileTestJava NO-SOURCE
+> Task :core:assistant-domain:processTestResources NO-SOURCE
+> Task :core:assistant-domain:testClasses UP-TO-DATE
+> Task :core:assistant-domain:test FROM-CACHE
+> Task :apps:watch:preBuild UP-TO-DATE
+> Task :apps:watch:preDebugBuild UP-TO-DATE
+> Task :apps:watch:generateDebugBuildConfig
+> Task :apps:watch:generateDebugResources FROM-CACHE
+> Task :apps:watch:packageDebugResources FROM-CACHE
+> Task :apps:watch:processDebugNavigationResources FROM-CACHE
+> Task :apps:watch:parseDebugLocalResources FROM-CACHE
+> Task :apps:watch:generateDebugRFile FROM-CACHE
+> Task :apps:watch:javaPreCompileDebug FROM-CACHE
+> Task :apps:watch:checkDebugAarMetadata
+> Task :apps:watch:mapDebugSourceSetPaths
+> Task :apps:watch:compileDebugNavigationResources FROM-CACHE
+> Task :apps:watch:createDebugCompatibleScreenManifests
+> Task :apps:watch:extractDeepLinksDebug FROM-CACHE
+> Task :apps:watch:processDebugMainManifest
+> Task :apps:watch:mergeDebugResources
+> Task :apps:watch:processDebugManifest
+> Task :apps:watch:preDebugAndroidTestBuild SKIPPED
+> Task :apps:watch:extractProguardFiles
+> Task :apps:watch:preDebugUnitTestBuild UP-TO-DATE
+> Task :apps:watch:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :apps:watch:generateDebugAssets UP-TO-DATE
+> Task :apps:watch:mergeDebugAssets
+> Task :apps:watch:compressDebugAssets FROM-CACHE
+> Task :apps:watch:generateDebugGlobalSynthetics FROM-CACHE
+> Task :apps:watch:processDebugManifestForPackage
+> Task :apps:watch:checkDebugDuplicateClasses
+> Task :apps:watch:desugarDebugFileDependencies FROM-CACHE
+> Task :apps:watch:mergeDebugJniLibFolders
+> Task :apps:watch:validateSigningDebug
+> Task :apps:watch:writeDebugAppMetadata
+> Task :apps:watch:writeDebugSigningConfigVersions
+> Task :core:notification-domain:compileKotlin
+> Task :apps:watch:mergeDebugAndroidTestManifest
+> Task :apps:watch:processDebugAndroidTestManifest
+> Task :apps:watch:generateDebugAndroidTestBuildConfig
+> Task :apps:watch:generateDebugAndroidTestResources
+> Task :apps:watch:packageDebugAndroidTestResources
+> Task :apps:watch:processDebugAndroidTestNavigationResources
+> Task :apps:watch:javaPreCompileDebugAndroidTest FROM-CACHE
+> Task :apps:watch:generateDebugAndroidTestAssets UP-TO-DATE
+> Task :apps:watch:mergeDebugAndroidTestAssets
+> Task :apps:watch:compressDebugAndroidTestAssets FROM-CACHE
+> Task :apps:watch:generateDebugAndroidTestGlobalSynthetics FROM-CACHE
+> Task :apps:watch:parseDebugAndroidTestLocalResources
+> Task :apps:watch:checkDebugAndroidTestDuplicateClasses
+> Task :apps:watch:desugarDebugAndroidTestFileDependencies FROM-CACHE
+> Task :apps:watch:generateDebugAndroidTestRFile
+> Task :apps:watch:checkDebugAndroidTestAarMetadata
+> Task :apps:watch:mapDebugAndroidTestSourceSetPaths
+> Task :apps:watch:compileDebugAndroidTestNavigationResources FROM-CACHE
+> Task :apps:watch:mergeDebugAndroidTestJniLibFolders
+> Task :apps:watch:validateSigningDebugAndroidTest
+> Task :apps:watch:writeDebugAndroidTestSigningConfigVersions
+> Task :apps:watch:mergeDebugAndroidTestResources
+> Task :apps:watch:mergeExtDexDebugAndroidTest
+> Task :apps:watch:processDebugResources
+> Task :apps:watch:mergeExtDexDebug
+> Task :apps:watch:processDebugAndroidTestResources
+
+> Task :core:notification-domain:compileKotlin
+w: file:///F:/proyectos/galaxy_iphone/core/notification-domain/src/main/kotlin/dev/wristbridge/notification/AncsSessionEngine.kt:174:31 Unnecessary safe call on a non-null receiver of type 'ExpectedResponse'.
+
+> Task :core:notification-domain:compileJava NO-SOURCE
+> Task :core:notification-domain:classes UP-TO-DATE
+> Task :core:notification-domain:jar
+> Task :apps:watch:mergeDebugNativeLibs
+> Task :apps:watch:mergeDebugAndroidTestNativeLibs NO-SOURCE
+> Task :apps:watch:stripDebugAndroidTestDebugSymbols NO-SOURCE
+> Task :apps:watch:mergeLibDexDebugAndroidTest
+> Task :apps:watch:mergeLibDexDebug
+> Task :apps:watch:stripDebugDebugSymbols
+> Task :core:notification-domain:compileTestKotlin
+> Task :core:notification-domain:compileTestJava NO-SOURCE
+> Task :core:notification-domain:testClasses UP-TO-DATE
+
+> Task :apps:watch:compileDebugKotlin FAILED
+e: file:///F:/proyectos/galaxy_iphone/apps/watch/src/main/java/dev/wristbridge/watch/health/HealthCapture.kt:51:40 Unresolved reference 'capabilitiesAsync' on receiver of type 'PassiveMonitoringClient'.
+e: file:///F:/proyectos/galaxy_iphone/apps/watch/src/main/java/dev/wristbridge/watch/health/HealthCapture.kt:51:84 Unresolved reference 'supportedDataTypesPassiveMonitoring' on receiver of type 'MatchGroup?'.
+e: file:///F:/proyectos/galaxy_iphone/apps/watch/src/main/java/dev/wristbridge/watch/health/HealthCapture.kt:64:51 Unresolved reference 'not' for operator '!'.
+e: file:///F:/proyectos/galaxy_iphone/apps/watch/src/main/java/dev/wristbridge/watch/health/HealthCapture.kt:67:54 Unresolved reference 'not' for operator '!'.
+
+> Task :core:notification-domain:test
+
+[Incubating] Problems report is available at: file:///<user-home>/AppData/Local/Temp/WristBridge-update-11/root/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':apps:watch:compileDebugKotlin' (registered by plugin 'com.android.internal.application').
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
+   > Kotlin compiler: UNRESOLVED_REFERENCE
+       Kotlin compiler error
+         Unresolved reference 'capabilitiesAsync' on receiver of type 'PassiveMonitoringClient'.
+         Location: F:/proyectos/galaxy_iphone/apps/watch/src/main/java/dev/wristbridge/watch/health/HealthCapture.kt:51
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.8.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 4m 6s
+68 actionable tasks: 46 executed, 22 from cache

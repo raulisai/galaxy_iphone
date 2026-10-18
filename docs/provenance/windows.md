@@ -9,6 +9,7 @@ Implementación original de WristBridge para Wear OS, escrita desde el contrato 
 | Build | Gradle wrapper | 9.8.1 (checksum fijado) | Apache-2.0 |
 | Build | Android Gradle Plugin | 9.4.1 | Apache-2.0 |
 | Build | Kotlin Gradle Plugin / plugin Compose | 2.4.21 | Apache-2.0 |
+| App | androidx.health:health-services-client | 1.1.0 | Apache-2.0 |
 | App | androidx.core:core-ktx | 1.19.1 | Apache-2.0 |
 | App | androidx.activity:activity-compose | 1.13.0 | Apache-2.0 |
 | App | androidx.lifecycle (runtime-compose, service) | 2.11.0 | Apache-2.0 |

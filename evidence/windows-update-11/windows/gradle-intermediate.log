@@ -1,0 +1,147 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.8.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Shared read-only dependency cache is an incubating feature.
+> Task :core:protocol-kotlin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:protocol-kotlin:compileKotlin UP-TO-DATE
+> Task :core:protocol-kotlin:compileJava NO-SOURCE
+> Task :core:protocol-kotlin:processResources NO-SOURCE
+> Task :core:protocol-kotlin:classes UP-TO-DATE
+> Task :core:protocol-kotlin:jar UP-TO-DATE
+> Task :core:protocol-kotlin:compileTestKotlin UP-TO-DATE
+> Task :core:protocol-kotlin:compileTestJava NO-SOURCE
+> Task :core:protocol-kotlin:processTestResources NO-SOURCE
+> Task :core:protocol-kotlin:testClasses UP-TO-DATE
+> Task :core:protocol-kotlin:test UP-TO-DATE
+> Task :core:notification-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:notification-domain:compileKotlin UP-TO-DATE
+> Task :core:notification-domain:compileJava NO-SOURCE
+> Task :core:notification-domain:processResources NO-SOURCE
+> Task :core:notification-domain:classes UP-TO-DATE
+> Task :core:notification-domain:jar UP-TO-DATE
+> Task :core:notification-domain:compileTestKotlin UP-TO-DATE
+> Task :core:notification-domain:compileTestJava NO-SOURCE
+> Task :core:notification-domain:processTestResources NO-SOURCE
+> Task :core:notification-domain:testClasses UP-TO-DATE
+> Task :core:notification-domain:test UP-TO-DATE
+> Task :core:assistant-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:assistant-domain:compileKotlin UP-TO-DATE
+> Task :core:assistant-domain:compileJava NO-SOURCE
+> Task :core:assistant-domain:processResources NO-SOURCE
+> Task :core:assistant-domain:classes UP-TO-DATE
+> Task :core:assistant-domain:jar UP-TO-DATE
+> Task :core:assistant-domain:compileTestKotlin UP-TO-DATE
+> Task :core:assistant-domain:compileTestJava NO-SOURCE
+> Task :core:assistant-domain:processTestResources NO-SOURCE
+> Task :core:assistant-domain:testClasses UP-TO-DATE
+> Task :core:assistant-domain:test UP-TO-DATE
+> Task :apps:watch:preBuild UP-TO-DATE
+> Task :apps:watch:preDebugBuild UP-TO-DATE
+> Task :apps:watch:generateDebugBuildConfig UP-TO-DATE
+> Task :apps:watch:generateDebugResources UP-TO-DATE
+> Task :apps:watch:packageDebugResources UP-TO-DATE
+> Task :apps:watch:processDebugNavigationResources UP-TO-DATE
+> Task :apps:watch:parseDebugLocalResources UP-TO-DATE
+> Task :apps:watch:generateDebugRFile UP-TO-DATE
+> Task :apps:watch:javaPreCompileDebug UP-TO-DATE
+> Task :apps:watch:checkDebugAarMetadata UP-TO-DATE
+> Task :apps:watch:mapDebugSourceSetPaths UP-TO-DATE
+> Task :apps:watch:compileDebugNavigationResources UP-TO-DATE
+> Task :apps:watch:mergeDebugResources UP-TO-DATE
+> Task :apps:watch:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :apps:watch:extractDeepLinksDebug UP-TO-DATE
+> Task :apps:watch:processDebugMainManifest UP-TO-DATE
+> Task :apps:watch:processDebugManifest UP-TO-DATE
+> Task :apps:watch:processDebugManifestForPackage UP-TO-DATE
+> Task :apps:watch:processDebugResources UP-TO-DATE
+> Task :apps:watch:preDebugAndroidTestBuild SKIPPED
+> Task :apps:watch:extractProguardFiles UP-TO-DATE
+> Task :apps:watch:preDebugUnitTestBuild UP-TO-DATE
+> Task :apps:watch:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :apps:watch:generateDebugAssets UP-TO-DATE
+> Task :apps:watch:mergeDebugAssets UP-TO-DATE
+> Task :apps:watch:compressDebugAssets UP-TO-DATE
+> Task :apps:watch:generateDebugGlobalSynthetics UP-TO-DATE
+> Task :apps:watch:checkDebugDuplicateClasses UP-TO-DATE
+> Task :apps:watch:desugarDebugFileDependencies UP-TO-DATE
+> Task :apps:watch:mergeExtDexDebug UP-TO-DATE
+> Task :apps:watch:mergeLibDexDebug UP-TO-DATE
+> Task :apps:watch:mergeDebugJniLibFolders UP-TO-DATE
+> Task :apps:watch:mergeDebugNativeLibs UP-TO-DATE
+> Task :apps:watch:stripDebugDebugSymbols UP-TO-DATE
+> Task :apps:watch:validateSigningDebug UP-TO-DATE
+> Task :apps:watch:writeDebugAppMetadata UP-TO-DATE
+> Task :apps:watch:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :apps:watch:mergeDebugAndroidTestManifest UP-TO-DATE
+> Task :apps:watch:processDebugAndroidTestManifest UP-TO-DATE
+> Task :apps:watch:generateDebugAndroidTestBuildConfig UP-TO-DATE
+> Task :apps:watch:generateDebugAndroidTestResources UP-TO-DATE
+> Task :apps:watch:packageDebugAndroidTestResources UP-TO-DATE
+> Task :apps:watch:processDebugAndroidTestNavigationResources UP-TO-DATE
+> Task :apps:watch:parseDebugAndroidTestLocalResources UP-TO-DATE
+> Task :apps:watch:generateDebugAndroidTestRFile UP-TO-DATE
+> Task :apps:watch:javaPreCompileDebugAndroidTest UP-TO-DATE
+> Task :apps:watch:generateDebugAndroidTestAssets UP-TO-DATE
+> Task :apps:watch:mergeDebugAndroidTestAssets UP-TO-DATE
+> Task :apps:watch:compressDebugAndroidTestAssets UP-TO-DATE
+> Task :apps:watch:generateDebugAndroidTestGlobalSynthetics UP-TO-DATE
+> Task :apps:watch:checkDebugAndroidTestDuplicateClasses UP-TO-DATE
+> Task :apps:watch:desugarDebugAndroidTestFileDependencies UP-TO-DATE
+> Task :apps:watch:mergeExtDexDebugAndroidTest UP-TO-DATE
+> Task :apps:watch:mergeLibDexDebugAndroidTest UP-TO-DATE
+> Task :apps:watch:checkDebugAndroidTestAarMetadata UP-TO-DATE
+> Task :apps:watch:mapDebugAndroidTestSourceSetPaths UP-TO-DATE
+> Task :apps:watch:compileDebugAndroidTestNavigationResources UP-TO-DATE
+> Task :apps:watch:mergeDebugAndroidTestResources UP-TO-DATE
+> Task :apps:watch:processDebugAndroidTestResources UP-TO-DATE
+> Task :apps:watch:mergeDebugAndroidTestJniLibFolders UP-TO-DATE
+> Task :apps:watch:mergeDebugAndroidTestNativeLibs NO-SOURCE
+> Task :apps:watch:stripDebugAndroidTestDebugSymbols NO-SOURCE
+> Task :apps:watch:validateSigningDebugAndroidTest UP-TO-DATE
+> Task :apps:watch:writeDebugAndroidTestSigningConfigVersions UP-TO-DATE
+> Task :apps:watch:compileDebugKotlin
+w: file:///F:/proyectos/galaxy_iphone/apps/watch/src/main/java/dev/wristbridge/watch/bridge/AncsClient.kt:180:18 'fun connectGatt(p0: Context!, p1: Boolean, p2: BluetoothGattCallback!, p3: Int, p4: Int, p5: Handler!): BluetoothGatt!' is deprecated. Deprecated in Java.
+w: file:///F:/proyectos/galaxy_iphone/apps/watch/src/main/java/dev/wristbridge/watch/bridge/MediaPresenter.kt:117:54 Unnecessary safe call on a non-null receiver of type 'MediaPresenter.Visible'.
+w: file:///F:/proyectos/galaxy_iphone/apps/watch/src/main/java/dev/wristbridge/watch/bridge/MediaPresenter.kt:275:36 'constructor(p0: Int, p1: CharSequence!, p2: PendingIntent?): Notification.Action.Builder' is deprecated. Deprecated in Java.
+w: file:///F:/proyectos/galaxy_iphone/apps/watch/src/main/java/dev/wristbridge/watch/ui/MainActivity.kt:159:29 Condition is always 'true'.
+
+> Task :apps:watch:compileDebugJavaWithJavac
+> Task :apps:watch:bundleDebugClassesToCompileJar
+> Task :apps:watch:generateDebugLintReportModel
+> Task :apps:watch:generateDebugAndroidTestLintModel
+> Task :apps:watch:generateDebugUnitTestLintModel
+> Task :apps:watch:processDebugJavaRes
+> Task :apps:watch:mergeDebugJavaResource
+> Task :apps:watch:dexBuilderDebug
+> Task :apps:watch:mergeProjectDexDebug
+> Task :apps:watch:packageDebug
+> Task :apps:watch:createDebugApkListingFileRedirect
+> Task :apps:watch:assembleDebug
+> Task :apps:watch:compileDebugAndroidTestKotlin
+> Task :apps:watch:lintAnalyzeDebugUnitTest
+> Task :apps:watch:compileDebugAndroidTestJavaWithJavac
+> Task :apps:watch:processDebugAndroidTestJavaRes
+> Task :apps:watch:mergeDebugAndroidTestJavaResource
+> Task :apps:watch:dexBuilderDebugAndroidTest
+> Task :apps:watch:mergeProjectDexDebugAndroidTest
+> Task :apps:watch:packageDebugAndroidTest
+> Task :apps:watch:createDebugAndroidTestApkListingFileRedirect
+> Task :apps:watch:assembleDebugAndroidTest
+> Task :apps:watch:lintAnalyzeDebugAndroidTest
+> Task :apps:watch:lintAnalyzeDebug
+
+> Task :apps:watch:lintReportDebug
+Wrote HTML report to file:///<user-home>/AppData/Local/Temp/WristBridge-update-11/apps/watch/reports/lint-results-debug.html
+Wrote SARIF report to file:///<user-home>/AppData/Local/Temp/WristBridge-update-11/apps/watch/reports/lint-results-debug.sarif
+
+> Task :apps:watch:lintDebug
+
+[Incubating] Problems report is available at: file:///<user-home>/AppData/Local/Temp/WristBridge-update-11/root/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.8.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 3m 58s
+92 actionable tasks: 25 executed, 67 up-to-date

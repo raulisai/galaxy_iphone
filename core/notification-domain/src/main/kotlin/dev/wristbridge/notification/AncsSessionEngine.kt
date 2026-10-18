@@ -5,6 +5,7 @@ import dev.wristbridge.protocol.ancs.AncsCommands
 import dev.wristbridge.protocol.ancs.AncsError
 import dev.wristbridge.protocol.ancs.AncsResponse
 import dev.wristbridge.protocol.ancs.AncsUid
+import dev.wristbridge.protocol.ancs.CategoryId
 import dev.wristbridge.protocol.ancs.AppAttributeId
 import dev.wristbridge.protocol.ancs.AssemblyFailure
 import dev.wristbridge.protocol.ancs.AssemblyResult
@@ -252,13 +253,22 @@ class AncsSessionEngine(
 
     private fun enqueueNotification(entry: Entry, out: MutableList<SessionEffect>) {
         val fetch = Fetch.Notification(entry.uid)
-        if (fetch in queue) return
+        val urgent = entry.event.category == CategoryId.INCOMING_CALL && !entry.event.preExisting
+        if (fetch in queue) {
+            if (!urgent) return
+            queue.remove(fetch)
+        }
         if (queue.count { it is Fetch.Notification } >= limits.maxPendingUids) {
             counters = counters.copy(queueOverflow = counters.queueOverflow + 1)
             if (entry.card == null) postFallback(entry, out)
             return
         }
-        queue.addLast(fetch)
+        if (urgent) {
+            // Do not cancel a response already in flight. Live calls precede the remaining backlog,
+            // but never jump ahead of a user action such as answering/declining an existing call.
+            val at = queue.indexOfFirst { it !is Fetch.Action }.let { if (it < 0) queue.size else it }
+            queue.add(at, fetch)
+        } else queue.addLast(fetch)
     }
 
     private fun remove(uid: AncsUid, out: MutableList<SessionEffect>) {

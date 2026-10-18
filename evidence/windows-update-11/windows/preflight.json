@@ -1,0 +1,8 @@
+{
+  "capturedAtUtc": "2026-10-18T21:44:30.983897+00:00",
+  "installedVersion": "0.4.0-lab (9)",
+  "observedCallStyleRejections": 8,
+  "observedFatalThread": "wristbridge-ble",
+  "failure": "NotificationManager rejected CallStyle; uncaught exception in CardPresenter terminated the process",
+  "personalContentRecorded": false
+}

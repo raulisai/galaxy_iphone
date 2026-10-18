@@ -43,6 +43,7 @@ internal enum class Screen(val parent: Screen?) {
     HOME(null),
     ALERTS(HOME),
     MUSIC(HOME),
+    HEALTH(HOME),
     CONNECTION(HOME),
     SETTINGS(HOME),
     DIAGNOSTICS(SETTINGS),
@@ -58,6 +59,16 @@ class MainActivity : ComponentActivity() {
         // After a configuration change/process restore the extra is stale: the saved UI state wins.
         if (savedInstanceState == null) consumeOpenCall(intent)
         setContent { MaterialTheme { AppScaffold { WatchApp(openCallRequest) } } }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val prefs = getSharedPreferences(WristBridgeApp.PREFS, Context.MODE_PRIVATE)
+        if (prefs.getBoolean(WristBridgeApp.PREF_ENABLED, false) &&
+            BlePermissions.bluetoothGranted(this) && !BridgeStatus.state.value.serviceRunning) {
+            try { BridgeService.send(this, BridgeService.ACTION_START) }
+            catch (_: RuntimeException) { BridgeStatus.event("No se pudo reanudar el puente; pulsa Iniciar") }
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -166,6 +177,7 @@ private fun WatchApp(openCallRequest: Int) {
                         Screen.ALERTS -> AlertsScreen(model) { entry, action ->
                             BridgeService.sendCardAction(context, entry.active.card.key, action)
                         }
+                        Screen.HEALTH -> HealthScreen()
                         Screen.MUSIC -> MusicScreen(model) { command -> BridgeService.sendMedia(context, command) }
                         Screen.CONNECTION -> ConnectionScreen(
                             model = model,

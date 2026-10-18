@@ -73,3 +73,7 @@ Arquitectura añadida: `core/protocol-kotlin/.../ams` (codec y `MediaState`), `A
 ## Último commit conocido de cada rama
 
 Ver `git log` de `development` y `development_claude`; el commit con builds 2 y 3 y este SEED los integra.
+
+## Trabajo integrado · 18 octubre 2026 (0.5.0-lab)
+
+HECHO: corrección de CardPresenter sin CallStyle (Android 14+ lo rechaza sin servicio en primer plano ni pantalla completa y tumbaba el puente en cada llamada), recuperación ANCS acotada, prioridad de llamadas entrantes y captura local de salud con Health Services (opcional; permisos por métrica concedidos por el usuario en la pantalla Salud). Validado: 95 pruebas JVM, lint y compilación PASS. El envío de salud al iPhone sigue sin existir (necesita contrato P2 y sesión segura).
