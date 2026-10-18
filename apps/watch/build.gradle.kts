@@ -21,8 +21,8 @@ android {
         applicationId = "dev.wristbridge.watch"
         minSdk = 33
         targetSdk = 36
-        versionCode = 9
-        versionName = "0.4.0-lab"
+        versionCode = 11
+        versionName = "0.5.0-lab"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // H01: the running build must identify its exact revision. "-dirty" marks uncommitted changes.
         buildConfigField("String", "GIT_COMMIT", "\"$gitCommit\"")
@@ -63,6 +63,7 @@ dependencies {
     implementation(project(":core:notification-domain"))
 
     implementation(libs.androidx.core.ktx)
+    implementation("androidx.health:health-services-client:1.1.0")
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.service)

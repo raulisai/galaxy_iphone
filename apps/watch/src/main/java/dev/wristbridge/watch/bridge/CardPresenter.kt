@@ -3,7 +3,6 @@ package dev.wristbridge.watch.bridge
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.Person
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -48,6 +47,11 @@ class CardPresenter(private val context: Context) {
         } catch (e: SecurityException) {
             BridgeStatus.event("Permiso de notificaciones denegado: tarjeta no mostrada")
             Log.w(TAG, "notify denied", e)
+        } catch (e: RuntimeException) {
+            // A presentation failure must never take the BLE thread (and the whole bridge) down: the card is
+            // lost, the session goes on and the next one is shown.
+            BridgeStatus.event("Tarjeta no mostrada: ${e.javaClass.simpleName}")
+            Log.w(TAG, "card presentation failed", e)
         }
     }
 
@@ -121,10 +125,10 @@ class CardPresenter(private val context: Context) {
                 context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE,
             )
         }
-        // The native call template needs both answer and decline offered by the iPhone; otherwise keep the
-        // plain style with whatever buttons exist.
-        val callStyle = incoming && feedback == null && withActions &&
-            card.positiveActionLabel != null && card.negativeActionLabel != null
+        // Notification.CallStyle is NOT used: since Android 14 the system rejects it (IllegalArgumentException)
+        // unless the notification belongs to a foreground service or uses a full-screen intent, which this
+        // project forbids. Observed on the Watch7: the exception killed the BLE thread on every incoming call.
+        // Answer/decline stay as plain notification actions with the iPhone's own labels.
         val accent = if (incoming) CALL_GREEN else presentation.source.accentArgb
         val n: Notification = NotificationCompat.Builder(context, channel)
             .setSmallIcon(smallIcon)
@@ -148,7 +152,7 @@ class CardPresenter(private val context: Context) {
             .setContentIntent(open)
             .setGroup("wb-${card.key.sessionGeneration}-${presentation.source.groupKey}")
             .apply {
-                if (withActions && !callStyle) {
+                if (withActions) {
                     // Labels are the iPhone's own ("Aceptar", "Rechazar", "Borrar"); positive first.
                     card.positiveActionLabel?.let {
                         addAction(
@@ -174,31 +178,12 @@ class CardPresenter(private val context: Context) {
                 if (bounded) setTimeoutAfter(RING_TIMEOUT_MS)
             }
             .build()
-            .let { if (callStyle) withCallStyle(it, card, presentation, hidePreview) else it }
         // Insistent until ANCS Removed (answered, declined or missed) cancels it; the timeout above
         // bounds the ring if that event is lost with the link. Updates never restart the ring, and any
         // silent re-post (update or action result) on the quiet channel stops it.
         if (ringing) n.flags = n.flags or Notification.FLAG_INSISTENT
         manager.notify(card.key.tag, CARD_ID, n)
         return presentation
-    }
-
-    /**
-     * Re-styles [base] with the framework incoming-call template (API 31+): caller name, Answer/Decline buttons
-     * wired to the existing card action broadcasts. NotificationCompat has no hook for the framework style, so
-     * the built notification is recovered into a framework builder; every other field is preserved.
-     * With hide-preview on, the caller is never shown: a generic name is used instead.
-     */
-    private fun withCallStyle(
-        base: Notification, card: NotificationCard, presentation: CardPresentation, hidePreview: Boolean,
-    ): Notification {
-        val name = if (hidePreview) presentation.source.label.ifBlank { GENERIC_CALLER } else presentation.title
-        val caller = Person.Builder().setName(name.ifBlank { GENERIC_CALLER }).setImportant(true).build()
-        val answer = actionIntent(card.key, BridgeService.ACTION_CARD_ACTION, ActionId.POSITIVE, REQUEST_POSITIVE)
-        val decline = actionIntent(card.key, BridgeService.ACTION_CARD_ACTION, ActionId.NEGATIVE, REQUEST_NEGATIVE)
-        return Notification.Builder.recoverBuilder(context, base)
-            .setStyle(Notification.CallStyle.forIncomingCall(caller, decline, answer))
-            .build()
     }
 
     private fun label(fromIphone: String, fallback: Int): String =
@@ -259,7 +244,6 @@ class CardPresenter(private val context: Context) {
         const val CARD_ID = 1
         private const val RING_TIMEOUT_MS = 90_000L
         private const val CALL_GREEN = 0xFF34A853.toInt()
-        private const val GENERIC_CALLER = "Llamada entrante"
 
         // Request-code kinds for BridgeService.requestCode(key, kind); distinct per card and per intent.
         private const val REQUEST_POSITIVE = 1

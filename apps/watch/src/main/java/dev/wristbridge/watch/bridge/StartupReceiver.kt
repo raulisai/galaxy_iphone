@@ -14,6 +14,7 @@ import dev.wristbridge.watch.WristBridgeApp
 class StartupReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action != Intent.ACTION_BOOT_COMPLETED && intent.action != Intent.ACTION_MY_PACKAGE_REPLACED) return
+        dev.wristbridge.watch.health.HealthCapture.schedule(context)
         val prefs = context.getSharedPreferences(WristBridgeApp.PREFS, Context.MODE_PRIVATE)
         if (!prefs.getBoolean(WristBridgeApp.PREF_ENABLED, false) || !BlePermissions.bluetoothGranted(context)) return
         try {

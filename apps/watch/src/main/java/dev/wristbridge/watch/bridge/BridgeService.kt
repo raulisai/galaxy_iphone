@@ -216,7 +216,7 @@ class BridgeService : Service() {
             BluetoothAdapter.STATE_ON -> {
                 BridgeStatus.update { it.copy(radio = RadioState.ON) }
                 BridgeStatus.event("Bluetooth encendido")
-                if (running) host.start()
+                if (running) { ancs.start(); host.start() }
             }
             BluetoothAdapter.STATE_OFF -> {
                 BridgeStatus.update { it.copy(radio = RadioState.OFF) }

@@ -1,0 +1,78 @@
+{
+  "capturedAtUtc": "2026-10-18T22:05:50.443919+00:00",
+  "versionName": "0.5.0-lab",
+  "versionCode": 11,
+  "applicationId": "dev.wristbridge.watch",
+  "sha256": "b67d1893c0e3069e1db80de7d15eb9d96f629c221612b4da323a17ff5e5fde03",
+  "sizeBytes": 41029938,
+  "build": "PASS",
+  "signature": "PASS",
+  "jvmTests": [
+    {
+      "module": "protocol-kotlin",
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "notification-domain",
+      "tests": 58,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "assistant-domain",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "lint": {
+    "errors": 0,
+    "issues": [
+      {
+        "id": "DataExtractionRules",
+        "severity": "Warning"
+      },
+      {
+        "id": "WearRecents",
+        "severity": "Warning"
+      },
+      {
+        "id": "UseKtx",
+        "severity": "Warning"
+      },
+      {
+        "id": "UseKtx",
+        "severity": "Warning"
+      },
+      {
+        "id": "UseKtx",
+        "severity": "Warning"
+      },
+      {
+        "id": "UseKtx",
+        "severity": "Warning"
+      },
+      {
+        "id": "UseTomlInstead",
+        "severity": "Warning"
+      }
+    ]
+  },
+  "installation": "PASS",
+  "instrumentedTests": "PASS",
+  "realTelegramCall": "NOT_RUN",
+  "realHealthSampling": "NOT_RUN",
+  "healthTransferToIphone": "BLOCKED: shared secure channel and Swift receiver pending",
+  "formalGates": "NOT_RUN",
+  "passiveCapabilities": {
+    "dailySteps": true,
+    "heartRate": true,
+    "source": "instrumented Health Services query; no sensor samples read"
+  },
+  "installedSha256Matches": true
+}
