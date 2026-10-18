@@ -95,6 +95,16 @@
 			"isa" = "PBXBuildFile";
 			"fileRef" = "AA2C263208145D0776D049E6";
 		};
+		"8EFBAF9A2FA33DFAFBFFC8BB" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Views/FeatureScreens.swift";
+			"sourceTree" = "<group>";
+		};
+		"6D46C9472E9E36334EDE505F" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "8EFBAF9A2FA33DFAFBFFC8BB";
+		};
 		"9FED10A07BAFF65E3052FC8D" = {
 			"isa" = "PBXFileReference";
 			"lastKnownFileType" = "sourcecode.swift";
@@ -207,6 +217,7 @@
 				"5226E68D7E1B5CCD3CF5C7CF",
 				"6BAD5550F9512AAC289E3DC2",
 				"AA2C263208145D0776D049E6",
+				"8EFBAF9A2FA33DFAFBFFC8BB",
 				"9FED10A07BAFF65E3052FC8D",
 				"3C7B6B1E6ADBB0D35E519C3A",
 				"242D9AFE03DAC96730B81963",
@@ -278,6 +289,7 @@
 				"93CA5C14D884FF71F63B611C",
 				"0523A87E90D74F8639ED6EFC",
 				"94FC738582F39828F783E9EE",
+				"6D46C9472E9E36334EDE505F",
 				"3E88CA6F0A9C3BA2F31C6229",
 				"3680D5DBC1A7F229528B72B7",
 				"46DF809AFAEAF4415695D5F1",
@@ -339,8 +351,8 @@
 				"PRODUCT_BUNDLE_IDENTIFIER" = "$(WRISTBRIDGE_APP_BUNDLE_ID)";
 				"INFOPLIST_FILE" = "WristBridge/Info.plist";
 				"GENERATE_INFOPLIST_FILE" = "NO";
-				"MARKETING_VERSION" = "0.3.0";
-				"CURRENT_PROJECT_VERSION" = "7";
+				"MARKETING_VERSION" = "0.3.1";
+				"CURRENT_PROJECT_VERSION" = "8";
 				"LD_RUNPATH_SEARCH_PATHS" = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -369,8 +381,8 @@
 				"PRODUCT_BUNDLE_IDENTIFIER" = "$(WRISTBRIDGE_APP_BUNDLE_ID)";
 				"INFOPLIST_FILE" = "WristBridge/Info.plist";
 				"GENERATE_INFOPLIST_FILE" = "NO";
-				"MARKETING_VERSION" = "0.3.0";
-				"CURRENT_PROJECT_VERSION" = "7";
+				"MARKETING_VERSION" = "0.3.1";
+				"CURRENT_PROJECT_VERSION" = "8";
 				"LD_RUNPATH_SEARCH_PATHS" = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

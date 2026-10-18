@@ -177,11 +177,17 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
             do { try await Task.sleep(for: .seconds(20)) } catch { return }
             guard let self, let device, self.peripheral === device else { return }
             self.diagnostics.record(.discoveryTimedOut, value: device.state.rawValue)
-            // Service discovery timed out. Disable recovery before cancellation;
-            // the disconnect callback must not restart this failed attempt.
-            self.stop()
+            // The watch linked before its service was ready. Do not give up: drop
+            // this attempt and let the cancellation callback submit a fresh pending
+            // connection, so a watch that comes back is found without relaunching.
+            self.discoveryGate.reset()
+            self.peripheral = nil
+            if !self.automaticRecovery { self.enabled = false }
+            self.cancel(device)
             self.onEvent?(.disconnected)
-            self.onMessage?("No se pudo comprobar el servicio del reloj. Pulsa Reconectar para volver a intentarlo.")
+            self.onMessage?(self.automaticRecovery
+                ? "El reloj aún no respondía. Se volverá a intentar automáticamente."
+                : "No se pudo comprobar el servicio del reloj. Pulsa Reconectar para volver a intentarlo.")
         }
     }
 
@@ -246,7 +252,7 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
     private func finishDisconnection(_ peripheral: CBPeripheral, reconnectImmediately: Bool = false) {
         if cancelling.remove(peripheral.identifier) != nil {
             diagnostics.record(.cancellationCompleted)
-            connectIfPossible()
+            if enabled { connectIfPossible() }
             return
         }
         guard peripheral === self.peripheral else { return }

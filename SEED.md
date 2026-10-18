@@ -24,9 +24,10 @@ App iPhone (Swift) que configura el accesorio y genera avisos de prueba para un 
 |---|---|---|
 | Candidato firmado instalado en iPhone | 0.2.1 (6): PASS instalación y servicio restaurado | `evidence/apple-0.2.1/apple/` |
 | Código 0.3.0 (7) | Ensayo de reconexión (`cef2c29`), rediseño UI (`71c32b6`) y pase de animaciones (sin commit) | §4 |
-| Pruebas del paquete Swift | PASS, 23 pruebas (2026-10-18) | `scripts/apple/test-package.sh` |
-| Compilación + UI tests simulador | PASS build; PASS 6/6 UI tests en iPhone 17 Pro iOS 26.2 (`WRISTBRIDGE_TEST_DESTINATION=id=<sim>`) | 2026-10-18 |
-| 0.3.0 en iPhone físico | Firmado y **instalado: PASS**; apertura **BLOCKED** (iPhone bloqueado); ensayo de 20 reconexiones y aceptación **NOT_RUN** | `evidence/apple-0.3.0/apple/run.json` |
+| Pruebas del paquete Swift | PASS, 26 pruebas (2026-10-18) | `scripts/apple/test-package.sh` |
+| Compilación + UI tests simulador | PASS build; PASS 7/7 UI tests en iPhone 17 Pro iOS 26.2 (`WRISTBRIDGE_TEST_DESTINATION=id=<sim>`) | 2026-10-18 |
+| 0.3.1 (8) en iPhone físico | Firmado e **instalado: PASS**; apertura **BLOCKED** (iPhone bloqueado); reconexión en vivo y aceptación **NOT_RUN** | `evidence/apple-0.3.1/apple/run.json` |
+| 0.3.0 en iPhone físico (histórico) | Firmado y **instalado: PASS**; apertura **BLOCKED** (iPhone bloqueado); ensayo de 20 reconexiones y aceptación **NOT_RUN** | `evidence/apple-0.3.0/apple/run.json` |
 | Campaña P2 20 ciclos / 19-de-20 en 30 s | **NOT_RUN** física | `test/hil/apple/p2-recovery.md` |
 | Gates G1/G2 y campaña conjunta | **PENDIENTES** (necesitan reloj + Windows) | `docs/apple/iphone-phases.md` |
 | Wire format / seguridad / propiedades BLE | **Bloqueado**: contrato conjunto `p1-lab-1` no congelado | `Doc/01_CONTRATO_COMPARTIDO.md` |
@@ -36,6 +37,7 @@ Fases P1–P8: ver tabla en `docs/apple/iphone-phases.md` (no se duplica aquí).
 ## 4. Registro de trabajo (más reciente arriba)
 | Fecha | Agente | Tarea | Estado | Notas / qué falta |
 |---|---|---|---|---|
+| 2026-10-18 | Claude | 0.3.1 (8): (a) reconexión en vivo: el tiempo de espera de descubrimiento ya no detiene la recuperación, `LinkResumePolicy` + `BridgeModel.resumeLinkIfNeeded()` al volver a primer plano y cada 8 s; (b) pantallas `Views/FeatureScreens.swift`: Esferas (borrador local), Salud, Buscar reloj (última conexión local `lastLinkedAt`), Música; acciones que requieren canal seguro siguen bloqueadas | HECHO (sin commit) | Causa de (a) inferida del código (stop() tras 20 s sin servicio dejaba el enlace muerto hasta relanzar), NO reproducida en dispositivo: verificar apagando/encendiendo el reloj con el iPhone abierto. Esferas/Salud/Buscar/Música no envían ni leen nada del reloj. |
 | 2026-10-18 | Claude | Animaciones: `Views/Motion.swift` (resorte, aparición escalonada, profundidad al desplazar, fondo MeshGradient vivo), reloj con brillo que respira, marcas de segundero, radar al conectar, onda + háptica al verificar e inclinación 3D; acciones con morph de vidrio y efectos de símbolo; transiciones zoom; anillo y 20 puntos en Reconexión; resumen animado en Notificaciones; barra de pestañas que se minimiza | HECHO (sin commit) | Revisado en simulador claro/oscuro en demo. Todo efecto continuo se congela con Reducir movimiento (no verificado visualmente). Falta iPhone físico y medir batería/CPU del fondo animado. |
 | 2026-10-18 | Claude | Rediseño UI: pestañas Reloj/Notificaciones/Ajustes, reloj redondo vectorial con estado, acciones rápidas en vidrio (Liquid Glass), tarjetas de funciones, hoja "Próximamente" bloqueada (esferas, salud, buscar, música) | HECHO (sin commit) | Revisado en simulador en modo demo. Falta verlo en iPhone físico y modo oscuro. Funciones bloqueadas NO se simulan: esperan contrato/gates. |
 | 2026-10-18 | Claude | Terminar ensayo de reconexión 0.3.0 + crear SEED | HECHO (código y docs) | Revisado: compila y pasa pruebas. Falta firmar/instalar 0.3.0 y ejecutarlo en el iPhone físico (requiere usuario con iPhone desbloqueado). Sin commit. |
@@ -48,7 +50,7 @@ Fases P1–P8: ver tabla en `docs/apple/iphone-phases.md` (no se duplica aquí).
 3. Quitar la entrada de `README.md` "Candidato actual 0.2.1" cuando 0.3.0 se instale y pruebe; hasta entonces dice 0.2.1 por ser lo verificado en dispositivo.
 4. P3 local: revisar Dynamic Type y Reducir movimiento del rediseño; medir CPU del fondo `LivingBackground` en iPhone físico. P8 empaquetado autorizado.
 5. Esperar a Windows: wire format, seguridad, UUID/propiedades finales, nombre anunciado `WristBridge` (propuesta Apple pendiente de confirmar).
-6. Cuando exista el canal seguro: convertir las tarjetas "Próximamente" de `Views/HomeView.swift` en funciones reales, una por gate aprobado.
+6. Cuando exista el canal seguro: activar las acciones bloqueadas de `Views/FeatureScreens.swift` (Enviar al reloj, Sincronizar salud, Hacer sonar), una por gate aprobado; sin canal no hay datos ni envíos simulados.
 
 ## 6. Decisiones firmes (no reabrir)
 - ANCS lo consume el reloj; el iPhone no puede tratar su autorización de notificaciones ni un enlace CoreBluetooth como "ANCS listo".

@@ -197,31 +197,38 @@ struct HomeView: View {
         .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
     }
 
-    /// Galaxy Wearable features that depend on the watch's secure channel.
-    /// Shown as locked roadmap items, never simulated.
+    /// Galaxy Wearable features that depend on the watch's secure channel. Each opens
+    /// a full screen with what works locally; the rest stays locked, never simulated.
     private var upcoming: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Próximamente en el reloj").font(.headline).padding(.horizontal, 4)
+            Text("Funciones del reloj").font(.headline).padding(.horizontal, 4)
             ScrollView(.horizontal) {
                 HStack(spacing: 12) {
-                    ForEach(Self.upcoming, id: \.title) { item in
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                IconTile(symbol: item.symbol, color: .gray, size: 34)
-                                Spacer()
-                                Image(systemName: "lock.fill").font(.caption).foregroundStyle(.tertiary)
+                    ForEach(WatchFeature.allCases) { feature in
+                        NavigationLink {
+                            feature.screen(model: model)
+                                .navigationTransition(.zoom(sourceID: feature.id, in: zoom))
+                        } label: {
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    IconTile(symbol: feature.symbol, color: feature.color, size: 34)
+                                    Spacer()
+                                    Image(systemName: "chevron.right").font(.caption.weight(.bold)).foregroundStyle(.tertiary)
+                                }
+                                Text(feature.title).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
+                                Text(feature.summary).font(.caption2).foregroundStyle(.secondary)
+                                    .lineLimit(2, reservesSpace: true)
                             }
-                            Text(item.title).font(.subheadline.weight(.semibold))
-                            Text(item.reason).font(.caption2).foregroundStyle(.secondary)
-                                .lineLimit(2, reservesSpace: true)
+                            .padding(14)
+                            .frame(width: 150, alignment: .leading)
+                            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                            .matchedTransitionSource(id: feature.id, in: zoom)
                         }
-                        .padding(14)
-                        .frame(width: 150, alignment: .leading)
-                        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                        .buttonStyle(PressableStyle())
                         .scrollTransition(.interactive, axis: .horizontal) { view, phase in
                             view.scaleEffect(phase.isIdentity ? 1 : 0.92).opacity(phase.isIdentity ? 1 : 0.6)
                         }
-                        .accessibilityElement(children: .combine)
+                        .accessibilityIdentifier("feature-\(feature.id)")
                     }
                 }
                 .scrollTargetLayout()
@@ -229,17 +236,10 @@ struct HomeView: View {
             .scrollIndicators(.hidden)
             .scrollTargetBehavior(.viewAligned)
             .scrollClipDisabled()
-            Text("Necesitan el canal seguro acordado con el reloj. No se simulan datos mientras tanto.")
+            Text("Lo que necesita el canal seguro con el reloj aparece bloqueado; no se simulan datos.")
                 .font(.caption).foregroundStyle(.secondary).padding(.horizontal, 4)
         }
     }
-
-    private static let upcoming: [(title: String, symbol: String, reason: String)] = [
-        ("Esferas", "watchface.applewatch.case", "Requiere canal de configuración seguro"),
-        ("Salud", "heart.fill", "Requiere gate G2 y permisos de salud"),
-        ("Buscar reloj", "location.magnifyingglass", "Requiere comando aprobado en el contrato"),
-        ("Música", "music.note", "Se controla desde el reloj (AMS)")
-    ]
 }
 
 // MARK: - Secondary screens

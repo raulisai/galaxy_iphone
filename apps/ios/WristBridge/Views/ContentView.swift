@@ -97,7 +97,17 @@ struct ContentView: View {
             if phase != .active { model.recoveryCampaign.cancel(interrupted: true) }
             if phase == .active && !model.isDemo {
                 model.refreshAuthorization()
+                model.resumeLinkIfNeeded()
                 Task { await fixtures.refreshPermission() }
+            }
+        }
+        // Slow heartbeat while the app is visible: the link recovers in real time
+        // even if iOS never delivered a reconnect callback.
+        .task(id: scenePhase) {
+            guard scenePhase == .active, !model.isDemo else { return }
+            while !Task.isCancelled {
+                do { try await Task.sleep(for: .seconds(8)) } catch { return }
+                model.resumeLinkIfNeeded()
             }
         }
     }

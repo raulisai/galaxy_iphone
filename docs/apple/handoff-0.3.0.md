@@ -13,6 +13,10 @@ Tres pestañas inspiradas en Galaxy Wearable con lenguaje iOS 26: **Reloj** (rel
 ## Animaciones
 Sistema compartido en `Views/Motion.swift`. El reloj respira con el color del estado, ilumina las marcas al ritmo del segundero, muestra radar y un arco giratorio al conectar, y lanza una onda con vibración al verificar el servicio; se inclina en 3D al arrastrarlo. Las acciones rápidas cambian con morph de Liquid Glass y efectos de símbolo; las tarjetas aparecen escalonadas, las funciones abren con transición zoom y la barra de pestañas se minimiza al desplazar. Reconexión muestra un anillo y 20 puntos por intento. Reducir movimiento detiene los efectos continuos. Las animaciones solo reflejan estado local; no indican avisos verificados.
 
+## 0.3.1 (8): reconexión en vivo y funciones del reloj
+- Reconexión: informe del usuario: tras volver a conectar el reloj, la app no lo detectaba hasta relanzarla. Causa probable (código, no reproducida): si el reloj enlazaba antes de ofrecer su servicio, el límite de 20 s llamaba a `stop()` y no quedaba ninguna solicitud pendiente. Ahora ese intento se descarta y se reenvía una conexión pendiente; además la app reanuda sola al volver a primer plano y cada 8 s si el enlace quedó inactivo sin que el usuario pulsara Detener (`LinkResumePolicy`, con pruebas). Pendiente de comprobación física.
+- Pantallas: Esferas (preferencia local), Salud (sin permisos ni datos), Buscar reloj (última verificación local, ayuda) y Música (explicación AMS y comprobación guiada). Lo que requiere canal seguro con el reloj aparece bloqueado y no está implementado.
+
 ## Límites
 Mide solo el servicio propio. El informe exportado declara `ancsVerified=false` y `jointGateApproved=false`; no aprueba entrega de avisos, P2 ni gates. Los 20 ciclos y las 24/72 h físicas siguen NOT_RUN.
 

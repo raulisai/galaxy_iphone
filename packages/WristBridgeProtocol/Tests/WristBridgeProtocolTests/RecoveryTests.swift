@@ -52,3 +52,32 @@ func unreadableSettingsFailClosedWithoutOverwritingOriginal(data: Data) throws {
     #expect(defaults.data(forKey: "wristbridge.localSettings") == data)
     #expect(LocalSettingsStore(defaults: defaults).settings.stopped)
 }
+
+@Suite struct LinkResumeTests {
+    private func resume(stopped: Bool = false, authorized: Bool = true, auto: Bool = true,
+                        campaign: Bool = false, radio: Bool = true,
+                        _ channel: ConfigurationChannel) -> Bool {
+        LinkResumePolicy.shouldResume(stopped: stopped, authorized: authorized, automaticRecovery: auto,
+                                      campaignRunning: campaign, radioOn: radio, channel: channel)
+    }
+
+    @Test func idleOrDisconnectedLinkResumesWithoutRelaunch() {
+        #expect(resume(.disconnected))
+        #expect(resume(.idle))
+        #expect(resume(.unavailable))
+    }
+
+    @Test func pendingOrHealthyLinkIsNeverRestarted() {
+        #expect(!resume(.connecting))
+        #expect(!resume(.connected))
+        #expect(!resume(.serviceFound))
+    }
+
+    @Test func operatorChoicesAndMissingPermissionsAreRespected() {
+        #expect(!resume(stopped: true, .disconnected))
+        #expect(!resume(authorized: false, .disconnected))
+        #expect(!resume(auto: false, .disconnected))
+        #expect(!resume(campaign: true, .disconnected))
+        #expect(!resume(radio: false, .unavailable))
+    }
+}

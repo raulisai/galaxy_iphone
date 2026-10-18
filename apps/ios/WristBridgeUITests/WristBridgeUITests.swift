@@ -74,6 +74,28 @@ final class WristBridgeUITests: XCTestCase {
         XCTAssertTrue(text(app, containing: "de 20 intentos").exists)
     }
 
+    func testWatchFeatureScreensOpenAndStayHonest() {
+        let app = XCUIApplication()
+        app.launchArguments = ["--demo"]
+        app.launch()
+        for (id, title) in [("faces", "Esferas"), ("health", "Salud"), ("find", "Buscar reloj"), ("music", "Música")] {
+            let tile = app.buttons["feature-\(id)"]
+            for _ in 0..<8 where !tile.exists || tile.frame.maxY > app.frame.height - 140 { app.swipeUp() }
+            // The feature carousel scrolls horizontally; bring later tiles into view.
+            for _ in 0..<3 where !tile.isHittable { app.buttons["feature-faces"].swipeLeft() }
+            XCTAssertTrue(tile.isHittable, "\(title) tile")
+            tile.tap()
+            XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 5), "\(title) screen")
+            let shot = XCTAttachment(screenshot: app.screenshot())
+            shot.name = "feature-\(id)"; shot.lifetime = .keepAlways; add(shot)
+            // Capabilities that need the watch are never offered as enabled.
+            let actionable = app.buttons.matching(NSPredicate(
+                format: "label CONTAINS[c] 'Enviar al reloj' OR label CONTAINS[c] 'Hacer sonar' OR label CONTAINS[c] 'Activar sincronización'"))
+            XCTAssertEqual(actionable.count, 0)
+            app.navigationBars[title].buttons.firstMatch.tap()
+        }
+    }
+
     func testManualObservationDoesNotPromoteAutomaticReadiness() {
         let app = XCUIApplication()
         app.launch()

@@ -14,7 +14,10 @@ final class BridgeModel: ObservableObject {
     @Published private(set) var automaticRecovery = true
     @Published private(set) var settingsWarning: String?
     @Published private(set) var retentionDays = 30
+    @Published private(set) var lastLinkedAt: Date?
     let isDemo: Bool
+    private let preferences: UserDefaults
+    private static let lastLinkedKey = "WristBridge.lastLinkedAt"
     private let setup = AccessorySetupAdapter()
     private let transport = BluetoothCentralAdapter()
     @Published private(set) var authorizedID: UUID?
@@ -38,8 +41,22 @@ final class BridgeModel: ObservableObject {
     }
     func stopRecoveryProbe() { transport.stop() }
 
+    /// Quietly re-requests the link when it went idle without the operator asking
+    /// (watch came back, discovery gave up, radio returned). Called on foreground
+    /// and by a slow heartbeat; a pending connection is never restarted.
+    func resumeLinkIfNeeded() {
+        guard !isDemo, let accessory = authorizedID,
+              LinkResumePolicy.shouldResume(stopped: stopped, authorized: state.authorization == .authorized,
+                                            automaticRecovery: automaticRecovery,
+                                            campaignRunning: campaignController?.isRunning == true,
+                                            radioOn: radio == "Encendido", channel: state.channel) else { return }
+        transport.authorizeAndConnect(accessory)
+    }
+
     init(isDemo: Bool = false, preferences: UserDefaults = .standard) {
         self.isDemo = isDemo
+        self.preferences = preferences
+        lastLinkedAt = isDemo ? nil : preferences.object(forKey: Self.lastLinkedKey) as? Date
         settingsStore = isDemo ? nil : LocalSettingsStore(defaults: preferences)
         stopped = settingsStore?.settings.stopped ?? false
         automaticRecovery = settingsStore?.settings.automaticRecovery ?? true
@@ -144,6 +161,8 @@ final class BridgeModel: ObservableObject {
         settingsWarning = nil
         transport.clearDiagnostics()
         campaignController?.delete()
+        lastLinkedAt = nil
+        preferences.removeObject(forKey: Self.lastLinkedKey)
     }
 
     func setAutomaticRecovery(_ enabled: Bool) {
@@ -155,6 +174,11 @@ final class BridgeModel: ObservableObject {
     private func apply(_ event: BridgeEvent) {
         state.apply(event)
         lastCheck = Date()
+        // Local observation only: when our own service check last succeeded.
+        if case .serviceFound = event, state.channel == .serviceFound {
+            lastLinkedAt = Date()
+            if !isDemo { preferences.set(lastLinkedAt, forKey: Self.lastLinkedKey) }
+        }
         campaignController?.handle(event)
         #if DEBUG
         // Explicit, single-cycle physical regression of stop -> reconnect while
