@@ -38,5 +38,10 @@
             android:name=".bridge.BridgeService"
             android:exported="false"
             android:foregroundServiceType="connectedDevice" />
+
+        <!-- Notification buttons, dismissals and media controls; internal only. -->
+        <receiver
+            android:name=".bridge.CommandReceiver"
+            android:exported="false" />
     </application>
 </manifest>

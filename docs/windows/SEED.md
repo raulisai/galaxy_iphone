@@ -1,6 +1,6 @@
 # SEED · estado y continuación del lado Windows/Kotlin
 
-Archivo de relevo para cualquier agente (Claude, Codex u otro) que continúe el trabajo del reloj. **Léelo primero, actualízalo al terminar cada bloque de trabajo y no lo uses para secretos ni datos personales.** Última actualización: 18 de octubre de 2026 (build 0.1.2-lab (3)), America/Mexico_City.
+Archivo de relevo para cualquier agente (Claude, Codex u otro) que continúe el trabajo del reloj. **Léelo primero, actualízalo al terminar cada bloque de trabajo y no lo uses para secretos ni datos personales.** Última actualización: 18 de octubre de 2026 (build 0.2.0-lab (4)), America/Mexico_City.
 
 Lectura obligatoria previa: `AGENTS.md`, `Doc/00_LEEME_Y_COORDINACION.md`, `Doc/01_CONTRATO_COMPARTIDO.md`, `Doc/02_WINDOWS_KOTLIN.md`, `docs/windows/handoff-G0.md`.
 
@@ -9,7 +9,7 @@ Lectura obligatoria previa: `AGENTS.md`, `Doc/00_LEEME_Y_COORDINACION.md`, `Doc/
 - Windows/Kotlin escribe `apps/watch`, `core/*`, Gradle, `docs/windows`, `test/hil/windows`, `evidence/*/windows`. No tocar Swift, `apps/ios`, `packages/WristBridgeProtocol` ni firma Apple.
 - `Doc/**` no se modifica (sus hashes se verifican). Nunca ejecutar `git add --renormalize` sobre `Doc`; `.gitattributes` ya lo protege.
 - Sin identificadores personales, direcciones, seriales, claves ni contenido real de avisos en archivos versionados ni en logs.
-- Sin IA, Mac, salud ni acciones ANCS sensibles antes de sus gates. Sin pantalla completa, Telecom, superposiciones ni desactivar keyguard para simular llamadas (plan §6.5).
+- Sin IA, Mac, salud ni comandos sensibles del canal propio antes de sus gates. Las acciones ANCS que ofrece iOS (P2-07) se habilitaron en 0.2.0-lab por pedido del usuario de avanzar el prototipo; siempre como «solicitado», nunca prometiendo el efecto final. Sin pantalla completa, Telecom, superposiciones ni desactivar keyguard para simular llamadas (plan §6.5).
 - Estados honestos: `PASS`, `FAIL`, `BLOCKED`, `NOT_RUN`. Un simulador o un fake nunca aprueba un gate físico.
 - Flujo de ramas: trabajo en la rama de la sesión → `development_claude` → validar sobre una copia limpia → integrar en `development` → subir ambas. Commits con la línea `Co-Authored-By` indicada por la sesión.
 
@@ -27,6 +27,7 @@ Lectura obligatoria previa: `AGENTS.md`, `Doc/00_LEEME_Y_COORDINACION.md`, `Doc/
 | Tarjetas nativas con avisos sintéticos de prueba (F001–F005) | PASS (parcial) | log: «Tarjeta mostrada … fixture=run-…/F001» |
 | Arreglo de vínculo (BondWait) e instalación de la build 0.1.1-lab (2) | PASS; aceptación funcional del usuario | `docs/windows/release-0.1.1-lab.md` |
 | Identificación de app (nombre, color, monograma) y llamadas diferenciadas, build 0.1.2-lab (3) | PASS en JVM/lint/assemble; instalación y pruebas físicas NOT_RUN | `docs/windows/release-0.1.2-lab.md`, `evidence/windows-p1-update-3/` |
+| Prototipo 0.2.0-lab (4): acciones ANCS (aceptar/rechazar/borrar), música AMS, descarte sincronizado opcional, pantalla renovada | PASS en JVM (70), lint, assemble e instalación con checksum; casos físicos NOT_RUN | `docs/windows/release-0.2.0-lab.md`, `evidence/windows-p1-update-4/` |
 | Avisos reales de otras apps, iPhone bloqueado, UI cerrada, 30 min (H05) | NOT_RUN | pendiente |
 | R01–R04 (reconexión, Bluetooth off/on, Service Changed, corte durante consulta) | NOT_RUN | pendiente |
 | ADR-001 (elegir A o B) | Pendiente de redactar con la evidencia anterior | `docs/adr/ADR-001-roles-ble.md` |
@@ -34,13 +35,15 @@ Lectura obligatoria previa: `AGENTS.md`, `Doc/00_LEEME_Y_COORDINACION.md`, `Doc/
 
 ## Estado del código
 
-El arreglo de vínculo y la presentación de app/llamadas (builds 0.1.1-lab (2) y 0.1.2-lab (3)) están en el commit que acompaña a este SEED. La build 3 **no está instalada en el reloj**.
+0.2.0-lab (4) está instalada en el Watch7 (checksum verificado) y en el commit que acompaña a este SEED. Tras instalar, el reloj estaba bloqueado: hay que abrir WristBridge e iniciar el puente si aparece detenido.
+
+Arquitectura añadida: `core/protocol-kotlin/.../ams` (codec y `MediaState`), `AncsSessionEngine.performAction` + `SessionEffect.ActionResult`, `AmsSession` (comparte la cola GATT; solo arranca con ANCS listo; sus fallos no tocan ANCS), `CardPresenter` (botones con etiquetas del iPhone, timbre que se corta al pulsar, descarte sincronizado solo en avisos que no son llamadas), `MediaPresenter`, `CommandReceiver` (botones y descartes por broadcast interno al servicio en marcha), `SharedState.kt` (`ActiveCards`, `MediaStatus`) y la UI en `ui/` (`MainActivity`, `Sections`, `StatusText`).
 
 ## Qué sigue, en orden
 
-1. **Instalar la build 3** (`build/releases/wristbridge-watch-0.1.2-lab-3.apk`, SHA-256 en `evidence/windows-p1-update-3/windows/artifact.json`) con `adb install -r`, sin borrar datos ni vínculo.
-2. **Perfiles de app: hecho en código.** Catálogo `SourceProfiles` (Telegram, WhatsApp, Netflix, Spotify, Gmail, Mensajes, Teléfono, FaceTime, Calendario, Mail) y monograma local. Pendiente comprobarlo en el reloj con avisos reales y, si el usuario aporta logotipos con derecho de uso, sustituir los monogramas.
-3. **Llamadas: hecho en código.** Canal propio con timbre, vibración repetida y `FLAG_INSISTENT`, que se detiene con `Removed` (límite 90 s). Pendiente una llamada real. Contestar/rechazar siguen desactivados hasta P2-07; abrir apps del iPhone exige coordinarlo con Swift.
+1. **Prueba conjunta de golpe** con la sección «Prototipo 0.2.0-lab» de `test/hil/windows/p1-campaign.md` (UI01, N10–N18, M01–M06), registrando logcat y resultados reales. Vigilar: corte del timbre al pulsar, descarte sincronizado con el reloj inactivo y que AMS aparezca tras «Listo».
+2. **Perfiles de app**: si el usuario aporta logotipos con derecho de uso, sustituir los monogramas.
+3. **Tile/complicación**: requiere añadir `androidx.wear.tiles`/`protolayout`, que no están en la caché offline de esta PC; descargarlos con red antes de implementarlos.
 4. **Pruebas físicas con avisos reales**: Telegram, Netflix, Spotify, Gmail y una llamada real; registrar cada caso en `test/hil/windows/p1-campaign.md` y en `evidence/<run>/windows/`.
 5. **Cerrar P1 Windows**: ejecutar H05 (30 min con pantallas dormidas), R01 (veinte ciclos), R03 y R04; redactar ADR-001; actualizar `handoff-G0.md` (o crear `handoff-G1.md`) con commit, APK y SHA-256 reales.
 6. **No avanzar a P2** (codec propio, seguridad, persistencia) hasta que G1 esté aprobado de forma conjunta con el lado Apple.
@@ -48,7 +51,7 @@ El arreglo de vínculo y la presentación de app/llamadas (builds 0.1.1-lab (2) 
 ## Cómo operar en esta máquina (Windows 11)
 
 - Java: Temurin 21 (`JAVA_HOME` de usuario). El JBR de Android Studio (JDK 25) no se usa para compilar.
-- Compilar y probar desde Bash o terminal: `./gradlew.bat :core:protocol-kotlin:test :core:notification-domain:test :core:assistant-domain:test :apps:watch:lintDebug :apps:watch:assembleDebug`. El APK queda en `apps/watch/build/outputs/apk/debug/watch-debug.apk`.
+- Compilar y probar desde Bash o terminal: `./gradlew.bat :core:protocol-kotlin:test :core:notification-domain:test :core:assistant-domain:test :apps:watch:lintDebug :apps:watch:assembleDebug`. El APK queda en `apps/watch/build/outputs/apk/debug/watch-debug.apk`. Si Gradle sigue bloqueado por la caché global, usar `--gradle-user-home build/g3 --project-cache-dir build/gradle-p1-project-3 --offline --no-watch-fs --no-configuration-cache --init-script scripts/windows/native-output.init.gradle -Pwristbridge.nativeBuildRoot=<carpeta local>` con `GRADLE_RO_DEP_CACHE=build/gradle-android-p1-home/caches` (así se compiló 0.2.0-lab).
 - ADB inalámbrico al reloj: el puerto de **conexión** y el de **vinculación** son distintos y cambian al reactivar. Descubrirlos con `adb mdns services` (`_adb-tls-connect` y `_adb-tls-pairing`); `adb pair <ip:puerto-vinculación> <código>` y luego `adb connect <ip:puerto-conexión>`. El Wi-Fi del reloj pierde muchos paquetes y ADB cae a `offline`: reintentar en bucle y mantener el reloj cargando con la pantalla encendida. Las pantallas se leen con `uiautomator dump`, el log con `adb logcat -s WristBridge`.
 - Para que el selector del iPhone vea el reloj, su nombre Bluetooth debe contener `WristBridge` (botón «Nombre WristBridge» de la app; «Restaurar nombre» lo revierte). Si el nombre vuelve al original, el selector responde «No accessory found».
 - El iPhone concede ANCS solo tras el vínculo y con «Compartir notificaciones del sistema» activo para el reloj en Ajustes → Bluetooth.

@@ -2,13 +2,11 @@ package dev.wristbridge.watch.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.os.SystemClock
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,170 +15,195 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.core.content.edit
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
-import androidx.wear.compose.material3.Button
+import androidx.wear.compose.material3.AppScaffold
 import androidx.wear.compose.material3.MaterialTheme
-import androidx.wear.compose.material3.Text
+import androidx.wear.compose.material3.ScreenScaffold
+import dev.wristbridge.notification.CallKind
+import dev.wristbridge.notification.CardPresentation
 import dev.wristbridge.watch.BuildConfig
 import dev.wristbridge.watch.R
 import dev.wristbridge.watch.WristBridgeApp
-import dev.wristbridge.watch.bridge.AncsState
+import dev.wristbridge.watch.bridge.ActiveCards
+import dev.wristbridge.watch.bridge.AmsState
 import dev.wristbridge.watch.bridge.BlePermissions
-import dev.wristbridge.watch.bridge.BondState
 import dev.wristbridge.watch.bridge.BridgeService
 import dev.wristbridge.watch.bridge.BridgeStatus
-import dev.wristbridge.watch.bridge.BridgeUiState
-import dev.wristbridge.watch.bridge.OwnChannelState
-import dev.wristbridge.watch.bridge.RadioState
+import dev.wristbridge.watch.bridge.MediaStatus
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { MaterialTheme { BridgeScreen() } }
+        setContent { MaterialTheme { AppScaffold { BridgeScreen() } } }
     }
 }
 
+/**
+ * Main screen, top to bottom: status headline, incoming call, music, active cards, settings, connection
+ * and (collapsed) diagnostics. Card and track content is only rendered, never logged.
+ */
 @Composable
 private fun BridgeScreen() {
     val context = LocalContext.current
-    val state by BridgeStatus.state.collectAsStateWithLifecycle()
-    var missing by remember { mutableStateOf(BlePermissions.missing(context)) }
+    val bridge by BridgeStatus.state.collectAsStateWithLifecycle()
+    val music by MediaStatus.state.collectAsStateWithLifecycle()
+    val cards by ActiveCards.state.collectAsStateWithLifecycle()
+
     val prefs = remember { context.getSharedPreferences(WristBridgeApp.PREFS, Context.MODE_PRIVATE) }
-    var hidePreview by remember { mutableStateOf(prefs.getBoolean(WristBridgeApp.PREF_HIDE_PREVIEW, false)) }
+    val hidePref = rememberBoolPref(prefs, WristBridgeApp.PREF_HIDE_PREVIEW, false)
+    val actionsPref = rememberBoolPref(prefs, WristBridgeApp.PREF_ACTIONS, true)
+    val syncDismissPref = rememberBoolPref(prefs, WristBridgeApp.PREF_SYNC_DISMISS, false)
+    val mediaNotificationPref = rememberBoolPref(prefs, WristBridgeApp.PREF_MEDIA_NOTIFICATION, true)
+
+    var missing by remember { mutableStateOf(BlePermissions.missing(context)) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
         missing = BlePermissions.missing(context)
     }
+    val bluetoothGranted = remember(missing) { BlePermissions.bluetoothGranted(context) }
+    var diagnosticsOpen by remember { mutableStateOf(false) }
+
+    val hidePreview = hidePref.value
+    val actionsEnabled = actionsPref.value
+    val hiddenText = stringResource(R.string.card_hidden)
+    val unavailableText = stringResource(R.string.card_details_unavailable)
+    val presented = remember(cards, hidePreview, hiddenText, unavailableText) {
+        cards.map { PresentedCard(it, CardPresentation.from(it.card, hidePreview, hiddenText, unavailableText)) }
+    }
+    // Newest incoming call goes on top; every other card (older calls included) stays in the list.
+    val call = presented.firstOrNull { it.presentation.callKind == CallKind.INCOMING }
+    val others = if (call == null) presented else presented.filter { it !== call }
+    val status = headline(bridge, music.ams, bluetoothGranted)
+    val media = music.media
+    val playerVisible = music.ams == AmsState.READY && media.hasPlayer
+    val events = bridge.events
+    val showDiagnostics = diagnosticsOpen
+
+    val appName = stringResource(R.string.app_name)
+    val permissionsNeeded = stringResource(R.string.permissions_needed)
+    val grantPermissions = stringResource(R.string.grant_permissions)
+    val startBridge = stringResource(R.string.start_bridge)
+    val stopBridge = stringResource(R.string.stop_bridge)
+    val recover = stringResource(R.string.recover)
+    val useProposedName = stringResource(R.string.use_proposed_name)
+    val restoreName = stringResource(R.string.restore_name)
+
     val listState = rememberScalingLazyListState()
-
-    ScalingLazyColumn(modifier = Modifier.fillMaxWidth(), state = listState) {
-        item { Title(stringResource(R.string.app_name)) }
-        item { Line("Versión ${BuildConfig.VERSION_NAME} · ${BuildConfig.GIT_COMMIT}") }
-
-        if (missing.isNotEmpty()) {
-            item { Line(stringResource(R.string.permissions_needed)) }
-            item {
-                Action(stringResource(R.string.grant_permissions)) { launcher.launch(BlePermissions.REQUIRED) }
+    ScreenScaffold(scrollState = listState) { contentPadding ->
+        ScalingLazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            state = listState,
+            contentPadding = contentPadding,
+        ) {
+            // 1. Header
+            item(key = "app") { AppTitle(appName) }
+            item(key = "headline") { HeadlineText(status) }
+            // Without permissions nothing else works: offer the request right under the headline.
+            if (missing.isNotEmpty()) {
+                item(key = "perm-text") { InfoLine(permissionsNeeded) }
+                item(key = "perm-button") {
+                    PrimaryAction(grantPermissions) { launcher.launch(BlePermissions.REQUIRED) }
+                }
             }
-        }
 
-        item { Status("Puente", if (state.serviceRunning) "Activo" else "Detenido") }
-        item { Status("Bluetooth", radioLabel(state.radio)) }
-        item { Status("Canal propio", ownLabel(state)) }
-        state.advertisedName?.let { item { Line("Nombre anunciado: $it") } }
-        if (state.ownChannelDetail.isNotBlank()) item { Line(state.ownChannelDetail) }
-        item { Status("Vínculo", bondLabel(state.bond)) }
-        item { Status("Avisos (ANCS)", ancsLabel(state.ancs)) }
-        if (state.ancsDetail.isNotBlank()) item { Line(state.ancsDetail) }
-        item { Status("Internet/IA", "No aplica en P1") }
-        item { Line("Última recepción: ${lastReception(state)}") }
+            // 2. Incoming call
+            if (call != null) {
+                item(key = "call") {
+                    IncomingCallCard(call, actionsEnabled) { action ->
+                        BridgeService.sendCardAction(context, call.active.card.key, action)
+                    }
+                }
+            }
 
-        item {
-            if (state.serviceRunning) {
-                Action(stringResource(R.string.stop_bridge)) { BridgeService.send(context, BridgeService.ACTION_STOP) }
+            // 3. Music (AMS)
+            item(key = "music-header") { SectionHeader("Música") }
+            if (playerVisible) {
+                item(key = "music-info") { NowPlaying(media, hidePreview, hiddenText) }
+                item(key = "music-transport") {
+                    TransportControls(media) { command -> BridgeService.sendMedia(context, command) }
+                }
+                if (showVolume(media)) {
+                    item(key = "music-volume") {
+                        VolumeControls(media) { command -> BridgeService.sendMedia(context, command) }
+                    }
+                } else {
+                    media.volume?.let { v -> item(key = "music-volume-level") { InfoLine("Volumen ${volumePercent(v)}") } }
+                }
             } else {
-                Action(stringResource(R.string.start_bridge), enabled = BlePermissions.bluetoothGranted(context)) {
-                    BridgeService.send(context, BridgeService.ACTION_START)
+                item(key = "music-off") { InfoLine(musicUnavailableLine(music)) }
+            }
+
+            // 4. Active cards (ANCS)
+            item(key = "cards-header") { SectionHeader("Avisos activos (${others.size})") }
+            if (others.isEmpty()) {
+                item(key = "cards-empty") { InfoLine("Sin avisos") }
+            } else {
+                items(others, key = { "card:${it.active.card.key.tag}" }) { entry ->
+                    NotificationItem(entry, actionsEnabled) { action ->
+                        BridgeService.sendCardAction(context, entry.active.card.key, action)
+                    }
                 }
             }
-        }
-        if (state.serviceRunning) {
-            item { Action(stringResource(R.string.recover)) { BridgeService.send(context, BridgeService.ACTION_RECOVER) } }
-            item {
-                Action(stringResource(R.string.use_proposed_name)) {
-                    BridgeService.send(context, BridgeService.ACTION_USE_PROPOSED_NAME)
+
+            // 5. Settings (persisted immediately)
+            item(key = "settings-header") { SectionHeader("Ajustes") }
+            item(key = "pref-hide") { PrefSwitch("Ocultar contenido", hidePref) }
+            item(key = "pref-actions") { PrefSwitch("Acciones en avisos", actionsPref) }
+            item(key = "pref-sync") {
+                PrefSwitch("Borrar en iPhone al descartar", syncDismissPref, secondary = "Solo avisos, nunca llamadas")
+            }
+            item(key = "pref-media") { PrefSwitch("Notificación de música", mediaNotificationPref) }
+
+            // 6. Connection
+            item(key = "conn-header") { SectionHeader("Conexión") }
+            item(key = "bridge-toggle") {
+                if (bridge.serviceRunning) {
+                    SecondaryAction(stopBridge) { BridgeService.send(context, BridgeService.ACTION_STOP) }
+                } else {
+                    PrimaryAction(startBridge, enabled = bluetoothGranted) {
+                        BridgeService.send(context, BridgeService.ACTION_START)
+                    }
                 }
             }
-            item {
-                Action(stringResource(R.string.restore_name)) { BridgeService.send(context, BridgeService.ACTION_RESTORE_NAME) }
+            if (bridge.serviceRunning) {
+                item(key = "recover") { SecondaryAction(recover) { BridgeService.send(context, BridgeService.ACTION_RECOVER) } }
+                item(key = "use-name") {
+                    SecondaryAction(useProposedName) { BridgeService.send(context, BridgeService.ACTION_USE_PROPOSED_NAME) }
+                }
+                item(key = "restore-name") {
+                    SecondaryAction(restoreName) { BridgeService.send(context, BridgeService.ACTION_RESTORE_NAME) }
+                }
+            }
+            item(key = "st-bridge") { StatusRow("Puente", if (bridge.serviceRunning) "Activo" else "Detenido") }
+            item(key = "st-radio") { StatusRow("Bluetooth", radioLabel(bridge.radio)) }
+            item(key = "st-own") {
+                val detail = listOfNotNull(
+                    bridge.advertisedName?.let { "Nombre anunciado: $it" },
+                    bridge.ownChannelDetail.takeIf { it.isNotBlank() },
+                ).joinToString("\n")
+                StatusRow("Canal propio", ownLabel(bridge), detail)
+            }
+            item(key = "st-bond") { StatusRow("Vínculo", bondLabel(bridge.bond)) }
+            item(key = "st-ancs") { StatusRow("Avisos (ANCS)", ancsLabel(bridge.ancs), bridge.ancsDetail) }
+            item(key = "st-ams") { StatusRow("Música (AMS)", amsLabel(music.ams), music.detail) }
+            item(key = "st-ia") { StatusRow("Internet/IA", "No aplica en P1") }
+            item(key = "st-last") { LastReceptionRow(bridge.lastReceptionElapsedMs) }
+
+            // 7. Diagnostics (collapsed by default)
+            item(key = "diag-header") { SectionHeader("Diagnóstico") }
+            item(key = "diag-toggle") {
+                SecondaryAction(if (showDiagnostics) "Ocultar diagnóstico" else "Mostrar diagnóstico") {
+                    diagnosticsOpen = !diagnosticsOpen
+                }
+            }
+            if (showDiagnostics) {
+                item(key = "diag-version") { InfoLine("Versión ${BuildConfig.VERSION_NAME} · ${BuildConfig.GIT_COMMIT}") }
+                item(key = "diag-counters") { InfoLine(diagnostics(bridge)) }
+                // Event lines may repeat, so they are not keyed.
+                items(events) { line -> InfoLine(line) }
             }
         }
-        item {
-            Action(if (hidePreview) "Mostrar contenido" else "Ocultar contenido") {
-                hidePreview = !hidePreview
-                prefs.edit { putBoolean(WristBridgeApp.PREF_HIDE_PREVIEW, hidePreview) }
-            }
-        }
-
-        item { Title("Diagnóstico") }
-        item { Line(diagnostics(state)) }
-        items(state.events.size) { i -> Line(state.events[i]) }
     }
-}
-
-@Composable
-private fun Title(text: String) = Text(
-    text, style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center,
-    modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 4.dp),
-)
-
-@Composable
-private fun Line(text: String) = Text(
-    text, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center,
-    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
-)
-
-@Composable
-private fun Status(label: String, value: String) = Text(
-    "$label: $value", style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center,
-    modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
-)
-
-@Composable
-private fun Action(label: String, enabled: Boolean = true, onClick: () -> Unit) {
-    Button(onClick = onClick, enabled = enabled, modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)) {
-        Text(label)
-    }
-}
-
-private fun radioLabel(r: RadioState) = when (r) {
-    RadioState.ON -> "Encendido"
-    RadioState.OFF -> "Apagado"
-    RadioState.UNAVAILABLE -> "No disponible"
-    RadioState.UNKNOWN -> "Sin comprobar"
-}
-
-private fun ownLabel(s: BridgeUiState) = when (s.ownChannel) {
-    OwnChannelState.STOPPED -> "Detenido"
-    OwnChannelState.STARTING -> "Iniciando"
-    OwnChannelState.ADVERTISING -> "Anunciando, esperando iPhone"
-    OwnChannelState.CONNECTED -> "iPhone conectado (${s.peer ?: "?"})"
-    OwnChannelState.FAILED -> "Error"
-}
-
-private fun bondLabel(b: BondState) = when (b) {
-    BondState.BONDED -> "Vinculado"
-    BondState.BONDING -> "Vinculando"
-    BondState.NONE -> "Sin vincular"
-    BondState.UNKNOWN -> "Sin comprobar"
-}
-
-/** "Listo" only after both remote subscriptions were confirmed (Contract §1). */
-private fun ancsLabel(a: AncsState) = when (a) {
-    AncsState.IDLE -> "Sin sesión"
-    AncsState.CONNECTING -> "Conectando"
-    AncsState.DISCOVERING -> "Buscando servicio"
-    AncsState.NOT_FOUND -> "No disponible"
-    AncsState.SUBSCRIBING -> "Suscribiendo"
-    AncsState.DATA_SOURCE_CONFIRMED -> "Data Source confirmado"
-    AncsState.READY -> "Listo"
-    AncsState.FAILED -> "Error"
-}
-
-private fun lastReception(s: BridgeUiState): String {
-    val t = s.lastReceptionElapsedMs ?: return "ninguna"
-    return "hace ${(SystemClock.elapsedRealtime() - t) / 1000} s"
-}
-
-private fun diagnostics(s: BridgeUiState): String {
-    val c = s.counters
-    return "gen=${s.generation} mtu=${s.mtu} gatt=${s.lastGattStatus ?: "-"}\n" +
-        "eventos=${c.nsEvents} añadidos=${c.added} modificados=${c.modified} retirados=${c.removed} previos=${c.preExisting}\n" +
-        "consultas=${c.fetchStarted} completas=${c.fetchCompleted} timeouts=${c.fetchTimedOut} fallos=${c.fetchFailed} ancsErr=${c.ancsErrors}\n" +
-        "tarjetas +${c.cardsPosted} ~${c.cardsUpdated} -${c.cardsRemoved} desbordes=${c.queueOverflow} " +
-        "descartes=${c.discardedResponses} obsoletos=${c.staleInputsIgnored} inválidos=${c.nsInvalid}"
 }

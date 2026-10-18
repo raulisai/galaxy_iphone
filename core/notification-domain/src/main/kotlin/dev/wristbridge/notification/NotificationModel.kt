@@ -1,5 +1,6 @@
 package dev.wristbridge.notification
 
+import dev.wristbridge.protocol.ancs.ActionId
 import dev.wristbridge.protocol.ancs.AncsUid
 import dev.wristbridge.protocol.ancs.CategoryId
 
@@ -77,7 +78,12 @@ sealed interface SessionEffect {
 
     /** Remove every card whose generation is older than [generation] (new session rebuilds backlog). */
     data class RemoveCardsBefore(val generation: Long) : SessionEffect
+
+    /** Outcome of [AncsSessionEngine.performAction]; REQUESTED is not proof of the final effect. */
+    data class ActionResult(val key: NotificationKey, val action: ActionId, val status: ActionStatus) : SessionEffect
 }
+
+enum class ActionStatus { REQUESTED, FAILED, UNAVAILABLE }
 
 /** Counters for diagnostics and campaign evidence. No titles or bodies. */
 data class SessionCounters(
@@ -99,4 +105,6 @@ data class SessionCounters(
     val cardsPosted: Long = 0,
     val cardsUpdated: Long = 0,
     val cardsRemoved: Long = 0,
+    val actionsRequested: Long = 0,
+    val actionsFailed: Long = 0,
 )

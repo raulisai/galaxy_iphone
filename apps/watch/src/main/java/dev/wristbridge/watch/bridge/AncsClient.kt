@@ -13,7 +13,11 @@ import android.os.Handler
 import android.os.SystemClock
 import dev.wristbridge.notification.BondWait
 import dev.wristbridge.notification.AncsSessionEngine
+import dev.wristbridge.notification.NotificationKey
 import dev.wristbridge.notification.SessionEffect
+import dev.wristbridge.protocol.ams.RemoteCommand
+import dev.wristbridge.protocol.ancs.ActionId
+import dev.wristbridge.protocol.ancs.AncsUid
 import dev.wristbridge.protocol.contract.AncsUuids
 import dev.wristbridge.protocol.gatt.GattOperation
 import dev.wristbridge.protocol.gatt.GattOperationQueue
@@ -27,13 +31,15 @@ import dev.wristbridge.protocol.gatt.MonotonicClock
  * Invariants (Contract §3): Data Source is confirmed before Notification Source; GATT operations are
  * serialized by [GattOperationQueue]; "ready" is only reported after both remote CCCD writes succeed;
  * callbacks of an older link are dropped by [linkGen]; Service Changed closes the session and rediscovers.
- * Runs only on the BLE [handler] thread. Permission checks happen in [BridgeService] before start.
+ * AMS (music) shares the link and the queue but starts only after ANCS is READY and never changes ANCS
+ * state. Runs only on the BLE [handler] thread. Permission checks happen in [BridgeService] before start.
  */
 @SuppressLint("MissingPermission")
 class AncsClient(
     private val context: Context,
     private val handler: Handler,
     private val presenter: CardPresenter,
+    media: MediaPresenter,
 ) {
     private val clock = MonotonicClock { SystemClock.elapsedRealtimeNanos() }
     private val engine = AncsSessionEngine(clock)
@@ -46,6 +52,7 @@ class AncsClient(
     private var controlPoint: BluetoothGattCharacteristic? = null
     private val bondWait = BondWait(clock)
     private var stopped = true
+    private val ams = AmsSession(clock, ::enqueueOnLink, media)
 
     private val tick = Runnable {
         if (bondWait.expire()) {
@@ -96,11 +103,31 @@ class AncsClient(
         connect(d, autoConnect = false)
     }
 
+    /** closeLink also resets AMS, which retires the media notification. */
     fun stop() {
         stopped = true
         closeLink("detenido")
         device = null
         BridgeStatus.update { it.copy(ancs = AncsState.IDLE, ancsDetail = "", peer = null) }
+    }
+
+    /**
+     * P2-07: requests [action] on the card (generation, uid) from a button, the app or a dismissal. The
+     * engine answers UNAVAILABLE for a stale generation, an inactive session or an action not offered.
+     */
+    fun performAction(generation: Long, uid: Long, action: ActionId) {
+        BridgeStatus.event("Acción ${action.name} solicitada gen=$generation uid=$uid")
+        if (uid !in 0L..AncsUid.MAX) {
+            BridgeStatus.event("Acción descartada: uid fuera de rango")
+            return
+        }
+        val key = NotificationKey(engine.sourceDeviceId.orEmpty(), generation, AncsUid(uid))
+        apply(engine.performAction(key, action))
+    }
+
+    /** Sends an AMS remote command; ignored with an event unless music is ready. */
+    fun mediaCommand(command: RemoteCommand) {
+        ams.command(command)
     }
 
     private fun connect(peer: BluetoothDevice, autoConnect: Boolean) {
@@ -123,6 +150,7 @@ class AncsClient(
     private fun closeLink(reason: String) {
         handler.removeCallbacks(tick)
         engine.endSession(engine.generation)
+        ams.reset()
         detachQueue()
         controlPoint = null
         bondWait.finish()
@@ -152,6 +180,12 @@ class AncsClient(
             if (queue === q) done(outcome)
         })
         scheduleTick()
+    }
+
+    /** AMS entry to the current link's queue; without a link the operation is cancelled at once. */
+    private fun enqueueOnLink(key: String, timeoutMs: Long, execute: () -> Boolean, done: (GattOutcome) -> Unit) {
+        val q = queue ?: return done(GattOutcome.Cancelled)
+        enqueue(q, key, timeoutMs, execute, done)
     }
 
     private fun discover(g: BluetoothGatt) {
@@ -191,6 +225,8 @@ class AncsClient(
                 BridgeStatus.update { it.copy(ancs = AncsState.READY, ancsDetail = "", generation = engine.generation) }
                 BridgeStatus.event("ANCS listo gen=${engine.generation}")
                 apply(effects)
+                // Music only after notifications are live; its outcome never feeds back into ANCS.
+                ams.setup(g)
             }
         }
     }
@@ -327,14 +363,24 @@ class AncsClient(
                     apply(engine.onNotificationSource(gen, value))
                 }
                 AncsUuids.DATA_SOURCE -> apply(engine.onDataSource(gen, value))
+                else -> ams.onCharacteristicChanged(characteristic.uuid, value)
             }
+        }
+
+        override fun onCharacteristicRead(g: BluetoothGatt, characteristic: BluetoothGattCharacteristic, value: ByteArray, status: Int) {
+            if (!current(g)) return
+            // The value is handed over before completing the operation, whose continuation consumes it.
+            ams.onCharacteristicRead(characteristic.uuid, value, status)
+            queue?.onCallback("read:${characteristic.uuid}", status)
         }
 
         override fun onServiceChanged(g: BluetoothGatt) {
             if (!current(g)) return
             // R03: close the session generation, rediscover and confirm subscriptions again.
+            // AMS is set up again once ANCS is ready on the rediscovered services.
             BridgeStatus.event("Service Changed: nueva generación y redescubrimiento")
             engine.endSession(engine.generation)
+            ams.reset()
             detachQueue()
             queue = GattOperationQueue(clock)
             controlPoint = null

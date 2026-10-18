@@ -1,0 +1,39 @@
+{
+  "applicationId": "dev.wristbridge.watch",
+  "versionName": "0.2.0-lab",
+  "versionCode": 4,
+  "apk": "build/releases/wristbridge-watch-0.2.0-lab-4.apk",
+  "sha256": "80512f3c3ce6f13d254dd613a8c5dc4c4f750d79b40e2136501670d635ab8e8a",
+  "bytes": 35624638,
+  "build": "PASS",
+  "lint": { "status": "PASS", "errors": 0, "warnings": 2, "warningRules": ["DataExtractionRules", "UseKtx"] },
+  "jvmTests": {
+    "status": "PASS",
+    "total": 70,
+    "failures": 0,
+    "suites": {
+      "AssistantGateTest": 1,
+      "AncsActionsTest": 4,
+      "AncsSessionEngineTest": 18,
+      "BondWaitTest": 4,
+      "CardPresentationTest": 7,
+      "ContractConsistencyTest": 4,
+      "AmsTest": 7,
+      "AncsCommandsTest": 5,
+      "DataSourceAssemblerTest": 10,
+      "NotificationSourceParserTest": 4,
+      "GattOperationQueueTest": 6
+    }
+  },
+  "installation": "PASS",
+  "installMethod": "adb install -r --no-streaming; app data and bond preserved",
+  "installedVersionName": "0.2.0-lab",
+  "installedVersionCode": 4,
+  "installedSha256Matches": true,
+  "deviceModel": "SM-L300",
+  "processStarted": true,
+  "bridgeRunningAfterUpdate": "NOT_RUN (watch locked; user must open the app and start the bridge)",
+  "physicalChecks": "NOT_RUN (see test/hil/windows/p1-campaign.md, Prototipo 0.2.0-lab)",
+  "G1": "NOT_RUN",
+  "iphoneUpdateRequired": false
+}
