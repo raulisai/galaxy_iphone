@@ -1,3 +1,4 @@
+import Charts
 import SwiftUI
 import WristBridgeProtocol
 
@@ -7,13 +8,14 @@ import WristBridgeProtocol
 // to write to or read from the watch stays visibly locked: no simulated data.
 
 enum WatchFeature: String, CaseIterable, Identifiable {
-    case faces, health, find, music
+    case faces, health, find, findPhone, music
     var id: String { rawValue }
     var title: String {
         switch self {
         case .faces: "Esferas"
         case .health: "Salud"
         case .find: "Buscar reloj"
+        case .findPhone: "Buscar iPhone"
         case .music: "Música"
         }
     }
@@ -22,6 +24,7 @@ enum WatchFeature: String, CaseIterable, Identifiable {
         case .faces: "watchface.applewatch.case"
         case .health: "heart.fill"
         case .find: "location.magnifyingglass"
+        case .findPhone: "iphone.radiowaves.left.and.right"
         case .music: "music.note"
         }
     }
@@ -30,6 +33,7 @@ enum WatchFeature: String, CaseIterable, Identifiable {
         case .faces: .indigo
         case .health: .pink
         case .find: .teal
+        case .findPhone: .blue
         case .music: .red
         }
     }
@@ -38,14 +42,16 @@ enum WatchFeature: String, CaseIterable, Identifiable {
         case .faces: "Elige tu favorita"
         case .health: "Tus datos, bajo tu control"
         case .find: "Última conexión y ayuda"
+        case .findPhone: "Haz sonar tu iPhone"
         case .music: "Controles desde el reloj"
         }
     }
-    @ViewBuilder func screen(model: BridgeModel) -> some View {
+    @MainActor @ViewBuilder func screen(model: BridgeModel) -> some View {
         switch self {
         case .faces: WatchFacesScreen(model: model)
-        case .health: HealthScreen()
+        case .health: HealthScreen(store: model.health, model: model)
         case .find: FindWatchScreen(model: model)
+        case .findPhone: FindPhoneScreen(model: model)
         case .music: MusicScreen(model: model)
         }
     }
@@ -238,48 +244,149 @@ struct WatchFacesScreen: View {
 // MARK: - Salud
 
 struct HealthScreen: View {
-    private struct Metric: Identifiable { let id: String; let symbol: String; let color: Color }
-    private let metrics = [
-        Metric(id: "Pasos", symbol: "figure.walk", color: .green),
-        Metric(id: "Frecuencia cardiaca", symbol: "heart.fill", color: .red),
-        Metric(id: "Sueño", symbol: "bed.double.fill", color: .indigo),
-        Metric(id: "Oxígeno en sangre", symbol: "lungs.fill", color: .cyan),
-        Metric(id: "Energía", symbol: "flame.fill", color: .orange),
-        Metric(id: "Entrenamientos", symbol: "figure.run", color: .mint)
+    @ObservedObject var store: HealthStore
+    @ObservedObject var model: BridgeModel
+
+    private struct Tile: Identifiable {
+        let metric: HealthMetric; let title: String; let symbol: String; let color: Color
+        var id: String { metric.rawValue }
+    }
+    private let tiles = [
+        Tile(metric: .steps, title: "Pasos", symbol: "figure.walk", color: .green),
+        Tile(metric: .heartRate, title: "Frecuencia cardiaca", symbol: "heart.fill", color: .red),
+        Tile(metric: .distance, title: "Distancia", symbol: "point.topleft.down.to.point.bottomright.curvepath.fill", color: .mint),
+        Tile(metric: .activeEnergy, title: "Energía activa", symbol: "flame.fill", color: .orange)
     ]
 
     var body: some View {
-        FeatureScroll(feature: .health, subtitle: "Tus datos de salud solo se moverán cuando tú lo autorices.") {
+        FeatureScroll(feature: .health, subtitle: store.isSample ? "Vista de demostración con datos de muestra."
+                      : store.hasData
+                      ? "Datos recibidos del reloj y guardados solo en este iPhone."
+                      : "Tus datos de salud solo se moverán cuando tú lo autorices.") {
+            if store.isSample {
+                Label("Datos de muestra · demostración. No vienen de ningún reloj.", systemImage: "testtube.2")
+                    .font(.footnote.weight(.semibold)).foregroundStyle(.orange)
+                    .frame(maxWidth: .infinity, alignment: .leading).padding(12)
+                    .background(.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .accessibilityIdentifier("healthSampleBanner")
+            }
+            if let warning = store.warning {
+                Label(warning, systemImage: "exclamationmark.triangle").font(.footnote).foregroundStyle(.orange)
+            }
             LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
-                ForEach(Array(metrics.enumerated()), id: \.element.id) { index, metric in
-                    VStack(alignment: .leading, spacing: 10) {
-                        HStack {
-                            Image(systemName: metric.symbol).font(.title3).foregroundStyle(metric.color.opacity(0.5))
-                            Spacer()
-                            Image(systemName: "lock.fill").font(.caption).foregroundStyle(.tertiary)
-                        }
-                        Text("—").font(.system(size: 30, weight: .semibold, design: .rounded)).foregroundStyle(.tertiary)
-                        Text(metric.id).font(.caption).foregroundStyle(.secondary)
-                    }
-                    .padding(14)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                    .appear(index)
-                    .accessibilityElement(children: .combine)
-                    .accessibilityLabel("\(metric.id): sin datos, bloqueado")
+                ForEach(Array(tiles.enumerated()), id: \.element.id) { index, tile in
+                    tileView(tile).appear(index)
+                }
+            }
+            if store.ledger.latest(.steps) != nil { StepsChart(ledger: store.ledger) }
+            if store.ledger.latest(.heartRate) != nil { HeartRateChart(ledger: store.ledger) }
+            Card(title: "Estado de la sincronización") {
+                IconRow(symbol: "antenna.radiowaves.left.and.right", color: syncColor, title: syncTitle, subtitle: syncDetail)
+                if !store.ledger.gaps.isEmpty {
+                    Divider()
+                    IconRow(symbol: "questionmark.circle.fill", color: .gray, title: "Huecos sin datos",
+                            subtitle: "\(store.ledger.gaps.reduce(0) { $0 + $1.missingIntervals }) intervalos que el reloj no pudo conservar; no se interpolan.")
                 }
             }
             Card(title: "Privacidad primero") {
-                IconRow(symbol: "hand.raised.fill", color: .blue, title: "Sin acceso a Salud",
+                IconRow(symbol: "hand.raised.fill", color: .blue, title: "Sin acceso a Salud de Apple",
                         subtitle: "WristBridge no ha pedido permiso a Apple Salud ni a Contactos.")
                 Divider()
                 IconRow(symbol: "internaldrive.fill", color: .gray, title: "Nada sale del dispositivo",
-                        subtitle: "Cuando exista el canal, podrás elegir qué métricas compartir y borrarlas.")
+                        subtitle: "Se guarda cifrado por el sistema, fuera de las copias de seguridad. Borra todo desde Ajustes → Privacidad.")
             }
-            LockedAction(title: "Activar sincronización de salud", symbol: "heart.text.square.fill")
-            GateCard(items: [.init(text: "Gate G2 aprobado con el equipo del reloj"),
-                             .init(text: "Sesión segura y esquema de datos de salud acordados"),
-                             .init(text: "Permisos de Apple Salud solicitados solo en ese momento")])
+            if !store.hasData {
+                LockedAction(title: "Activar sincronización de salud", symbol: "heart.text.square.fill")
+                GateCard(items: [.init(text: "Canal seguro iPhone ↔ reloj aprobado (G2) y formato de mensajes congelado"),
+                                 .init(text: "App del reloj enviando pasos y ritmo cardiaco por lotes"),
+                                 .init(text: "Permisos de Apple Salud solo si activas la copia, por métrica")])
+            }
+        }
+    }
+
+    private var syncTitle: String { store.hasData ? "Última sincronización" : "Sin sincronizar" }
+    private var syncColor: Color { store.hasData ? .green : .gray }
+    private var syncDetail: String {
+        guard let end = HealthMetric.allCases.compactMap({ store.ledger.latest($0)?.end }).max() else {
+            return "Aún no ha llegado ningún dato del reloj."
+        }
+        return "Dato más reciente: " + end.formatted(.relative(presentation: .named)) + "."
+    }
+
+    @ViewBuilder private func tileView(_ tile: Tile) -> some View {
+        let value = valueText(tile.metric)
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Image(systemName: tile.symbol).font(.title3).foregroundStyle(tile.color.opacity(value == nil ? 0.5 : 1))
+                Spacer()
+                if value == nil { Image(systemName: "lock.fill").font(.caption).foregroundStyle(.tertiary) }
+            }
+            Text(value ?? "—").font(.system(size: 28, weight: .semibold, design: .rounded))
+                .foregroundStyle(value == nil ? .tertiary : .primary)
+                .contentTransition(.numericText())
+                .minimumScaleFactor(0.6).lineLimit(1)
+            Text(tile.title).font(.caption).foregroundStyle(.secondary)
+            if let detail = detailText(tile.metric) { Text(detail).font(.caption2).foregroundStyle(.tertiary) }
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(tile.title): \(value ?? "sin datos, bloqueado")")
+    }
+
+    private func valueText(_ metric: HealthMetric) -> String? {
+        let today = Date()
+        switch metric {
+        case .steps: return store.ledger.total(.steps, on: today).map { Int($0).formatted() }
+        case .distance: return store.ledger.total(.distance, on: today).map { String(format: "%.1f km", $0 / 1000) }
+        case .activeEnergy: return store.ledger.total(.activeEnergy, on: today).map { "\(Int($0)) kcal" }
+        case .heartRate: return store.ledger.latest(.heartRate).map { "\(Int($0.value.rounded())) lpm" }
+        }
+    }
+
+    private func detailText(_ metric: HealthMetric) -> String? {
+        guard metric == .heartRate, let day = store.ledger.heartRate(on: Date()) else {
+            return store.ledger.latest(metric) == nil ? nil : "Hoy"
+        }
+        return "Hoy \(Int(day.minimum))–\(Int(day.maximum)) lpm"
+    }
+}
+
+private struct StepsChart: View {
+    let ledger: HealthLedger
+    var body: some View {
+        let start = Calendar.current.startOfDay(for: Date())
+        let data = ledger.series(.steps, from: start, to: Date().addingTimeInterval(3600))
+        Card(title: "Pasos de hoy") {
+            Chart(data) { sample in
+                BarMark(x: .value("Hora", sample.start, unit: .hour), y: .value("Pasos", sample.value))
+                    .foregroundStyle(Color.green.gradient).cornerRadius(3)
+            }
+            .chartXAxis { AxisMarks(values: .stride(by: .hour, count: 6)) { _ in AxisGridLine(); AxisValueLabel(format: .dateTime.hour()) } }
+            .frame(height: 140)
+            .accessibilityLabel("Gráfica de pasos por hora de hoy")
+        }
+    }
+}
+
+private struct HeartRateChart: View {
+    let ledger: HealthLedger
+    var body: some View {
+        let start = Calendar.current.startOfDay(for: Date())
+        let data = ledger.series(.heartRate, from: start, to: Date().addingTimeInterval(3600))
+        Card(title: "Ritmo cardiaco de hoy") {
+            Chart(data) { sample in
+                AreaMark(x: .value("Hora", sample.start), yStart: .value("Mín", sample.minimum ?? sample.value),
+                         yEnd: .value("Máx", sample.maximum ?? sample.value))
+                    .foregroundStyle(Color.red.opacity(0.25))
+                LineMark(x: .value("Hora", sample.start), y: .value("lpm", sample.value))
+                    .foregroundStyle(Color.red).interpolationMethod(.monotone)
+            }
+            .chartYScale(domain: 40...180)
+            .chartXAxis { AxisMarks(values: .stride(by: .hour, count: 6)) { _ in AxisGridLine(); AxisValueLabel(format: .dateTime.hour()) } }
+            .frame(height: 140)
+            .accessibilityLabel("Gráfica de ritmo cardiaco de hoy")
         }
     }
 }
@@ -352,6 +459,65 @@ struct FindWatchScreen: View {
 
 private extension String {
     var capitalizedFirst: String { prefix(1).uppercased() + dropFirst() }
+}
+
+// MARK: - Buscar iPhone
+
+struct FindPhoneScreen: View {
+    @ObservedObject var model: BridgeModel
+    @ObservedObject private var alarm = FindPhoneAlarm.shared
+
+    var body: some View {
+        FeatureScroll(feature: .findPhone, subtitle: "Haz sonar este iPhone para encontrarlo. Prueba el sonido aquí; el aviso desde el reloj llegará con el canal seguro.") {
+            VStack(spacing: 16) {
+                ZStack {
+                    Circle().stroke(Color.secondary.opacity(0.15), lineWidth: 12)
+                    Circle().trim(from: 0, to: alarm.isRinging ? Double(alarm.remaining) / Double(FindPhoneAlarm.maxSeconds) : 0)
+                        .stroke(Color.blue.gradient, style: StrokeStyle(lineWidth: 12, lineCap: .round))
+                        .rotationEffect(.degrees(-90))
+                        .animation(.linear(duration: 1), value: alarm.remaining)
+                    VStack(spacing: 2) {
+                        Image(systemName: alarm.isRinging ? "speaker.wave.3.fill" : "speaker.slash.fill")
+                            .font(.system(size: 34)).foregroundStyle(alarm.isRinging ? Color.blue : Color.secondary)
+                            .symbolEffect(.variableColor.iterative, options: .repeating, isActive: alarm.isRinging)
+                            .contentTransition(.symbolEffect(.replace))
+                        Text(alarm.isRinging ? "\(alarm.remaining) s" : "En silencio")
+                            .font(.title3.weight(.semibold).monospacedDigit()).contentTransition(.numericText())
+                    }
+                }
+                .frame(width: 170, height: 170)
+                .animation(Motion.smooth, value: alarm.isRinging)
+
+                Button {
+                    if alarm.isRinging { alarm.stop() } else { alarm.start(reason: .localTest) }
+                } label: {
+                    Label(alarm.isRinging ? "Detener" : "Hacer sonar este iPhone", systemImage: alarm.isRinging ? "stop.fill" : "play.fill")
+                        .frame(maxWidth: .infinity).padding(.vertical, 4)
+                }
+                .buttonStyle(.glassProminent)
+                .tint(alarm.isRinging ? .red : .blue)
+                .sensoryFeedback(.impact, trigger: alarm.isRinging)
+                .accessibilityIdentifier("findPhoneToggle")
+
+                Text(alarm.message).font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                    .accessibilityIdentifier("findPhoneStatus")
+            }
+            Card(title: "Cómo funcionará desde el reloj") {
+                IconRow(symbol: "applewatch", color: .teal, title: "Pulsas «Buscar iPhone» en el reloj",
+                        subtitle: "El reloj envía la orden por el canal seguro.")
+                Divider()
+                IconRow(symbol: "bolt.horizontal.fill", color: .indigo, title: "Bluetooth despierta la app",
+                        subtitle: "Aunque esté en segundo plano; suena hasta \(FindPhoneAlarm.maxSeconds) s y se detiene en pantalla.")
+                Divider()
+                IconRow(symbol: "speaker.wave.2.fill", color: .blue, title: "Se oye aunque esté en silencio",
+                        subtitle: "El volumen es el del sistema: súbelo si no se oye.")
+            }
+            LockedAction(title: "Activar «Buscar iPhone» desde el reloj", symbol: "applewatch.radiowaves.left.and.right")
+            GateCard(items: [.init(text: "Canal seguro iPhone ↔ reloj aprobado (G2) y formato de mensajes congelado"),
+                             .init(text: "Comando «buscar iPhone» aprobado en el contrato compartido y botón en la app del reloj"),
+                             .init(text: "Prueba física con la app en segundo plano y el iPhone bloqueado")])
+        }
+    }
 }
 
 // MARK: - Música

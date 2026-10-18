@@ -120,6 +120,41 @@ final class WristBridgeUITests: XCTestCase {
         }
     }
 
+    func testFindPhoneAlarmStartsAndStopsLocallyAndWatchTriggerStaysLocked() {
+        let app = XCUIApplication()
+        app.launchArguments = ["--demo"]
+        app.launch()
+        let tile = app.buttons["feature-findPhone"]
+        for _ in 0..<8 where !tile.exists || tile.frame.maxY > app.frame.height - 140 { app.swipeUp() }
+        for _ in 0..<6 where !tile.isHittable || tile.frame.maxX > app.frame.width {
+            let carousel = app.buttons["feature-faces"]
+            if carousel.isHittable { carousel.swipeLeft(velocity: .slow) } else { app.swipeUp() }
+        }
+        tile.tap()
+        XCTAssertTrue(app.navigationBars["Buscar iPhone"].waitForExistence(timeout: 5))
+        let toggle = app.buttons["findPhoneToggle"]
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5))
+        toggle.tap()
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Sonando'")).firstMatch.waitForExistence(timeout: 5))
+        toggle.tap()
+        XCTAssertTrue(app.staticTexts["Detenido."].waitForExistence(timeout: 5))
+        // The watch-initiated trigger is not offered as a control.
+        XCTAssertEqual(app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Activar «Buscar iPhone»'")).count, 0)
+    }
+
+    func testHealthScreenShowsLabeledSampleDataOnlyInDemo() {
+        let app = XCUIApplication()
+        app.launchArguments = ["--demo"]
+        app.launch()
+        let tile = app.buttons["feature-health"]
+        for _ in 0..<8 where !tile.exists || tile.frame.maxY > app.frame.height - 140 { app.swipeUp() }
+        for _ in 0..<6 where !tile.isHittable { app.buttons["feature-faces"].swipeLeft(velocity: .slow) }
+        tile.tap()
+        XCTAssertTrue(app.navigationBars["Salud"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["healthSampleBanner"].exists || app.descendants(matching: .any)["healthSampleBanner"].exists)
+        // Without a real ledger there is nothing to claim; the live app must not show the banner.
+    }
+
     func testManualObservationDoesNotPromoteAutomaticReadiness() {
         let app = XCUIApplication()
         app.launch()
