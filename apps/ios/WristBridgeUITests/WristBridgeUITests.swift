@@ -82,7 +82,10 @@ final class WristBridgeUITests: XCTestCase {
             let tile = app.buttons["feature-\(id)"]
             for _ in 0..<8 where !tile.exists || tile.frame.maxY > app.frame.height - 140 { app.swipeUp() }
             // The feature carousel scrolls horizontally; bring later tiles into view.
-            for _ in 0..<3 where !tile.isHittable { app.buttons["feature-faces"].swipeLeft() }
+            for _ in 0..<6 where !tile.isHittable || tile.frame.maxX > app.frame.width {
+                let carousel = app.buttons["feature-faces"].exists ? app.buttons["feature-faces"] : app.buttons["feature-health"]
+                if carousel.isHittable { carousel.swipeLeft(velocity: .slow) } else { app.swipeUp() }
+            }
             XCTAssertTrue(tile.isHittable, "\(title) tile")
             tile.tap()
             XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 5), "\(title) screen")

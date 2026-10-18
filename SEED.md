@@ -23,6 +23,7 @@ App iPhone (Swift) que configura el accesorio y genera avisos de prueba para un 
 | Área | Estado | Evidencia |
 |---|---|---|
 | Candidato firmado instalado en iPhone | 0.2.1 (6): PASS instalación y servicio restaurado | `evidence/apple-0.2.1/apple/` |
+| Integración con Windows | `origin/developer` (8a3c29f) = Windows 0.1.1–0.3.1-lab + Apple 0.2.1. **Sin conflictos**: `development_codex` lo fusionó localmente (9df0e24). Mis commits 0.3.x aún **no están en `developer`** (falta push). Tras la fusión: Apple PASS (26 pruebas de paquete, `validate_structure`, build y 7/7 UI en simulador). Pruebas Kotlin **BLOCKED en este Mac** (sin JDK; Windows reporta 70 pruebas JVM en `docs/windows/SEED.md`). UUID de servicio coincide Swift/Kotlin; `contracts/**` y `Doc/**` sin cambios | 2026-10-18 |
 | Código 0.3.0 (7) | Ensayo de reconexión (`cef2c29`), rediseño UI (`71c32b6`) y pase de animaciones (sin commit) | §4 |
 | Pruebas del paquete Swift | PASS, 26 pruebas (2026-10-18) | `scripts/apple/test-package.sh` |
 | Compilación + UI tests simulador | PASS build; PASS 7/7 UI tests en iPhone 17 Pro iOS 26.2 (`WRISTBRIDGE_TEST_DESTINATION=id=<sim>`) | 2026-10-18 |
@@ -51,7 +52,7 @@ Fases P1–P8: ver tabla en `docs/apple/iphone-phases.md` (no se duplica aquí).
 3. Quitar la entrada de `README.md` "Candidato actual 0.2.1" cuando 0.3.0 se instale y pruebe; hasta entonces dice 0.2.1 por ser lo verificado en dispositivo.
 4. P3 local: revisar Dynamic Type y Reducir movimiento del rediseño; medir CPU del fondo `LivingBackground` en iPhone físico. P8 empaquetado autorizado.
 5. Enviar `docs/apple/health-sync-proposal.md` a Windows para revisión (preguntas abiertas) y esperar wire format, seguridad, UUID/propiedades finales, nombre anunciado `WristBridge` (propuesta Apple pendiente de confirmar).
-6. Cuando exista el canal seguro: activar las acciones bloqueadas de `Views/FeatureScreens.swift` (Enviar al reloj, Sincronizar salud, Hacer sonar), una por gate aprobado; sin canal no hay datos ni envíos simulados.
+7. Cuando exista el canal seguro: activar las acciones bloqueadas de `Views/FeatureScreens.swift` (Enviar al reloj, Sincronizar salud, Hacer sonar), una por gate aprobado; sin canal no hay datos ni envíos simulados.
 
 ## 6. Decisiones firmes (no reabrir)
 - ANCS lo consume el reloj; el iPhone no puede tratar su autorización de notificaciones ni un enlace CoreBluetooth como "ANCS listo".
