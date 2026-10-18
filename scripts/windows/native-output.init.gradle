@@ -1,0 +1,14 @@
+// Windows workaround for native AAPT2 writes hanging on the workspace drive.
+// Usage: --no-configuration-cache --init-script scripts/windows/native-output.init.gradle
+// Optional: -Pwristbridge.nativeBuildRoot=<absolute local output directory>
+import java.security.MessageDigest
+
+gradle.beforeProject { p ->
+    def key = MessageDigest.getInstance('SHA-256')
+        .digest(p.rootDir.canonicalPath.getBytes('UTF-8')).encodeHex().toString().substring(0, 12)
+    def fallback = new File(System.getProperty('java.io.tmpdir'), 'WristBridge-' + key)
+    def base = p.providers.gradleProperty('wristbridge.nativeBuildRoot')
+        .map { new File(it) }.getOrElse(fallback)
+    def part = p.path == ':' ? 'root' : p.path.substring(1).replace(':', '/')
+    p.layout.buildDirectory.set(new File(base, part))
+}

@@ -5,6 +5,7 @@
     <string name="service_text">Escuchando avisos del iPhone</string>
     <string name="channel_service">Estado del puente</string>
     <string name="channel_alerts">Avisos del iPhone</string>
+    <string name="channel_calls">Llamadas del iPhone</string>
     <string name="channel_quiet">Avisos del iPhone (silenciosos)</string>
     <string name="card_hidden">Contenido oculto</string>
     <string name="card_details_unavailable">Detalles no disponibles</string>

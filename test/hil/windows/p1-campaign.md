@@ -30,3 +30,16 @@ Guion del lado reloj para la campaña conjunta. Complementa `test/hil/apple/mvp.
 | R04 | Cortar enlace durante consulta | Sin contaminación: siguiente aviso correcto; consultas viejas ignoradas | NOT_RUN |
 
 Al terminar, copiar el bloque **Diagnóstico** de la app (contadores) a la evidencia. «Programado» en iOS no cuenta como entregado: correlacionar por `runId/fixtureId`.
+
+## Regresión Android de emparejamiento · 18 de octubre
+
+Build de esta corrección: ver evidence/windows-p1-pairing/windows/build.json cuando finalice la validación. Casos físicos **NOT_RUN**; el reloj no está visible por ADB al preparar esta entrega. Conservar la pareja funcional y no borrar el vínculo por rutina.
+
+| Caso | Estímulo del operador | Resultado esperado | Estado |
+|---|---|---|---|
+| H02-bond-delay | En un emparejamiento nuevo autorizado, aceptar después de 10 s y antes de 60 s | Espera acotada; al vincular se abre otra generación GATT, confirma DS y NS y llega a Listo sin recuperación manual | NOT_RUN |
+| H03-bond-reject | Rechazar ese emparejamiento | Error comprensible; sin suscripciones ni estado Listo; reintento voluntario | NOT_RUN |
+| H03-bond-expire | Dejar pasar 60 s desde que entra en espera de vínculo | Cierra esa generación y muestra fallo; no prolonga la espera con fallos repetidos | NOT_RUN |
+| H09-bond-remove | Retirar el vínculo solo como prueba negativa explícita | Deja de mostrar Listo; ignora callbacks antiguos; nueva autorización necesaria | NOT_RUN |
+
+No confundir retirar el vínculo con revocar únicamente Compartir notificaciones en iOS: son estímulos distintos. Los tests JVM de BondWait no aprueban estos casos.

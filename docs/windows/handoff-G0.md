@@ -57,3 +57,7 @@ El APK compila; eso **no** aprueba G0 conjunto ni G1.
 ## Siguiente acción Windows
 
 Inventario del reloj por ADB (P1-01.K), instalar el APK (H01) y ejecutar el camino A con el iPhone. Si A falla, documentar el punto exacto y abrir B en rama aislada. No avanzar a P2 sin G1.
+
+## Actualización instalada · 18 de octubre de 2026
+
+WristBridge Watch 0.1.1-lab (2) compilado, firmado, instalado por actualización -r y abierto en SM-L300: PASS. Checksum instalado coincide con el APK validado. 52 tests JVM PASS (el build final reutiliza sus resultados con inputs idénticos), lint 0 errores/1 aviso. No requiere actualizar la app iPhone; no cambia el perfil P1. H05/R y G1 formales pendientes. Ver [release-0.1.1-lab.md](release-0.1.1-lab.md) y evidence/windows-p1-update-2/windows. AAPT2 se resolvió generando salidas en temporal local, conservando las salidas anteriores bloqueadas de F:.

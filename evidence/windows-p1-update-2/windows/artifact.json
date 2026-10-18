@@ -1,0 +1,87 @@
+{
+  "applicationId": "dev.wristbridge.watch",
+  "versionName": "0.1.1-lab",
+  "versionCode": 2,
+  "apk": "build/releases/wristbridge-watch-0.1.1-lab-2.apk",
+  "sha256": "f2ce5e172dbb5ef21512b75783eaa24c9f423f8dbddad30fd3b9ed5115c46f3d",
+  "bytes": 35357182,
+  "signatureVerification": "PASS",
+  "build": "PASS",
+  "lint": "PASS",
+  "installation": "PASS",
+  "installedVersionName": "0.1.1-lab",
+  "installedVersionCode": 2,
+  "installedSha256Matches": true,
+  "launch": "PASS",
+  "runtimeProcessObserved": true,
+  "installMethod": "adb install -r --no-streaming; app data preserved",
+  "deviceModel": "SM-L300",
+  "G1": "NOT_RUN",
+  "postUpdateDiagnostics": {
+    "serviceStarted": true,
+    "advertisingObserved": true,
+    "dataSourceConfirmed": true,
+    "ancsReadyReported": true
+  },
+  "notificationDeliveryAfterUpdate": {
+    "status": "PASS",
+    "source": "user report after installing build 2",
+    "continuousNotificationReceptionReported": true
+  },
+  "iphoneUpdateRequired": false,
+  "jvmTests": {
+    "protocol-kotlin": {
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "notification-domain": {
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "assistant-domain": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "testResultOrigin": "Gradle reused cached results with matching task inputs; 52 tests had executed successfully in the preceding validation",
+  "lintFindings": {
+    "error": 0,
+    "warning": 1,
+    "note": 0
+  },
+  "lintRules": [
+    "DataExtractionRules"
+  ],
+  "sourceRevision": "0abcd517bc71dc703d9b6181fc424374f725e573",
+  "branch": "development",
+  "workingTreeDirty": true,
+  "sourceManifest": "source-manifest.json",
+  "recordedAtUTC": "2026-10-18T16:44:44.174485+00:00",
+  "presentationDate": "2026-10-18",
+  "presentationTimeZone": "America/Mexico_City",
+  "reusableNativeOutputScript": "PASS: Gradle help configured successfully",
+  "appUIObserved": false,
+  "serviceActivation": {
+    "status": "PASS",
+    "source": "user confirmation in this chat",
+    "bridgeActiveReported": true
+  },
+  "postUpdateDiagnosticInterpretation": "Current-process log markers observed; these are historical transitions, not a live ANCS state or delivery proof",
+  "operatorFunctionalAcceptance": {
+    "status": "PASS",
+    "source": "user states phase validation completed",
+    "observations": [
+      "connects correctly",
+      "continues receiving notifications"
+    ],
+    "durationMinutes": "NOT_RECORDED",
+    "perCaseCounts": "NOT_RECORDED"
+  },
+  "formalGateNote": "Functional operator acceptance recorded; quantitative H/N/R cases and joint review not inferred"
+}

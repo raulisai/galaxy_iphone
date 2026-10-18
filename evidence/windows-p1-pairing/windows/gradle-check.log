@@ -1,0 +1,174 @@
+
+Welcome to Gradle 9.8.1!
+
+Here are the highlights of this release:
+ - Java 27 support
+ - Maven mirror settings reuse
+ - Linked problem locations in build output
+
+For more details see https://docs.gradle.org/9.8.1/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.8.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Shared read-only dependency cache is an incubating feature.
+Calculating task graph as no cached configuration is available for tasks: :core:protocol-kotlin:test :core:notification-domain:test :core:assistant-domain:test :apps:watch:lintDebug :apps:watch:assembleDebug
+> Task :core:notification-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:assistant-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:protocol-kotlin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:notification-domain:processTestResources NO-SOURCE
+> Task :core:protocol-kotlin:processResources NO-SOURCE
+> Task :core:notification-domain:processResources NO-SOURCE
+> Task :core:assistant-domain:processResources NO-SOURCE
+> Task :core:protocol-kotlin:processTestResources NO-SOURCE
+> Task :core:assistant-domain:processTestResources NO-SOURCE
+> Task :apps:watch:preBuild UP-TO-DATE
+> Task :apps:watch:preDebugAndroidTestBuild SKIPPED
+> Task :apps:watch:generateDebugAssets UP-TO-DATE
+> Task :apps:watch:preDebugBuild UP-TO-DATE
+> Task :apps:watch:preDebugUnitTestBuild UP-TO-DATE
+> Task :apps:watch:extractProguardFiles
+> Task :apps:watch:generateDebugBuildConfig
+> Task :apps:watch:generateDebugResources
+> Task :apps:watch:mapDebugSourceSetPaths
+> Task :apps:watch:createDebugCompatibleScreenManifests
+> Task :apps:watch:javaPreCompileDebug
+> Task :apps:watch:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :apps:watch:extractDeepLinksDebug
+> Task :apps:watch:packageDebugResources
+> Task :apps:watch:generateDebugGlobalSynthetics
+> Task :apps:watch:checkDebugDuplicateClasses
+> Task :apps:watch:desugarDebugFileDependencies
+> Task :apps:watch:processDebugNavigationResources
+> Task :apps:watch:processDebugMainManifest
+> Task :apps:watch:mergeDebugAssets
+> Task :apps:watch:processDebugManifest
+> Task :apps:watch:processDebugManifestForPackage
+> Task :apps:watch:compressDebugAssets
+> Task :core:assistant-domain:compileKotlin
+> Task :core:protocol-kotlin:compileKotlin
+> Task :apps:watch:checkDebugAarMetadata
+> Task :apps:watch:mergeDebugResources
+> Task :apps:watch:mergeExtDexDebug
+> Task :apps:watch:mergeDebugJniLibFolders
+> Task :apps:watch:validateSigningDebug
+> Task :apps:watch:writeDebugAppMetadata
+> Task :apps:watch:writeDebugSigningConfigVersions
+> Task :core:assistant-domain:compileJava NO-SOURCE
+> Task :core:assistant-domain:classes UP-TO-DATE
+> Task :apps:watch:parseDebugLocalResources
+> Task :core:assistant-domain:jar
+> Task :apps:watch:compileDebugNavigationResources
+> Task :core:assistant-domain:compileTestKotlin
+> Task :core:assistant-domain:compileTestJava NO-SOURCE
+> Task :core:assistant-domain:testClasses UP-TO-DATE
+> Task :core:protocol-kotlin:compileJava NO-SOURCE
+> Task :core:protocol-kotlin:classes UP-TO-DATE
+> Task :core:protocol-kotlin:jar
+> Task :apps:watch:generateDebugRFile
+> Task :core:assistant-domain:test
+> Task :core:protocol-kotlin:compileTestKotlin
+> Task :core:protocol-kotlin:compileTestJava NO-SOURCE
+> Task :core:protocol-kotlin:testClasses UP-TO-DATE
+> Task :core:notification-domain:compileKotlin
+> Task :core:notification-domain:compileJava NO-SOURCE
+> Task :core:notification-domain:classes UP-TO-DATE
+> Task :core:notification-domain:jar
+> Task :core:protocol-kotlin:test
+> Task :apps:watch:mergeDebugNativeLibs
+> Task :apps:watch:mergeLibDexDebug
+> Task :apps:watch:stripDebugDebugSymbols
+> Task :core:notification-domain:compileTestKotlin
+> Task :core:notification-domain:compileTestJava NO-SOURCE
+> Task :core:notification-domain:testClasses UP-TO-DATE
+> Task :core:notification-domain:test
+
+> Task :apps:watch:compileDebugKotlin
+w: file:///F:/proyectos/galaxy_iphone/apps/watch/src/main/java/dev/wristbridge/watch/bridge/AncsClient.kt:115:18 'fun connectGatt(p0: Context!, p1: Boolean, p2: BluetoothGattCallback!, p3: Int, p4: Int, p5: Handler!): BluetoothGatt!' is deprecated. Deprecated in Java.
+
+> Task :apps:watch:processDebugJavaRes
+> Task :apps:watch:processDebugResources
+> Task :apps:watch:mergeDebugJavaResource
+> Task :apps:watch:compileDebugJavaWithJavac
+> Task :apps:watch:generateDebugLintReportModel
+> Task :apps:watch:lintAnalyzeDebug
+
+> Task :apps:watch:processDebugResources FAILED
+AAPT2 aapt2-9.4.1-15978811-windows Daemon #0 Failed to shutdown within timeout
+java.util.concurrent.TimeoutException: AAPT2 aapt2-9.4.1-15978811-windows Daemon #0: Failed to shut down within 30 seconds. Forcing shutdown
+	at com.android.builder.internal.aapt.v2.Aapt2DaemonImpl.stopProcess(Aapt2DaemonImpl.kt:247)
+	at com.android.builder.internal.aapt.v2.Aapt2Daemon.shutDown(Aapt2Daemon.kt:170)
+	at com.android.builder.internal.aapt.v2.Aapt2Daemon.handleError(Aapt2Daemon.kt:197)
+	at com.android.builder.internal.aapt.v2.Aapt2Daemon.handleError$default(Aapt2Daemon.kt:188)
+	at com.android.builder.internal.aapt.v2.Aapt2Daemon.link(Aapt2Daemon.kt:127)
+	at com.android.builder.internal.aapt.v2.Aapt2DaemonManager$LeasedAaptDaemon.link(Aapt2DaemonManager.kt:164)
+	at com.android.builder.internal.aapt.v2.Aapt2DaemonManager$leasingAapt2Daemon$1.link(Aapt2DaemonManager.kt:188)
+	at com.android.build.gradle.internal.services.PartialInProcessResourceProcessor.link(PartialInProcessResourceProcessor.kt:51)
+	at com.android.build.gradle.internal.res.Aapt2ProcessResourcesRunnableKt.processResources(Aapt2ProcessResourcesRunnable.kt:73)
+	at com.android.build.gradle.internal.res.LinkApplicationAndroidResourcesTask$Companion.invokeAaptForSplit(LinkApplicationAndroidResourcesTask.kt:857)
+	at com.android.build.gradle.internal.res.LinkApplicationAndroidResourcesTask$Companion.access$invokeAaptForSplit(LinkApplicationAndroidResourcesTask.kt:695)
+	at com.android.build.gradle.internal.res.LinkApplicationAndroidResourcesTask$TaskAction.run(LinkApplicationAndroidResourcesTask.kt:396)
+	at com.android.build.gradle.internal.profile.ProfileAwareWorkAction.execute(ProfileAwareWorkAction.kt:66)
+	at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:68)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:64)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:61)
+	at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:103)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:61)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:44)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:41)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.workers.internal.AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:58)
+	at org.gradle.workers.internal.DefaultWorkerExecutor.lambda$submitWork$1(DefaultWorkerExecutor.java:169)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQueue.java:191)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.access$600(DefaultConditionalExecutionQueue.java:112)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner$1.run(DefaultConditionalExecutionQueue.java:168)
+	at org.gradle.internal.Factories$1.create(Factories.java:30)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.lambda$runAndReleaseLocks$0(DefaultWorkerLeaseService.java:296)
+	at org.gradle.internal.work.ResourceLockStatistics$1.measure(ResourceLockStatistics.java:43)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAndReleaseLocks(DefaultWorkerLeaseService.java:294)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withLocksAcquired(DefaultWorkerLeaseService.java:290)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withLocks(DefaultWorkerLeaseService.java:282)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:132)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:138)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue.java:163)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java:125)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:65)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+[Incubating] Problems report is available at: file:///F:/proyectos/galaxy_iphone/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':apps:watch:processDebugResources' (registered by plugin 'com.android.internal.application').
+> A failure occurred while executing com.android.build.gradle.internal.res.LinkApplicationAndroidResourcesTask$TaskAction
+   > AAPT2 aapt2-9.4.1-15978811-windows Daemon #0: Link timed out, attempting to stop daemon.
+     This should not happen under normal circumstances, please file an issue if it does.
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.8.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 13m 20s
+49 actionable tasks: 49 executed
+Configuration cache entry stored.

@@ -1,0 +1,65 @@
+# SEED · estado y continuación del lado Windows/Kotlin
+
+Archivo de relevo para cualquier agente (Claude, Codex u otro) que continúe el trabajo del reloj. **Léelo primero, actualízalo al terminar cada bloque de trabajo y no lo uses para secretos ni datos personales.** Última actualización: 18 de octubre de 2026 (build 0.1.2-lab (3)), America/Mexico_City.
+
+Lectura obligatoria previa: `AGENTS.md`, `Doc/00_LEEME_Y_COORDINACION.md`, `Doc/01_CONTRATO_COMPARTIDO.md`, `Doc/02_WINDOWS_KOTLIN.md`, `docs/windows/handoff-G0.md`.
+
+## Reglas que no se rompen
+
+- Windows/Kotlin escribe `apps/watch`, `core/*`, Gradle, `docs/windows`, `test/hil/windows`, `evidence/*/windows`. No tocar Swift, `apps/ios`, `packages/WristBridgeProtocol` ni firma Apple.
+- `Doc/**` no se modifica (sus hashes se verifican). Nunca ejecutar `git add --renormalize` sobre `Doc`; `.gitattributes` ya lo protege.
+- Sin identificadores personales, direcciones, seriales, claves ni contenido real de avisos en archivos versionados ni en logs.
+- Sin IA, Mac, salud ni acciones ANCS sensibles antes de sus gates. Sin pantalla completa, Telecom, superposiciones ni desactivar keyguard para simular llamadas (plan §6.5).
+- Estados honestos: `PASS`, `FAIL`, `BLOCKED`, `NOT_RUN`. Un simulador o un fake nunca aprueba un gate físico.
+- Flujo de ramas: trabajo en la rama de la sesión → `development_claude` → validar sobre una copia limpia → integrar en `development` → subir ambas. Commits con la línea `Co-Authored-By` indicada por la sesión.
+
+## Dónde estamos
+
+| Área | Estado | Evidencia |
+|---|---|---|
+| Base Gradle (AGP 9.4.1, Gradle 9.8.1, Kotlin 2.4.21, JDK 21), módulos `core/*` y `apps/watch` | PASS | 48 pruebas JVM, lint sin errores, `evidence/windows-g0/windows/build.json` |
+| Parser ANCS, ensamblador de Data Source, cola GATT, motor de sesión (U01–U20, lógica de N01–N08) | PASS en JVM | `core/*/src/test` |
+| APK de laboratorio instalado en el Galaxy Watch7 (Wear OS 6, API 36) | PASS | instalación verificada por `dumpsys package` |
+| Servicio foreground `connectedDevice`, anuncio del UUID, servidor GATT mínimo | PASS en dispositivo | log `WristBridge`: «Servicio iniciado», «Anunciando servicio … nombreValido=true» |
+| Selector de AccessorySetupKit del iPhone encuentra el reloj | PASS (con nombre `WristBridge`) | observado por el usuario |
+| Vínculo LE con el iPhone | PASS | log del Bluetooth del reloj: `BOND_BONDING => BOND_BONDED` |
+| ANCS: Data Source y Notification Source confirmados, «ANCS listo» | PASS | log: «Data Source confirmado», «ANCS listo gen=1» |
+| Tarjetas nativas con avisos sintéticos de prueba (F001–F005) | PASS (parcial) | log: «Tarjeta mostrada … fixture=run-…/F001» |
+| Arreglo de vínculo (BondWait) e instalación de la build 0.1.1-lab (2) | PASS; aceptación funcional del usuario | `docs/windows/release-0.1.1-lab.md` |
+| Identificación de app (nombre, color, monograma) y llamadas diferenciadas, build 0.1.2-lab (3) | PASS en JVM/lint/assemble; instalación y pruebas físicas NOT_RUN | `docs/windows/release-0.1.2-lab.md`, `evidence/windows-p1-update-3/` |
+| Avisos reales de otras apps, iPhone bloqueado, UI cerrada, 30 min (H05) | NOT_RUN | pendiente |
+| R01–R04 (reconexión, Bluetooth off/on, Service Changed, corte durante consulta) | NOT_RUN | pendiente |
+| ADR-001 (elegir A o B) | Pendiente de redactar con la evidencia anterior | `docs/adr/ADR-001-roles-ble.md` |
+| G1 | NO aprobado | faltan campaña completa H/N/R y revisión conjunta |
+
+## Estado del código
+
+El arreglo de vínculo y la presentación de app/llamadas (builds 0.1.1-lab (2) y 0.1.2-lab (3)) están en el commit que acompaña a este SEED. La build 3 **no está instalada en el reloj**.
+
+## Qué sigue, en orden
+
+1. **Instalar la build 3** (`build/releases/wristbridge-watch-0.1.2-lab-3.apk`, SHA-256 en `evidence/windows-p1-update-3/windows/artifact.json`) con `adb install -r`, sin borrar datos ni vínculo.
+2. **Perfiles de app: hecho en código.** Catálogo `SourceProfiles` (Telegram, WhatsApp, Netflix, Spotify, Gmail, Mensajes, Teléfono, FaceTime, Calendario, Mail) y monograma local. Pendiente comprobarlo en el reloj con avisos reales y, si el usuario aporta logotipos con derecho de uso, sustituir los monogramas.
+3. **Llamadas: hecho en código.** Canal propio con timbre, vibración repetida y `FLAG_INSISTENT`, que se detiene con `Removed` (límite 90 s). Pendiente una llamada real. Contestar/rechazar siguen desactivados hasta P2-07; abrir apps del iPhone exige coordinarlo con Swift.
+4. **Pruebas físicas con avisos reales**: Telegram, Netflix, Spotify, Gmail y una llamada real; registrar cada caso en `test/hil/windows/p1-campaign.md` y en `evidence/<run>/windows/`.
+5. **Cerrar P1 Windows**: ejecutar H05 (30 min con pantallas dormidas), R01 (veinte ciclos), R03 y R04; redactar ADR-001; actualizar `handoff-G0.md` (o crear `handoff-G1.md`) con commit, APK y SHA-256 reales.
+6. **No avanzar a P2** (codec propio, seguridad, persistencia) hasta que G1 esté aprobado de forma conjunta con el lado Apple.
+
+## Cómo operar en esta máquina (Windows 11)
+
+- Java: Temurin 21 (`JAVA_HOME` de usuario). El JBR de Android Studio (JDK 25) no se usa para compilar.
+- Compilar y probar desde Bash o terminal: `./gradlew.bat :core:protocol-kotlin:test :core:notification-domain:test :core:assistant-domain:test :apps:watch:lintDebug :apps:watch:assembleDebug`. El APK queda en `apps/watch/build/outputs/apk/debug/watch-debug.apk`.
+- ADB inalámbrico al reloj: el puerto de **conexión** y el de **vinculación** son distintos y cambian al reactivar. Descubrirlos con `adb mdns services` (`_adb-tls-connect` y `_adb-tls-pairing`); `adb pair <ip:puerto-vinculación> <código>` y luego `adb connect <ip:puerto-conexión>`. El Wi-Fi del reloj pierde muchos paquetes y ADB cae a `offline`: reintentar en bucle y mantener el reloj cargando con la pantalla encendida. Las pantallas se leen con `uiautomator dump`, el log con `adb logcat -s WristBridge`.
+- Para que el selector del iPhone vea el reloj, su nombre Bluetooth debe contener `WristBridge` (botón «Nombre WristBridge» de la app; «Restaurar nombre» lo revierte). Si el nombre vuelve al original, el selector responde «No accessory found».
+- El iPhone concede ANCS solo tras el vínculo y con «Compartir notificaciones del sistema» activo para el reloj en Ajustes → Bluetooth.
+
+## Problemas conocidos
+
+- **Gradle bloqueado en esta máquina.** Un `java.exe` de Gradle quedó en estado «Unknown» e imposible de terminar, y retiene bloqueos de `~/.gradle/caches/journal-1` y de `.gradle/9.8.1/fileHashes`. Un reinicio de Windows lo libera. Mientras tanto se puede compilar con `GRADLE_USER_HOME` y `--project-cache-dir` en carpetas nuevas, aunque la primera vez descarga todas las dependencias y puede tardar más de 10 minutos. En Windows, PowerShell y `git` lanzados desde PowerShell se han colgado: preferir Bash.
+- **Wi-Fi del reloj inestable** (ver arriba). Instalar el APK exige varios reintentos.
+- El nombre de anuncio `WristBridge` depende de renombrar el adaptador del reloj; confirmar con el Mac en ADR-001 si hay alternativa (datos de servicio y máscara).
+- Un cuerpo de aviso sintético largo llegó con 256 bytes en el log; verificar si lo recorta iOS o nuestro límite antes de dar N02 por aprobado.
+
+## Último commit conocido de cada rama
+
+Ver `git log` de `development` y `development_claude`; el commit con builds 2 y 3 y este SEED los integra.

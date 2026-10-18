@@ -11,6 +11,7 @@ import android.bluetooth.BluetoothStatusCodes
 import android.content.Context
 import android.os.Handler
 import android.os.SystemClock
+import dev.wristbridge.notification.BondWait
 import dev.wristbridge.notification.AncsSessionEngine
 import dev.wristbridge.notification.SessionEffect
 import dev.wristbridge.protocol.contract.AncsUuids
@@ -43,11 +44,15 @@ class AncsClient(
     private var linkConnected = false
     private var queue: GattOperationQueue? = null
     private var controlPoint: BluetoothGattCharacteristic? = null
-    private var waitingForBond = false
+    private val bondWait = BondWait(clock)
     private var stopped = true
 
     private val tick = Runnable {
-        queue?.onTick()
+        if (bondWait.expire()) {
+            failPairing("El emparejamiento no se completó. Vuelve a intentarlo desde el iPhone.")
+        } else {
+            queue?.onTick()
+        }
         apply(engine.onTick())
     }
 
@@ -72,9 +77,12 @@ class AncsClient(
         val bond = bondOf(state)
         BridgeStatus.update { it.copy(bond = bond) }
         BridgeStatus.event("Vínculo ${bond.name.lowercase()} peer=${Pseudonym.of(peer)}")
-        if (bond == BondState.BONDED && waitingForBond) {
-            waitingForBond = false
-            gatt?.let { discover(it) }
+        if (bond == BondState.BONDED && bondWait.finish()) {
+            // A timed-out descriptor can still call back. A fresh GATT generation prevents that
+            // callback from confirming a new subscription on the same characteristic.
+            connect(peer, autoConnect = false)
+        } else if (bond == BondState.NONE && (bondWait.waiting || gatt != null)) {
+            failPairing("Vínculo rechazado o retirado. Autoriza de nuevo el reloj en el iPhone.")
         }
     }
 
@@ -117,7 +125,7 @@ class AncsClient(
         engine.endSession(engine.generation)
         detachQueue()
         controlPoint = null
-        waitingForBond = false
+        bondWait.finish()
         linkConnected = false
         gatt?.let {
             try {
@@ -201,7 +209,10 @@ class AncsClient(
             when {
                 outcome == GattOutcome.Success -> onConfirmed()
                 outcome is GattOutcome.Failed && outcome.status in AUTH_STATUSES &&
-                    device?.bondState != BluetoothDevice.BOND_BONDED -> requestBond(device!!, "Suscripción requiere vínculo")
+                    device?.bondState != BluetoothDevice.BOND_BONDED ->
+                    device?.let { requestBond(it, "Suscripción requiere vínculo") }
+                outcome == GattOutcome.TimedOut && device?.bondState != BluetoothDevice.BOND_BONDED ->
+                    device?.let { requestBond(it, "Esperando que aceptes el emparejamiento") }
                 else -> {
                     BridgeStatus.update {
                         it.copy(ancs = AncsState.FAILED, ancsDetail = "Suscripción falló: $outcome",
@@ -214,12 +225,20 @@ class AncsClient(
     }
 
     private fun requestBond(peer: BluetoothDevice, why: String) {
-        waitingForBond = true
+        bondWait.begin()
         BridgeStatus.update { it.copy(ancs = AncsState.SUBSCRIBING, ancsDetail = "$why; acepta el emparejamiento") }
-        BridgeStatus.event("Solicitando vínculo: $why")
+        BridgeStatus.event("Esperando vínculo: $why")
         if (peer.bondState == BluetoothDevice.BOND_NONE && !peer.createBond()) {
-            BridgeStatus.event("createBond rechazado por el sistema")
+            failPairing("El sistema no pudo iniciar el emparejamiento. Vuelve a intentarlo.")
+            return
         }
+        scheduleTick()
+    }
+
+    private fun failPairing(detail: String) {
+        closeLink("vínculo no disponible")
+        BridgeStatus.update { it.copy(ancs = AncsState.FAILED, ancsDetail = detail) }
+        BridgeStatus.event("Emparejamiento no completado o vínculo retirado")
     }
 
     private fun apply(effects: List<SessionEffect>) {
@@ -251,7 +270,7 @@ class AncsClient(
 
     private fun scheduleTick() {
         handler.removeCallbacks(tick)
-        val next = listOfNotNull(engine.nextDeadlineNanos(), queue?.nextDeadlineNanos()).minOrNull() ?: return
+        val next = listOfNotNull(engine.nextDeadlineNanos(), queue?.nextDeadlineNanos(), bondWait.nextDeadlineNanos()).minOrNull() ?: return
         val delayMs = ((next - clock.nowNanos()) / 1_000_000).coerceAtLeast(0) + 1
         handler.postDelayed(tick, delayMs)
     }

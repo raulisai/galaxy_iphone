@@ -1,0 +1,21 @@
+{
+  "applicationId": "dev.wristbridge.watch",
+  "versionName": "0.1.2-lab",
+  "versionCode": 3,
+  "apk": "build/releases/wristbridge-watch-0.1.2-lab-3.apk",
+  "sha256": "3b015f41ffdf029faf44b359fd04b8cef2fe323aeba840fbc927525380ea97d7",
+  "bytes": 35390362,
+  "build": "PASS",
+  "lint": "PASS",
+  "jvmTests": {
+    "notification-domain": { "tests": 29, "failures": 0, "errors": 0, "skipped": 0,
+      "suites": { "AncsSessionEngineTest": 18, "BondWaitTest": 4, "CardPresentationTest": 7 } },
+    "protocol-kotlin": "NOT_RUN (not re-executed; module unchanged since build 2)",
+    "assistant-domain": "NOT_RUN (not re-executed; module unchanged since build 2)"
+  },
+  "signatureVerification": "NOT_RUN",
+  "installation": "NOT_RUN",
+  "physicalChecks": "NOT_RUN",
+  "G1": "NOT_RUN",
+  "note": "First attempt failed in processDebugResources (file lock on F:); repeated with scripts/windows/native-output.init.gradle and a local output root."
+}
