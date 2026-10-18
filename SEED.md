@@ -52,6 +52,7 @@ Fases P1–P8: ver tabla en `docs/apple/iphone-phases.md` (no se duplica aquí).
 3. Quitar la entrada de `README.md` "Candidato actual 0.2.1" cuando 0.3.0 se instale y pruebe; hasta entonces dice 0.2.1 por ser lo verificado en dispositivo.
 4. P3 local: revisar Dynamic Type y Reducir movimiento del rediseño; medir CPU del fondo `LivingBackground` en iPhone físico. P8 empaquetado autorizado.
 5. Enviar `docs/apple/health-sync-proposal.md` a Windows para revisión (preguntas abiertas) y esperar wire format, seguridad, UUID/propiedades finales, nombre anunciado `WristBridge` (propuesta Apple pendiente de confirmar).
+6. **Tareas iPhone que dejó Windows** (`docs/windows/compatibilidad-iphone.md`, necesitan contrato conjunto P2, **no implementar aún**): «Abrir en el iPhone» (reloj envía bundleId+uid; iOS puede no abrir sin primer plano), respuestas rápidas vía Atajos con consentimiento, ajustes/estado desde el iPhone. Acción Apple ahora: revisar y responder la propuesta en el contrato. Límites ya aceptados: sin audio/micrófono de llamada (HFP no soportado por Wear OS con iOS), sin responder WhatsApp.
 7. Cuando exista el canal seguro: activar las acciones bloqueadas de `Views/FeatureScreens.swift` (Enviar al reloj, Sincronizar salud, Hacer sonar), una por gate aprobado; sin canal no hay datos ni envíos simulados.
 
 ## 6. Decisiones firmes (no reabrir)
