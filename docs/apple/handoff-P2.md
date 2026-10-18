@@ -1,0 +1,31 @@
+# Apple · inicio de P2
+
+18 de octubre de 2026. Rama `development_codex`, base conjunta incorporada por avance directo a `0abcd51`. No se editó Kotlin, Gradle, contrato compartido ni `Doc/**`.
+
+El usuario autoriza continuar las siguientes etapas iOS y reporta conexión iPhone–Watch7 y recepción de avisos con el teléfono suspendido **y después de cerrar WristBridge deslizando la app fuera del selector**. Estas observaciones son PASS con procedencia «reporte del usuario», no mediciones ejecutadas por el agente. Revisión instalada, cantidades, latencias, logs del reloj y duración no quedaron registrados. El reporte está en `evidence/apple-p2-start/apple/user-validation.json`; reemplaza la dependencia histórica «APK no instalado» del handoff G0. La aceptación conjunta G1 y ADR-001 requieren aún consolidar su evidencia; no se les asigna un PASS global.
+
+Actualización posterior: diagnóstico y corrección del orden de restauración en [reconnect-diagnostics.md](reconnect-diagnostics.md), candidato 0.1.1 (4). Su evidencia separada conserva los resultados anteriores sin convertir el fallo físico en PASS por una compilación.
+
+## Entrega Apple
+
+- P2-02.S, parcial: solicitud de conexión pendiente mientras el reloj está fuera de alcance; ya no se cancela cada 20 segundos. Tras una desconexión se solicita recuperación dentro del callback Bluetooth. La recuperación tiene presupuesto finito de tres intentos por petición explícita o descubrimiento exitoso; una desconexión consume un intento inmediato y los fallos de conexión usan las posiciones restantes de la secuencia 2/5/15 segundos y depende de ejecución concedida por iOS. No existe temporizador que mantenga viva la app.
+- El límite de 20 segundos cubre solo descubrimiento del servicio. Al vencer, se detiene antes de cancelar para evitar el bucle involuntario del código P1. Detener/quitar cancelan reintentos; apagar/resetear la radio descarta referencias y cancelaciones antiguas que podrían bloquear la recuperación. Volver a encender respeta el ajuste automático y la detención explícita.
+- P2-06.S, parcial: ajustes propios versionados v1 (`stopped`, `automaticRecovery`) con migración de `bridgeStopped`. Al encontrar datos corruptos o versión desconocida se conserva el original y se inicia detenido; acciones explícitas solo cambian esa sesión. No se guardan identificadores del par ni autorizaciones derivadas de caché. ASK sigue siendo la fuente de autorización.
+- UI de recuperación y diagnóstico: ajuste persistente, advertencia de lectura, número de reintentos y cantidad de periféricos restaurados. El estado ANCS sigue sin comprobar automáticamente; el éxito reportado no se convierte en un indicador de telemetría inexistente.
+- La validación Apple compara ahora sus UUID y filtros ASK con `contracts/ble-profile.json`, además del original inmutable.
+
+## Límites y dependencias
+
+P2-02.S no está cerrado: reconstrucción temprana del central en relanzamiento del sistema, coordinación asíncrona con ASK y regresión física de restauración siguen pendientes. El código existente de `willRestoreState` no demuestra esos casos. La recepción ANCS tras cierre forzado no demuestra que iOS haya relanzado esta app. Tampoco se promete recuperación automática tras ese cierre.
+
+P2-04.S/P2-05.S: BLOCKED por formato, propiedades/CCCD, framing, backpressure, vectores F01–F12 y seguridad aún no congelados en `p1-lab-1`. La [revisión Apple de decisiones y vectores pendientes](p2-contract-review.md) concreta la entrega que hace falta de Windows; Apple revisa cuando publique la propuesta; no habilitar características reservadas, comandos sensibles, claves de sesión ni parsing inventado. El perfil P1 expone solo el servicio primario.
+
+P2-06.S: siguen pendientes identidad/pares (coordinados con P2-05) y política completa de resultados propios; el registro sintético P1 existente se conserva.
+
+P2-08.S y aceptación G2: NOT_RUN hasta la campaña física documentada en `test/hil/apple/p2-recovery.md`. No iniciar IA, agente macOS o salud por el reporte de avisos. La actualización Debug firmada se instaló y abrió en el iPhone el 18 de octubre: PASS por `devicectl`. Se conservó la versión de laboratorio 0.1.0 (1); la huella del binario y el manifiesto identifican esta entrega. Después de instalar, el usuario confirmó que los avisos siguen llegando al reloj: smoke de avisos PASS por reporte del usuario. Aclaró después que no verificó el texto «Servicio de configuración encontrado». Una captura física posterior, inspeccionada por el agente, muestra accesorio autorizado, configuración desconectada y el mensaje del vencimiento de descubrimiento: **FAIL del descubrimiento en ese intento**, sustituyendo el anterior NOT_RUN. La causa raíz sigue sin establecer; el mensaje corresponde al plazo local de 20 segundos, no confirma que el servicio falte en el reloj. Evidencia: `evidence/apple-p2-start/apple/physical-configuration-timeout.jpg`. Se mantiene PASS de avisos por reporte del usuario; reconexiones y casos de suspensión/cierre con esta nueva build siguen NOT_RUN.
+
+## Validación de esta entrega
+
+Validación final PASS: estructura, originales intactos, consistencia del perfil compartido, 11 pruebas del paquete, tres UI (incluida persistencia tras relanzar), compilación simulador, Release arm64 sin firma y Debug firmada. El primer test UI del interruptor falló al pulsar la fila contenedora; se corrigió para accionar el control real y esperar el cambio. Resultados y huellas de fuentes: `evidence/apple-p2-start/apple/run.json`. Los logs completos de Xcode quedan fuera del repositorio porque pueden incluir rutas personales o metadatos de firma. Compilación/simulador no aprueban recuperación física.
+
+Base técnica: [Core Bluetooth en segundo plano y restauración](https://developer.apple.com/library/archive/documentation/NetworkingInternetWeb/Conceptual/CoreBluetooth_concepts/CoreBluetoothBackgroundProcessingForIOSApps/PerformingTasksWhileYourAppIsInTheBackground.html) describe solicitudes de conexión sin vencimiento y recreación del manager durante el arranque. [TN3115](https://developer.apple.com/documentation/technotes/tn3115-bluetooth-state-restoration-app-relaunch-rules) distingue condiciones de relanzamiento. Ninguna de estas garantías equivale a ejecución continua.

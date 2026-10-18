@@ -1,0 +1,28 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "apps/ios/WristBridge/Adapters/AccessorySetupAdapter.swift": "c7185431890f78cc3af65fb75e9fe655daca76a856c122787c2f9b2810840234",
+    "apps/ios/WristBridge/Adapters/BluetoothCentralAdapter.swift": "3971f2d2309d7596c0b3b49f1ee440d34bfc8b5e7d75f855b1640910cb4f01e5",
+    "apps/ios/WristBridge/Adapters/NotificationFixtureAdapter.swift": "b798909ffdabdab1820fb1ebe03b30e433e30e681f112350cceb0bb869bc6ded",
+    "apps/ios/WristBridge/BridgeModel.swift": "367587cbd47446a0e873bc239609541d32c5f1ecc124eed051367f6c4496817d",
+    "apps/ios/WristBridge/Info.plist": "8468d6fea704fb757cc603175bedeba929a06533774dd6c94c4d5af6942fcdf0",
+    "apps/ios/WristBridge/Resources/PrivacyInfo.xcprivacy": "6a7b5e0f1cc319e385cd0aea83741f2e550fb6229bc53ddaa34f93cff0119cc2",
+    "apps/ios/WristBridge/Views/ContentView.swift": "e5d2286b8a0f167dbb9074e0fd277f0962694ef1cf5b7c6fc48fc6282249f10a",
+    "apps/ios/WristBridge/WristBridgeApp.swift": "71c66cb63287ea927db765323261134b0cc2bad3bb95ce6957c6c1f26635976f",
+    "apps/ios/WristBridge.xcodeproj/project.pbxproj": "085f16341ccf5537a84b86890ec3b996e6546d737a45447ac99d90d480ebebea",
+    "apps/ios/WristBridge.xcodeproj/xcshareddata/xcschemes/WristBridge.xcscheme": "09acd326c49173a370d3a8682d25c3f781c124cafb760536dca0773d0dfed622",
+    "apps/ios/WristBridgeUITests/WristBridgeUITests.swift": "4fd3bff2c60d1ee6d90900651c64101c2de35623078079c152994b257b060ab9",
+    "packages/WristBridgeProtocol/Package.swift": "78b96a147c5a5f56b454ba279d546ef5963be255a1219d64da4cd6fcc63bedee",
+    "packages/WristBridgeProtocol/Sources/WristBridgeProtocol/BLEProfile.swift": "b2e094f49effad60a2f89d7c5a528624b658a26636308e7de0704e2fe51321d7",
+    "packages/WristBridgeProtocol/Sources/WristBridgeProtocol/BridgeState.swift": "538aefc700e1a567f2242cf102034c0486b44b71ee87fc5b7a08d41ce59d96a3",
+    "packages/WristBridgeProtocol/Sources/WristBridgeProtocol/ConnectionRetryPolicy.swift": "60b6ea1a9718283be138f2cb1a715ff6eae7f7492aaef127a6d8c2d0ce2c15ee",
+    "packages/WristBridgeProtocol/Sources/WristBridgeProtocol/FixturePlan.swift": "33b7e48b2bc9d2b5e9838633084c6088b9d3eeba2e3b4a3cb5ef3efef3be7b70",
+    "packages/WristBridgeProtocol/Sources/WristBridgeProtocol/LocalSettingsStore.swift": "def63e4b0025714e174ab72f05d114e105d618803ef0fb29a563b31b25795947",
+    "packages/WristBridgeProtocol/Tests/WristBridgeProtocolTests/AppleFoundationTests.swift": "4be1396611121283aca83ebd2b88374886ab0b3651fbb4f0908da971a45abf65",
+    "packages/WristBridgeProtocol/Tests/WristBridgeProtocolTests/RecoveryTests.swift": "a0eca709b8e25479249e4241ebba55000b10044aaab2e012abd56bfb9030a36d",
+    "scripts/apple/check.sh": "1dd1374d87390e29dde1949d5bf8f7ebe0eaf450f14f37e5940698ea8e0413aa",
+    "scripts/apple/generate_project.py": "936124e3c690163e6040473d95b320fabef78bd8f6a9a20dfffbebd2b416e9ca",
+    "scripts/apple/test-package.sh": "7dcd12a8c9a86e0301ed867d56c524eec21b00d09c9e4b1292c3d8b5e2d532e4",
+    "scripts/apple/validate_structure.py": "4194397f80e3d195370b6e4cd2a475bdd95724897fda2522bfe1558e5bc796b8"
+  }
+}

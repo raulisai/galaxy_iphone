@@ -1,0 +1,15 @@
+# Reconexión iOS · diagnóstico y corrección
+
+18 de octubre de 2026. `development_codex`, candidato 0.1.1 (4).
+
+El usuario confirmó que pulsar Recuperar/Reconectar no resolvía el estado de configuración desconectada. Los avisos seguían llegando. Se añadió diagnóstico local propio y mensajes para distinguir intento activo, ausencia de autorización, espera del cierre anterior y espera de disponibilidad Bluetooth. La cancelación es asíncrona: no se fuerza otra conexión sobre una cancelación pendiente.
+
+La captura física inicial permanece como FAIL en la evidencia P2. La versión instrumentada (2) logró conexión y respuesta de descubrimiento con un servicio. En la prueba posterior (3) se observó restauración de un periférico conectado y solicitud de descubrimiento antes del callback `poweredOn`; el callback siguiente no retomaba el trabajo porque ya existía un periférico. Esta ruta carecía de una guarda de disponibilidad. Las trazas no incluyen nombres, UUID de pares ni mensajes.
+
+La corrección (4) difiere el descubrimiento hasta recibir disponibilidad de radio, lo serializa para evitar solicitudes duplicadas y comienza su plazo solo al enviar la solicitud. Detener, retirar autorización, desconectar o invalidar reinician esa guarda. Se registran explícitamente descubrimiento enviado/completado y servicio esperado verificado. Diagnóstico exportable y archivo local protegido; 64 eventos máximos, excluido de backup.
+
+Hay 14 pruebas de paquete PASS, incluidas restauración antes de radio disponible, rechazo tras retirada y ausencia de consultas duplicadas; estructura/originales intactos, build de simulador y Debug firmada PASS. Tres pruebas UI pasaron antes del último ajuste de orden; no se cuentan como prueba de recuperación física. La versión 0.1.1 (4) quedó instalada: PASS. Apertura y prueba física final: BLOCKED porque el iPhone estaba bloqueado (SpringBoard, FBSOpenApplicationErrorDomain 7). No se declara resuelto físicamente el fallo; falta abrir WristBridge al desbloquear y verificar el candidato. Estado final de instalación y prueba física en `evidence/apple-reconnect-diagnostics/apple/run.json`.
+
+Solo Debug acepta `--lab-reconnect-once`: al encontrar el servicio, ejecuta un único detener/reconectar con cancelación pendiente; respeta detención explícita y no modifica el vínculo ASK ni las preferencias guardadas. Finalizar la campaña abriendo de nuevo sin ese argumento. No se usa en UI normal ni Release. El diagnóstico no aprueba ANCS ni G1/G2.
+
+Referencias: Apple indica [emitir comandos con el central disponible](https://developer.apple.com/documentation/corebluetooth/cbcentralmanagerdelegate/centralmanagerdidupdatestate(_:)) y documenta el [orden inicial de callbacks de restauración](https://developer.apple.com/library/archive/documentation/NetworkingInternetWeb/Conceptual/CoreBluetooth_concepts/CoreBluetoothBackgroundProcessingForIOSApps/PerformingTasksWhileYourAppIsInTheBackground.html). La atribución causal al fallo físico anterior se mantiene como hipótesis hasta completar regresión del candidato.

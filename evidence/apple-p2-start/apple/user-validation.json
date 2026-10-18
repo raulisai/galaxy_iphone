@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-18",
+  "source": "user-report-in-chat",
+  "independentlyObservedByAgent": false,
+  "devices": [
+    "iPhone",
+    "Galaxy Watch7"
+  ],
+  "observations": [
+    {
+      "case": "phone-to-watch-notification-delivery",
+      "status": "PASS",
+      "provenance": "user-report"
+    },
+    {
+      "case": "delivery-with-phone-suspended",
+      "status": "PASS",
+      "provenance": "user-report"
+    },
+    {
+      "case": "delivery-after-swiping-iPhone-app-away",
+      "status": "PASS",
+      "provenance": "user-report"
+    }
+  ],
+  "exactInstalledRevisions": "NOT_RECORDED",
+  "notificationCountsAndLatency": "NOT_RECORDED",
+  "coreBluetoothConfigurationChannelRestoration": "NOT_RUN",
+  "24h72hCampaign": "NOT_RUN",
+  "G1FormalAcceptance": {
+    "status": "BLOCKED",
+    "reason": "Reported observations accepted; complete campaign evidence and installed revisions not recorded."
+  },
+  "notes": "Confirms reported ANCS delivery conditions, not iOS app relaunch, BLE roles, all HIL cases or acceptance of the new P2 implementation. Historical installation records are preserved."
+}

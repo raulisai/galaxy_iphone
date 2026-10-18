@@ -1,0 +1,30 @@
+{
+  "schema": "wristbridge.apple-inventory.v1",
+  "product": "WristBridge iPhone",
+  "version": "0.2.0",
+  "build": "5",
+  "firstPartyPackages": [
+    {
+      "name": "WristBridgeProtocol",
+      "source": "packages/WristBridgeProtocol",
+      "dependencies": []
+    }
+  ],
+  "systemFrameworks": [
+    "SwiftUI",
+    "UIKit",
+    "AccessorySetupKit",
+    "CoreBluetooth",
+    "UserNotifications",
+    "Foundation",
+    "Combine"
+  ],
+  "testFrameworks": [
+    "Testing",
+    "XCTest"
+  ],
+  "thirdPartyRuntimeDependencies": [],
+  "sensitiveFeaturesEnabled": [],
+  "privacyManifest": "apps/ios/WristBridge/Resources/PrivacyInfo.xcprivacy",
+  "licenseNote": "Apple SDK/framework terms apply; no product distribution license invented."
+}

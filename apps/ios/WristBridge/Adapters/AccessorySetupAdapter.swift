@@ -5,6 +5,8 @@ import WristBridgeProtocol
 
 @MainActor
 final class AccessorySetupAdapter {
+    var onUnresolvedAuthorization: (() -> Void)?
+    var onChoices: (([UUID]) -> Void)?
     var onAuthorized: ((UUID) -> Void)?
     var onRemoved: (() -> Void)?
     var onEvent: ((BridgeEvent) -> Void)?
@@ -55,6 +57,18 @@ final class AccessorySetupAdapter {
         }
     }
 
+    func selectAuthorized(_ identifier: UUID) {
+        guard let accessory = session?.accessories.first(where: { $0.bluetoothIdentifier == identifier }) else {
+            onMessage?("Ese accesorio ya no está autorizado. Selecciónalo de nuevo.")
+            return
+        }
+        accept(accessory)
+    }
+
+    private func publishChoices() {
+        onChoices?(session?.accessories.compactMap(\.bluetoothIdentifier) ?? [])
+    }
+
     func forget() {
         guard let session, let selected else { return }
         session.removeAccessory(selected) { [weak self] error in
@@ -71,12 +85,16 @@ final class AccessorySetupAdapter {
         switch event.eventType {
         case .activated:
             onAvailability?(true)
+            publishChoices()
             // Never pick arbitrarily when more than one authorization exists.
             if let accessories = session?.accessories, accessories.count == 1,
                let accessory = accessories.first {
                 accept(accessory)
-            } else if (session?.accessories.count ?? 0) > 1 {
-                onMessage?("Hay varios accesorios autorizados. Selecciona el reloj que usarás.")
+            } else {
+                onUnresolvedAuthorization?()
+                if (session?.accessories.count ?? 0) > 1 {
+                    onMessage?("Hay varios accesorios autorizados. Elige cuál quieres conectar.")
+                }
             }
         case .accessoryAdded:
             // Wait until the system picker dismisses before initiating setup UI.
@@ -87,11 +105,13 @@ final class AccessorySetupAdapter {
             else { onEvent?(.pickerCancelled) }
             pendingSelection = nil
         case .accessoryChanged:
+            publishChoices()
             if let accessory = event.accessory,
                accessory.bluetoothIdentifier == selected?.bluetoothIdentifier {
                 accept(accessory)
             }
         case .accessoryRemoved:
+            publishChoices()
             guard event.accessory?.bluetoothIdentifier == selected?.bluetoothIdentifier else { return }
             selected = nil
             pendingSelection = nil
@@ -116,6 +136,7 @@ final class AccessorySetupAdapter {
             return
         }
         selected = accessory
+        publishChoices()
         onEvent?(.authorized)
         onAuthorized?(identifier)
     }

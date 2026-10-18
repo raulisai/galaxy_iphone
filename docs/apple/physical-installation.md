@@ -1,5 +1,7 @@
 # Instalación física Apple
 
+Actualización del 18 de octubre: el usuario reporta enlace con Watch7 y avisos recibidos con el teléfono suspendido y la app cerrada deslizando. Ver [handoff P2](handoff-P2.md); este documento conserva la instalación de P1, no certifica la nueva recuperación P2.
+
 17 de octubre de 2026, America/Mexico_City. iPhone 15, iOS 26.6.2 (23G90), conectado por cable, emparejado, Modo de desarrollador activo y DDI preparado.
 
 ## Estado observado

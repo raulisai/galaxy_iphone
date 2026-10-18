@@ -1,0 +1,426 @@
+{
+  "date": "2026-10-18",
+  "scope": "iPhone only; no gate inferred from implementation",
+  "tasks": [
+    {
+      "id": "P1-01",
+      "appleResponsibility": "Inventario iPhone/Mac y firma Xcode.",
+      "implementationState": "IMPLEMENTED",
+      "remainingOrLimit": "Inventario Apple histórico; verificar OS del candidato físico.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P1-02",
+      "appleResponsibility": "Proyecto iOS, paquete Swift y CI Apple.",
+      "implementationState": "IMPLEMENTED",
+      "remainingOrLimit": "Proyecto/paquete y CI Apple.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P1-03",
+      "appleResponsibility": "Sin código ANCS; revisión del alcance.",
+      "implementationState": "NO_IPHONE_CODE",
+      "remainingOrLimit": "Parser ANCS exclusivo Kotlin.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P1-04",
+      "appleResponsibility": "Picker/onboarding y transporte iOS A/B.",
+      "implementationState": "PARTIAL",
+      "remainingOrLimit": "Roles/ADR-001 y campaña conjunta física.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P1-05",
+      "appleResponsibility": "Implementar onboarding/permisos/cancelación/reintento.",
+      "implementationState": "IMPLEMENTED",
+      "remainingOrLimit": "Onboarding/cancelación/selección; aceptación física pendiente.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P1-06",
+      "appleResponsibility": "Preparar condiciones iPhone bloqueado/UI cerrada.",
+      "implementationState": "STIMULUS_READY",
+      "remainingOrLimit": "Bloqueo/segundo plano; H05 conjunto pendiente.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P1-07",
+      "appleResponsibility": "Sin código; aportar estímulos controlados.",
+      "implementationState": "STIMULUS_READY",
+      "remainingOrLimit": "Fixtures propios; cola/transacciones Kotlin.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P1-08",
+      "appleResponsibility": "Emitir fixtures cortos/largos/concurrentes.",
+      "implementationState": "STIMULUS_READY",
+      "remainingOrLimit": "Corto/largo/Unicode; oráculo receptor Kotlin.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P1-09",
+      "appleResponsibility": "Generador de nuestra app iOS y registro de emisión.",
+      "implementationState": "IMPLEMENTED",
+      "remainingOrLimit": "Emisor y registro propio; entrega del lote requiere observación.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P1-10",
+      "appleResponsibility": "Ciclo iOS/restauración propia y estímulos de radio.",
+      "implementationState": "PARTIAL",
+      "remainingOrLimit": "Código de restauración listo; R01–R04/20 ciclos no ejecutados.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P1-11",
+      "appleResponsibility": "Ejecutar lado iPhone y permisos negativos.",
+      "implementationState": "BLOCKED",
+      "remainingOrLimit": "Campaña física G1 incompleta.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P1-12",
+      "appleResponsibility": "Build iPhone con firma/canal disponible y guía Mac.",
+      "implementationState": "CANDIDATE_READY",
+      "remainingOrLimit": "Release firmado; instalar candidato cuando vuelva el teléfono.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P2-01",
+      "appleResponsibility": "Sin duplicar estado ANCS; serializar su transporte propio donde aplique.",
+      "implementationState": "IMPLEMENTED",
+      "remainingOrLimit": "Transporte Apple serial MainActor; no duplica ANCS.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P2-02",
+      "appleResponsibility": "Restauración del transporte iOS y permisos.",
+      "implementationState": "PARTIAL",
+      "remainingOrLimit": "Arranque/ASK/radio/cancelación implementados; HIL pendiente.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P2-03",
+      "appleResponsibility": "Emitir avisos antes/durante/después de reconectar.",
+      "implementationState": "STIMULUS_READY",
+      "remainingOrLimit": "Coalescing/backlog del watch y oráculo conjunto.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P2-04",
+      "appleResponsibility": "Revisión de formato y codec/framer Swift.",
+      "implementationState": "BLOCKED",
+      "remainingOrLimit": "Windows: control.schema/framing/capabilities/compatibility y F01–F12 congelados.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P2-05",
+      "appleResponsibility": "Identidad/Keychain, sesión/replay Swift.",
+      "implementationState": "BLOCKED",
+      "remainingOrLimit": "ADR de identidad, sesión/replay y revisión de seguridad conjunta.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P2-06",
+      "appleResponsibility": "Persistencia de pares/ajustes/resultados iOS.",
+      "implementationState": "PARTIAL",
+      "remainingOrLimit": "Ajustes/resultados propios listos; identidad del par depende de P2-05.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P2-07",
+      "appleResponsibility": "Estímulos y observación del efecto iPhone; sin «reply API» ficticia.",
+      "implementationState": "STIMULUS_READY",
+      "remainingOrLimit": "Acciones/flags ANCS del reloj y efecto físico.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P2-08",
+      "appleResponsibility": "Métricas iPhone y condiciones del ensayo.",
+      "implementationState": "BLOCKED",
+      "remainingOrLimit": "24/72 h, baseline y hardware para G2.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P3-01",
+      "appleResponsibility": "Sin UI watch.",
+      "implementationState": "NO_IPHONE_CODE",
+      "remainingOrLimit": "UI watch.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P3-02",
+      "appleResponsibility": "Ajustes iPhone que se acuerde sincronizar.",
+      "implementationState": "PARTIAL",
+      "remainingOrLimit": "Privacidad local lista; sincronizar requiere contrato.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P3-03",
+      "appleResponsibility": "Sin código.",
+      "implementationState": "NO_IPHONE_CODE",
+      "remainingOrLimit": "Tile/complication watch.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P3-04",
+      "appleResponsibility": "Reproductores/estímulos iPhone, sin servidor multimedia Swift.",
+      "implementationState": "STIMULUS_READY",
+      "remainingOrLimit": "AMS Kotlin y reproductor físico.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P3-05",
+      "appleResponsibility": "Cambios de pista/app/estado para campaña.",
+      "implementationState": "STIMULUS_READY",
+      "remainingOrLimit": "AMS Kotlin/cambios de pista y permisos reales.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P3-06",
+      "appleResponsibility": "Sin código watch.",
+      "implementationState": "NO_IPHONE_CODE",
+      "remainingOrLimit": "Rendimiento del reloj.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P3-07",
+      "appleResponsibility": "Ajustes/diagnóstico SwiftUI y permisos por función.",
+      "implementationState": "PARTIAL",
+      "remainingOrLimit": "UI SwiftUI lista; telemetría ANCS watch no definida en contrato.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P4-01",
+      "appleResponsibility": "Evaluar configuración/login iPhone solo si se requiere.",
+      "implementationState": "REVIEW_READY",
+      "remainingOrLimit": "iPhone no es proxy obligatorio; falta ADR proveedor/ruta y asignar auth si procede.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P4-02",
+      "appleResponsibility": "Sin código salvo mock de configuración acordado.",
+      "implementationState": "NO_IPHONE_CODE",
+      "remainingOrLimit": "Dominio IA Kotlin; mock iOS solo si contrato lo asigna.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P4-03",
+      "appleResponsibility": "Sin duplicar el cliente IA watch.",
+      "implementationState": "NO_IPHONE_CODE",
+      "remainingOrLimit": "SSE Kotlin.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P4-04",
+      "appleResponsibility": "Configuración/autorización/revocación si el ADR la asigna al iPhone.",
+      "implementationState": "BLOCKED",
+      "remainingOrLimit": "Solo si ADR asigna auth iPhone; sin proveedor/ruta elegidos.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P4-05",
+      "appleResponsibility": "Sin audio relay iPhone.",
+      "implementationState": "NO_IPHONE_CODE",
+      "remainingOrLimit": "Dictado/TTS watch; sin audio relay.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P4-06",
+      "appleResponsibility": "Borrar/configurar datos iOS propios si existen; sin historial ChatGPT supuesto.",
+      "implementationState": "NO_IPHONE_CODE",
+      "remainingOrLimit": "No existe historial IA iOS. Retención/borrado de datos propios sí implementados.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P4-07",
+      "appleResponsibility": "Ajuste/consentimiento si se comparte por contrato.",
+      "implementationState": "BLOCKED",
+      "remainingOrLimit": "Consentimiento/capacidad compartida segura si se asigna a iPhone.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P4-08",
+      "appleResponsibility": "Errores/revocación de auth iOS si participa.",
+      "implementationState": "BLOCKED",
+      "remainingOrLimit": "Manejo auth iOS condicionado al ADR; sin credenciales actuales.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P5-01",
+      "appleResponsibility": "Sin cliente de audio iPhone obligatorio.",
+      "implementationState": "NO_IPHONE_CODE",
+      "remainingOrLimit": "WebRTC/audio watch.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P5-02",
+      "appleResponsibility": "Consumir configuración si corresponde; no alojarlo dentro de iPhone por suposición.",
+      "implementationState": "NO_IPHONE_CODE",
+      "remainingOrLimit": "Servicio separado Windows; configuración iOS solo si se asigna.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P5-03",
+      "appleResponsibility": "Estímulos externos de interrupción cuando apliquen.",
+      "implementationState": "STIMULUS_READY",
+      "remainingOrLimit": "Interrupciones externas, watch físico con voz implementada.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P5-04",
+      "appleResponsibility": "Sin código de buffers watch.",
+      "implementationState": "NO_IPHONE_CODE",
+      "remainingOrLimit": "Buffers watch.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P5-05",
+      "appleResponsibility": "Sin proxy de conectividad obligatorio.",
+      "implementationState": "NO_IPHONE_CODE",
+      "remainingOrLimit": "Conectividad independiente watch.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P5-06",
+      "appleResponsibility": "Ejecutores Apple tipados solo de capacidades aprobadas y disponibles.",
+      "implementationState": "BLOCKED",
+      "remainingOrLimit": "Ejecutores Apple requieren capacidades aprobadas y P2 seguro.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P6-01",
+      "appleResponsibility": "Investigar captura pública e integraciones; ADR de alcance.",
+      "implementationState": "NOT_IPHONE_APP",
+      "remainingOrLimit": "Fase de otra aplicación macOS, fuera de la app iPhone solicitada.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P6-02",
+      "appleResponsibility": "App macOS de barra de menú e identidad.",
+      "implementationState": "NOT_IPHONE_APP",
+      "remainingOrLimit": "Fase de otra aplicación macOS, fuera de la app iPhone solicitada.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P6-03",
+      "appleResponsibility": "Servidor TLS/LAN/enrolamiento Mac.",
+      "implementationState": "NOT_IPHONE_APP",
+      "remainingOrLimit": "Fase de otra aplicación macOS, fuera de la app iPhone solicitada.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P6-04",
+      "appleResponsibility": "CLI/IPC local protegido y emisores sintéticos.",
+      "implementationState": "NOT_IPHONE_APP",
+      "remainingOrLimit": "Fase de otra aplicación macOS, fuera de la app iPhone solicitada.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P6-05",
+      "appleResponsibility": "IDs estables y rutas de integración Mac.",
+      "implementationState": "NOT_IPHONE_APP",
+      "remainingOrLimit": "Fase de otra aplicación macOS, fuera de la app iPhone solicitada.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P6-06",
+      "appleResponsibility": "Ejecutor local allowlist e historial de resultados.",
+      "implementationState": "NOT_IPHONE_APP",
+      "remainingOrLimit": "Fase de otra aplicación macOS, fuera de la app iPhone solicitada.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P6-07",
+      "appleResponsibility": "Sleep/wake, cambio LAN y cola acotada Mac.",
+      "implementationState": "NOT_IPHONE_APP",
+      "remainingOrLimit": "Fase de otra aplicación macOS, fuera de la app iPhone solicitada.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P7-01",
+      "appleResponsibility": "Permisos/capacidad de lectura/escritura Apple por tipo.",
+      "implementationState": "BLOCKED",
+      "remainingOrLimit": "G2/tipos/capacidades; no pedir permisos sensibles prematuramente.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P7-02",
+      "appleResponsibility": "Ledger/HealthKit/syncVersion y ACK tras efecto guardado.",
+      "implementationState": "BLOCKED",
+      "remainingOrLimit": "Sesión segura, outbox Kotlin y esquema/ACK; ledger HealthKit no implementado.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P7-03",
+      "appleResponsibility": "Contacts, conjunto autorizado, lotes y tombstones.",
+      "implementationState": "BLOCKED",
+      "remainingOrLimit": "Conjunto autorizado/esquema/snapshot y receptor Kotlin.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P7-04",
+      "appleResponsibility": "Retención/borrado/UI y procedencia iPhone.",
+      "implementationState": "BLOCKED",
+      "remainingOrLimit": "Política Salud/Contacts depende de esas capacidades; borrado de datos propios listo.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P8-01",
+      "appleResponsibility": "Congelar soporte iPhone/Mac y versiones Swift/protocolo.",
+      "implementationState": "PARTIAL",
+      "remainingOrLimit": "Targets/herramientas declarados, matriz física aún sin congelar.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P8-02",
+      "appleResponsibility": "Regresión Swift/iOS/macOS y parte Apple HIL.",
+      "implementationState": "PARTIAL",
+      "remainingOrLimit": "Regresión Swift/UI local; campañas conjuntas pendientes.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P8-03",
+      "appleResponsibility": "Perfil release/energía iPhone/Mac y condiciones.",
+      "implementationState": "BLOCKED",
+      "remainingOrLimit": "Baseline, 24 h pareadas y siete días de uso reales.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P8-04",
+      "appleResponsibility": "Migración Apple y contraparte Kotlin anterior.",
+      "implementationState": "PARTIAL",
+      "remainingOrLimit": "Migración preferencias y archivo futuro probados; compatibilidad cruzada pendiente.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P8-05",
+      "appleResponsibility": "Dependencias/avisos/secretos y privacidad Apple.",
+      "implementationState": "IMPLEMENTED",
+      "remainingOrLimit": "Inventario/procedencia/privacidad Apple; sin terceros.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P8-06",
+      "appleResponsibility": "Firma/canal de prueba iPhone y agente Mac cuando aplique.",
+      "implementationState": "CANDIDATE_READY",
+      "remainingOrLimit": "Release firmado y scripts; instalación/aceptación de candidato pendiente.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P8-07",
+      "appleResponsibility": "Observar/corregir fallos del uso iPhone/Mac.",
+      "implementationState": "PARTIAL",
+      "remainingOrLimit": "Correcciones iOS implementadas; uso prolongado del candidato pendiente.",
+      "gateAcceptance": "NOT_RUN"
+    },
+    {
+      "id": "P8-08",
+      "appleResponsibility": "Evidencia Apple y revisión del informe.",
+      "implementationState": "PARTIAL",
+      "remainingOrLimit": "Informe Apple/tareas/limitaciones listos; G8 no aprobado.",
+      "gateAcceptance": "NOT_RUN"
+    }
+  ]
+}

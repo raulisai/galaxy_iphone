@@ -25,6 +25,26 @@
 			"isa" = "PBXBuildFile";
 			"fileRef" = "24082B447A58C4FF09767EB0";
 		};
+		"AA8CD307583B5FD1AA71D7C6" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Adapters/BluetoothDiagnostics.swift";
+			"sourceTree" = "<group>";
+		};
+		"2045991E0281BA76CD10E189" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "AA8CD307583B5FD1AA71D7C6";
+		};
+		"BCB868EE79AEF1CC2FD808F1" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Adapters/LabJournalStore.swift";
+			"sourceTree" = "<group>";
+		};
+		"C0273F6AB0DD76A6DD9BFF25" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "BCB868EE79AEF1CC2FD808F1";
+		};
 		"D2B7B488D37F2345D55D6DD5" = {
 			"isa" = "PBXFileReference";
 			"lastKnownFileType" = "sourcecode.swift";
@@ -34,6 +54,16 @@
 		"2A50B4455A619DD5B9D0F101" = {
 			"isa" = "PBXBuildFile";
 			"fileRef" = "D2B7B488D37F2345D55D6DD5";
+		};
+		"5226E68D7E1B5CCD3CF5C7CF" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "BridgeAppDelegate.swift";
+			"sourceTree" = "<group>";
+		};
+		"93CA5C14D884FF71F63B611C" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "5226E68D7E1B5CCD3CF5C7CF";
 		};
 		"6BAD5550F9512AAC289E3DC2" = {
 			"isa" = "PBXFileReference";
@@ -110,7 +140,10 @@
 			"children" = (
 				"AE65CDDE9CEEFEEB75842E7E",
 				"24082B447A58C4FF09767EB0",
+				"AA8CD307583B5FD1AA71D7C6",
+				"BCB868EE79AEF1CC2FD808F1",
 				"D2B7B488D37F2345D55D6DD5",
+				"5226E68D7E1B5CCD3CF5C7CF",
 				"6BAD5550F9512AAC289E3DC2",
 				"AA2C263208145D0776D049E6",
 				"6229094C876603F9B4DC3A4D",
@@ -172,7 +205,10 @@
 			"files" = (
 				"6A51C2756EF03A404A9DB54F",
 				"7000C944555CB835C740AB82",
+				"2045991E0281BA76CD10E189",
+				"C0273F6AB0DD76A6DD9BFF25",
 				"2A50B4455A619DD5B9D0F101",
+				"93CA5C14D884FF71F63B611C",
 				"0523A87E90D74F8639ED6EFC",
 				"94FC738582F39828F783E9EE",
 				"94DB40E280255E53F091B95E",
@@ -231,8 +267,8 @@
 				"PRODUCT_BUNDLE_IDENTIFIER" = "$(WRISTBRIDGE_APP_BUNDLE_ID)";
 				"INFOPLIST_FILE" = "WristBridge/Info.plist";
 				"GENERATE_INFOPLIST_FILE" = "NO";
-				"MARKETING_VERSION" = "0.1.0";
-				"CURRENT_PROJECT_VERSION" = "1";
+				"MARKETING_VERSION" = "0.2.0";
+				"CURRENT_PROJECT_VERSION" = "5";
 				"LD_RUNPATH_SEARCH_PATHS" = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -261,8 +297,8 @@
 				"PRODUCT_BUNDLE_IDENTIFIER" = "$(WRISTBRIDGE_APP_BUNDLE_ID)";
 				"INFOPLIST_FILE" = "WristBridge/Info.plist";
 				"GENERATE_INFOPLIST_FILE" = "NO";
-				"MARKETING_VERSION" = "0.1.0";
-				"CURRENT_PROJECT_VERSION" = "1";
+				"MARKETING_VERSION" = "0.2.0";
+				"CURRENT_PROJECT_VERSION" = "5";
 				"LD_RUNPATH_SEARCH_PATHS" = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

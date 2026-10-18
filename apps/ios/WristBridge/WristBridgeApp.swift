@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct WristBridgeApp: App {
+    @UIApplicationDelegateAdaptor(BridgeAppDelegate.self) private var appDelegate
     @StateObject private var model: BridgeModel
     @StateObject private var fixtures = NotificationFixtureAdapter()
 
@@ -11,7 +12,7 @@ struct WristBridgeApp: App {
         #else
         let demo = false
         #endif
-        _model = StateObject(wrappedValue: BridgeModel(isDemo: demo))
+        _model = StateObject(wrappedValue: demo ? BridgeModel(isDemo: true) : BridgeRuntime.model)
     }
 
     var body: some Scene {
