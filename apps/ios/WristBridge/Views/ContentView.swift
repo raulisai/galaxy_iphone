@@ -33,6 +33,7 @@ struct ContentView: View {
             .tag(Tab.watch)
             NavigationStack {
                 List {
+                    notificationSummary
                     if !model.isDemo { fixtureSection }
                     observationSection
                     if !observations.journal.entries.isEmpty { historySection }
@@ -65,6 +66,7 @@ struct ContentView: View {
             .tag(Tab.settings)
         }
         .tint(Theme.accent)
+        .tabBarMinimizeBehavior(.onScrollDown)
         .confirmationDialog("¿Quitar la autorización del accesorio?", isPresented: $showForgetConfirmation,
                             titleVisibility: .visible) {
             Button("Quitar accesorio", role: .destructive, action: model.forget)
@@ -222,10 +224,6 @@ struct ContentView: View {
             if let lastBatchID = fixtures.lastBatchID { LabeledContent("ID del último lote", value: lastBatchID) }
             Text(fixtures.message).font(.callout)
             if let warning = fixtures.persistenceWarning { Label(warning, systemImage: "exclamationmark.triangle").foregroundStyle(.orange) }
-            HStack(spacing: 12) {
-                counter("Programación aceptada", fixtures.records.filter { $0.observation == .scheduleAccepted }.count, .blue)
-                counter("Observados en el centro", fixtures.records.filter { $0.observation == .deliveredSnapshot }.count, .orange)
-            }
             Text("Contadores de hasta 1000 registros locales dentro del plazo elegido. Programado no equivale a entregado ni recibido por el reloj.")
                 .font(.footnote).foregroundStyle(.secondary)
             ShareLink(item: fixtures.exportMetadata()) { Label("Compartir registro de pruebas", systemImage: "square.and.arrow.up") }
@@ -236,12 +234,54 @@ struct ContentView: View {
         "run-\(Int(Date().timeIntervalSince1970))-\(UUID().uuidString.prefix(8))"
     }
 
-    private func counter(_ title: String, _ value: Int, _ color: Color) -> some View {
+    private var notificationSummary: some View {
+        let accepted = fixtures.records.filter { $0.observation == .scheduleAccepted }.count
+        let delivered = fixtures.records.filter { $0.observation == .deliveredSnapshot }.count
+        return Section {
+            VStack(alignment: .leading, spacing: 18) {
+                HStack(spacing: 14) {
+                    Image(systemName: "bell.badge.fill")
+                        .font(.system(size: 26, weight: .semibold))
+                        .symbolRenderingMode(.hierarchical)
+                        .symbolEffect(.wiggle, options: .nonRepeating, value: accepted)
+                        .frame(width: 52, height: 52)
+                        .glassEffect(.regular.tint(.white.opacity(0.15)), in: .circle)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Avisos de prueba").font(.title3.weight(.bold))
+                        Text(model.isDemo ? "No disponible en demostración" : fixtures.permission)
+                            .font(.subheadline).opacity(0.85)
+                            .contentTransition(.interpolate)
+                    }
+                }
+                HStack(spacing: 12) {
+                    counter("Programación aceptada", accepted)
+                    counter("Observados en el centro", delivered)
+                }
+            }
+            .foregroundStyle(.white)
+            .padding(18)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(LinearGradient(colors: [Color(red: 1, green: 0.55, blue: 0.2), Color(red: 0.93, green: 0.27, blue: 0.35)],
+                                       startPoint: .topLeading, endPoint: .bottomTrailing),
+                        in: RoundedRectangle(cornerRadius: 26, style: .continuous))
+            .listRowBackground(Color.clear)
+            .listRowInsets(EdgeInsets())
+            .appear(0)
+        } footer: {
+            Text("Programado no equivale a entregado ni recibido por el reloj.")
+        }
+    }
+
+    private func counter(_ title: String, _ value: Int) -> some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text("\(value)").font(.title2.bold().monospacedDigit()).foregroundStyle(color)
-            Text(title).font(.caption).foregroundStyle(.secondary)
+            Text("\(value)").font(.system(size: 34, weight: .semibold, design: .rounded).monospacedDigit())
+                .contentTransition(.numericText(value: Double(value)))
+                .animation(Motion.snappy, value: value)
+            Text(title).font(.caption).opacity(0.85).lineLimit(2, reservesSpace: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(.white.opacity(0.14), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         .accessibilityElement(children: .combine)
     }
 

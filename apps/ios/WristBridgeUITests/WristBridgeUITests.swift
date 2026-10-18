@@ -58,6 +58,22 @@ final class WristBridgeUITests: XCTestCase {
         XCTAssertTrue(text(app, containing: "Sin comprobar").exists)
     }
 
+    func testDemoReconnectionScreenCannotStartWithoutRealWatch() {
+        let app = XCUIApplication()
+        app.launchArguments = ["--demo"]
+        app.launch()
+        app.buttons["selectWatch"].tap()
+        XCTAssertTrue(text(app, containing: "Servicio de configuración encontrado").waitForExistence(timeout: 5))
+        let tile = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Reconexión")).firstMatch
+        for _ in 0..<6 where !tile.isHittable { app.swipeUp() }
+        tile.tap()
+        let start = app.buttons["startRecoveryCampaign"]
+        XCTAssertTrue(start.waitForExistence(timeout: 5))
+        // Demo never runs physical trials, even with a simulated service.
+        XCTAssertFalse(start.isEnabled)
+        XCTAssertTrue(text(app, containing: "de 20 intentos").exists)
+    }
+
     func testManualObservationDoesNotPromoteAutomaticReadiness() {
         let app = XCUIApplication()
         app.launch()
@@ -72,7 +88,10 @@ final class WristBridgeUITests: XCTestCase {
         let feedback = app.staticTexts["Observación guardada como reporte tuyo; no es una comprobación automática del reloj."]
         for _ in 0..<3 where !feedback.exists { app.swipeUp() }
         XCTAssertTrue(feedback.waitForExistence(timeout: 5))
-        app.tabBars.buttons["Reloj"].tap()
+        // The tab bar minimizes while scrolling down; scrolling up restores it.
+        let watchTab = app.tabBars.buttons["Reloj"]
+        for _ in 0..<4 where !watchTab.exists { app.swipeDown() }
+        watchTab.tap()
         XCTAssertTrue(text(app, containing: "Sin comprobar").exists)
     }
 

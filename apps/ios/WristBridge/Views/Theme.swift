@@ -82,7 +82,11 @@ struct IconRow<Trailing: View>: View {
             IconTile(symbol: symbol, color: color)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                if let subtitle { Text(subtitle).font(.footnote).foregroundStyle(.secondary) }
+                if let subtitle {
+                    Text(subtitle).font(.footnote).foregroundStyle(.secondary)
+                        .contentTransition(.interpolate)
+                        .animation(Motion.snappy, value: subtitle)
+                }
             }
             Spacer(minLength: 8)
             trailing
@@ -115,13 +119,26 @@ struct Card<Content: View>: View {
 struct StatusPill: View {
     let text: String
     let tone: LinkTone
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var body: some View {
-        HStack(spacing: 6) {
-            Circle().fill(tone.color).frame(width: 8, height: 8)
+        HStack(spacing: 8) {
+            ZStack {
+                if tone == .working && !reduceMotion {
+                    Circle().fill(tone.glow)
+                        .phaseAnimator([false, true]) { view, phase in
+                            view.scaleEffect(phase ? 2.6 : 1).opacity(phase ? 0 : 0.8)
+                        } animation: { _ in .easeOut(duration: 1.1) }
+                }
+                Circle().fill(tone.glow)
+            }
+            .frame(width: 8, height: 8)
             Text(text).font(.subheadline.weight(.semibold))
+                .contentTransition(.interpolate)
         }
-        .padding(.horizontal, 14).padding(.vertical, 8)
+        .padding(.horizontal, 16).padding(.vertical, 9)
         .foregroundStyle(.white)
-        .glassEffect(.regular.tint(tone.color.opacity(0.25)), in: .capsule)
+        .glassEffect(.regular.tint(tone.glow.opacity(0.22)), in: .capsule)
+        .animation(Motion.snappy, value: text)
+        .animation(Motion.snappy, value: tone)
     }
 }

@@ -23,9 +23,9 @@ App iPhone (Swift) que configura el accesorio y genera avisos de prueba para un 
 | Área | Estado | Evidencia |
 |---|---|---|
 | Candidato firmado instalado en iPhone | 0.2.1 (6): PASS instalación y servicio restaurado | `evidence/apple-0.2.1/apple/` |
-| Código 0.3.0 (7) | Ensayo de reconexión de 20 intentos (commit `cef2c29`) + rediseño UI estilo Galaxy Wearable/iOS 26 (sin commit) | §4 |
+| Código 0.3.0 (7) | Ensayo de reconexión (`cef2c29`), rediseño UI (`71c32b6`) y pase de animaciones (sin commit) | §4 |
 | Pruebas del paquete Swift | PASS, 23 pruebas (2026-10-18) | `scripts/apple/test-package.sh` |
-| Compilación + UI tests simulador | PASS build; PASS 5/5 UI tests en iPhone 17 Pro iOS 26.2 (`WRISTBRIDGE_TEST_DESTINATION=id=<sim>`) | 2026-10-18 |
+| Compilación + UI tests simulador | PASS build; PASS 6/6 UI tests en iPhone 17 Pro iOS 26.2 (`WRISTBRIDGE_TEST_DESTINATION=id=<sim>`) | 2026-10-18 |
 | 0.3.0 en iPhone físico | **NOT_RUN** (no firmado ni instalado) | — |
 | Campaña P2 20 ciclos / 19-de-20 en 30 s | **NOT_RUN** física | `test/hil/apple/p2-recovery.md` |
 | Gates G1/G2 y campaña conjunta | **PENDIENTES** (necesitan reloj + Windows) | `docs/apple/iphone-phases.md` |
@@ -36,6 +36,7 @@ Fases P1–P8: ver tabla en `docs/apple/iphone-phases.md` (no se duplica aquí).
 ## 4. Registro de trabajo (más reciente arriba)
 | Fecha | Agente | Tarea | Estado | Notas / qué falta |
 |---|---|---|---|---|
+| 2026-10-18 | Claude | Animaciones: `Views/Motion.swift` (resorte, aparición escalonada, profundidad al desplazar, fondo MeshGradient vivo), reloj con brillo que respira, marcas de segundero, radar al conectar, onda + háptica al verificar e inclinación 3D; acciones con morph de vidrio y efectos de símbolo; transiciones zoom; anillo y 20 puntos en Reconexión; resumen animado en Notificaciones; barra de pestañas que se minimiza | HECHO (sin commit) | Revisado en simulador claro/oscuro en demo. Todo efecto continuo se congela con Reducir movimiento (no verificado visualmente). Falta iPhone físico y medir batería/CPU del fondo animado. |
 | 2026-10-18 | Claude | Rediseño UI: pestañas Reloj/Notificaciones/Ajustes, reloj redondo vectorial con estado, acciones rápidas en vidrio (Liquid Glass), tarjetas de funciones, hoja "Próximamente" bloqueada (esferas, salud, buscar, música) | HECHO (sin commit) | Revisado en simulador en modo demo. Falta verlo en iPhone físico y modo oscuro. Funciones bloqueadas NO se simulan: esperan contrato/gates. |
 | 2026-10-18 | Claude | Terminar ensayo de reconexión 0.3.0 + crear SEED | HECHO (código y docs) | Revisado: compila y pasa pruebas. Falta firmar/instalar 0.3.0 y ejecutarlo en el iPhone físico (requiere usuario con iPhone desbloqueado). Sin commit. |
 | 2026-10-18 | Codex | Ensayo de reconexión: `RecoveryCampaign`, repositorio, controlador, sección UI, pruebas, integración en `BridgeModel`/`ContentView`, bump 0.3.0 | PARCIAL → cerrado arriba | Dejó sin commit ni docs ni evidencia. |
@@ -45,7 +46,7 @@ Fases P1–P8: ver tabla en `docs/apple/iphone-phases.md` (no se duplica aquí).
 1. **(usuario + iPhone)** `bash scripts/apple/prepare-release.sh /tmp/WristBridge-iPhone-0.3.0` y `python3 scripts/apple/install-candidate.py /tmp/WristBridge-iPhone-0.3.0 --launch`; ejecutar el ensayo de 20 reconexiones y compartir el informe. Registrar PASS/FAIL en `evidence/apple-0.3.0/apple/run.json` (carpeta aún inexistente; no inventar resultados).
 2. Actualizar `docs/provenance/apple-inventory.json` y `evidence/**` al generar el candidato 0.3.0 (hoy menciona 0.2.1).
 3. Quitar la entrada de `README.md` "Candidato actual 0.2.1" cuando 0.3.0 se instale y pruebe; hasta entonces dice 0.2.1 por ser lo verificado en dispositivo.
-4. P3 local: revisar modo oscuro y Dynamic Type del rediseño; añadir prueba UI de la pantalla Reconexión. P8 empaquetado autorizado.
+4. P3 local: revisar Dynamic Type y Reducir movimiento del rediseño; medir CPU del fondo `LivingBackground` en iPhone físico. P8 empaquetado autorizado.
 5. Esperar a Windows: wire format, seguridad, UUID/propiedades finales, nombre anunciado `WristBridge` (propuesta Apple pendiente de confirmar).
 6. Cuando exista el canal seguro: convertir las tarjetas "Próximamente" de `Views/HomeView.swift` en funciones reales, una por gate aprobado.
 
@@ -58,7 +59,7 @@ Fases P1–P8: ver tabla en `docs/apple/iphone-phases.md` (no se duplica aquí).
 - Sin identificadores personales, certificados, tokens ni contenido real de notificaciones en Git.
 
 ## 7. Mapa mínimo del repo
-- `apps/ios/` app SwiftUI (`Views/HomeView.swift` pestaña Reloj, `WatchHeroView.swift` reloj dibujado, `Theme.swift` estilos y estado visual) + proyecto Xcode generado (`scripts/apple/generate_project.py`).
+- `apps/ios/` app SwiftUI (`Views/HomeView.swift` pestaña Reloj, `WatchHeroView.swift` reloj dibujado, `Theme.swift` estilos y estado visual, `Motion.swift` animaciones compartidas) + proyecto Xcode generado (`scripts/apple/generate_project.py`).
 - `packages/WristBridgeProtocol/` modelos y repositorios Swift con pruebas.
 - `scripts/apple/` check, test-package, prepare-release, install-candidate, validate_structure.
 - `docs/apple/` handoffs y revisión · `test/hil/apple/` guías de pruebas físicas · `evidence/` resultados.
