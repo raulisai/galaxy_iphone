@@ -27,6 +27,7 @@ struct ContentView: View {
             NavigationStack {
                 List {
                     if !model.isDemo { fixtureSection }
+                    RecoveryCampaignSection(bridge: model, controller: model.recoveryCampaign)
                     observationSection
                     if !observations.journal.entries.isEmpty { historySection }
                 }
@@ -55,16 +56,18 @@ struct ContentView: View {
             }
             Button("Cancelar", role: .cancel) {}
         } message: {
-            Text("Borra observaciones, registros de prueba y diagnóstico. Detiene la configuración y restablece sus ajustes. Solicita retirar los avisos sintéticos de esta app. La autorización del accesorio se quita por separado.")
+            Text("Borra observaciones, ensayos de reconexión, registros de prueba y diagnóstico. Detiene la configuración y restablece sus ajustes. Solicita retirar los avisos sintéticos de esta app. La autorización del accesorio se quita por separado.")
         }
         .task {
             if !model.isDemo {
                 await fixtures.refreshPermission()
                 fixtures.applyRetention(days: model.retentionDays)
                 observations.applyRetention(days: model.retentionDays)
+                model.recoveryCampaign.applyRetention(days: model.retentionDays)
             }
         }
         .onChange(of: scenePhase) { _, phase in
+            if phase != .active { model.recoveryCampaign.cancel(interrupted: true) }
             if phase == .active && !model.isDemo {
                 model.refreshAuthorization()
                 Task { await fixtures.refreshPermission() }
@@ -161,6 +164,7 @@ struct ContentView: View {
             Picker("Conservar registros", selection: Binding(get: { model.retentionDays }, set: { days in
                 model.setRetentionDays(days)
                 observations.applyRetention(days: days)
+                model.recoveryCampaign.applyRetention(days: days)
                 fixtures.applyRetention(days: days)
             })) {
                 ForEach([7, 30, 90], id: \.self) { Text("\($0) días").tag($0) }

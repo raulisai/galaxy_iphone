@@ -1,0 +1,16 @@
+# iPhone 0.3.0 (7) · ensayo de reconexión
+
+18 de octubre de 2026 · `development_codex` · sin commit. Estado vivo del proyecto: [`SEED.md`](../../SEED.md).
+
+## Cambio
+Sección «Ensayo de reconexión» en Conexión: 20 desconexiones/reconexiones del canal de configuración, máximo 30 s por intento, con la app en primer plano y servicio ya verificado. Se persiste solo el último ensayo (`Application Support/WristBridge/recovery-campaign.json`), con retención 7/30/90 días y borrado desde Privacidad. Salir de la app, perder autorización o radio, o cambiar de accesorio lo interrumpe; un proceso cerrado a mitad se marca interrumpido y no se reanuda.
+
+Código: `RecoveryCampaign` y `RecoveryCampaignRepository` (paquete), `RecoveryCampaignController`, `RecoveryCampaignSection`, enganches en `BridgeModel`/`ContentView`.
+
+## Límites
+Mide solo el servicio propio. El informe exportado declara `ancsVerified=false` y `jointGateApproved=false`; no aprueba entrega de avisos, P2 ni gates. Los 20 ciclos y las 24/72 h físicas siguen NOT_RUN.
+
+## Validación (2026-10-18)
+- `bash scripts/apple/test-package.sh`: PASS, 23 pruebas.
+- `bash scripts/apple/check.sh`: build de simulador PASS; UI tests NOT_RUN (sin `WRISTBRIDGE_TEST_DESTINATION`).
+- iPhone físico con 0.3.0: NOT_RUN (no firmado ni instalado).

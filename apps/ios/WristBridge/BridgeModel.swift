@@ -22,6 +22,21 @@ final class BridgeModel: ObservableObject {
     private var exercisedLabReconnect = false
     #endif
     private let settingsStore: LocalSettingsStore?
+    private var campaignController: RecoveryCampaignController?
+    var recoveryCampaign: RecoveryCampaignController {
+        if let campaignController { return campaignController }
+        let controller = RecoveryCampaignController(bridge: self)
+        campaignController = controller
+        return controller
+    }
+
+    func beginRecoveryProbe(accessory: UUID) -> Bool {
+        guard !isDemo, !stopped, state.authorization == .authorized, authorizedID == accessory else { return false }
+        transport.stop()
+        transport.authorizeAndConnect(accessory)
+        return true
+    }
+    func stopRecoveryProbe() { transport.stop() }
 
     init(isDemo: Bool = false, preferences: UserDefaults = .standard) {
         self.isDemo = isDemo
@@ -38,6 +53,7 @@ final class BridgeModel: ObservableObject {
         setup.onAvailability = { [weak self] in self?.pickerAvailable = $0 }
         setup.onAuthorized = { [weak self] identifier in
             guard let self else { return }
+            if self.authorizedID != identifier { self.campaignController?.cancel(interrupted: true) }
             self.authorizedID = identifier
             if !self.stopped { self.transport.authorizeAndConnect(identifier) }
             else { self.transport.rejectRestoration() }
@@ -66,7 +82,10 @@ final class BridgeModel: ObservableObject {
     }
 
     func refreshAuthorization() { if !isDemo { setup.activate() } }
-    func selectAuthorized(_ identifier: UUID) { if !isDemo { setup.selectAuthorized(identifier) } }
+    func selectAuthorized(_ identifier: UUID) {
+        campaignController?.cancel(interrupted: true)
+        if !isDemo { setup.selectAuthorized(identifier) }
+    }
 
     func selectWatch() {
         guard pickerAvailable else { return }
@@ -81,6 +100,7 @@ final class BridgeModel: ObservableObject {
     }
 
     func reconnect() {
+        campaignController?.cancel()
         stopped = false
         settingsStore?.update(stopped: false)
         if isDemo { selectWatch() }
@@ -89,6 +109,7 @@ final class BridgeModel: ObservableObject {
     }
 
     func stop() {
+        campaignController?.cancel()
         stopped = true
         settingsStore?.update(stopped: true)
         transport.stop()
@@ -97,6 +118,7 @@ final class BridgeModel: ObservableObject {
     }
 
     func forget() {
+        campaignController?.cancel(interrupted: true)
         if isDemo { apply(.authorizationRemoved) }
         else {
             stopped = true
@@ -121,6 +143,7 @@ final class BridgeModel: ObservableObject {
         retentionDays = 30
         settingsWarning = nil
         transport.clearDiagnostics()
+        campaignController?.delete()
     }
 
     func setAutomaticRecovery(_ enabled: Bool) {
@@ -132,6 +155,7 @@ final class BridgeModel: ObservableObject {
     private func apply(_ event: BridgeEvent) {
         state.apply(event)
         lastCheck = Date()
+        campaignController?.handle(event)
         #if DEBUG
         // Explicit, single-cycle physical regression of stop -> reconnect while
         // cancellation is pending. Never enabled by the normal UI or Release.
