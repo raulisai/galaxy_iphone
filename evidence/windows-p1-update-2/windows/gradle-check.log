@@ -1,0 +1,114 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.8.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Shared read-only dependency cache is an incubating feature.
+> Task :core:protocol-kotlin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:protocol-kotlin:compileKotlin FROM-CACHE
+> Task :core:protocol-kotlin:compileJava NO-SOURCE
+> Task :core:protocol-kotlin:processResources NO-SOURCE
+> Task :core:protocol-kotlin:classes UP-TO-DATE
+> Task :core:protocol-kotlin:jar
+> Task :core:protocol-kotlin:compileTestKotlin FROM-CACHE
+> Task :core:protocol-kotlin:compileTestJava NO-SOURCE
+> Task :core:protocol-kotlin:processTestResources NO-SOURCE
+> Task :core:protocol-kotlin:testClasses UP-TO-DATE
+> Task :core:protocol-kotlin:test FROM-CACHE
+> Task :core:notification-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:notification-domain:compileKotlin FROM-CACHE
+> Task :core:notification-domain:compileJava NO-SOURCE
+> Task :core:notification-domain:processResources NO-SOURCE
+> Task :core:notification-domain:classes UP-TO-DATE
+> Task :core:notification-domain:jar
+> Task :core:notification-domain:compileTestKotlin FROM-CACHE
+> Task :core:notification-domain:compileTestJava NO-SOURCE
+> Task :core:notification-domain:processTestResources NO-SOURCE
+> Task :core:notification-domain:testClasses UP-TO-DATE
+> Task :core:notification-domain:test FROM-CACHE
+> Task :core:assistant-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:assistant-domain:compileKotlin FROM-CACHE
+> Task :core:assistant-domain:compileJava NO-SOURCE
+> Task :core:assistant-domain:processResources NO-SOURCE
+> Task :core:assistant-domain:classes UP-TO-DATE
+> Task :core:assistant-domain:jar
+> Task :core:assistant-domain:compileTestKotlin FROM-CACHE
+> Task :core:assistant-domain:compileTestJava NO-SOURCE
+> Task :core:assistant-domain:processTestResources NO-SOURCE
+> Task :core:assistant-domain:testClasses UP-TO-DATE
+> Task :core:assistant-domain:test FROM-CACHE
+> Task :apps:watch:preBuild UP-TO-DATE
+> Task :apps:watch:preDebugBuild UP-TO-DATE
+> Task :apps:watch:generateDebugBuildConfig FROM-CACHE
+> Task :apps:watch:generateDebugResources FROM-CACHE
+> Task :apps:watch:packageDebugResources FROM-CACHE
+> Task :apps:watch:processDebugNavigationResources FROM-CACHE
+> Task :apps:watch:parseDebugLocalResources FROM-CACHE
+> Task :apps:watch:generateDebugRFile FROM-CACHE
+> Task :apps:watch:compileDebugKotlin FROM-CACHE
+> Task :apps:watch:javaPreCompileDebug FROM-CACHE
+> Task :apps:watch:compileDebugJavaWithJavac
+> Task :apps:watch:mapDebugSourceSetPaths
+> Task :apps:watch:compileDebugNavigationResources FROM-CACHE
+> Task :apps:watch:checkDebugAarMetadata
+> Task :apps:watch:mergeDebugResources FROM-CACHE
+> Task :apps:watch:createDebugCompatibleScreenManifests
+> Task :apps:watch:extractDeepLinksDebug FROM-CACHE
+> Task :apps:watch:processDebugMainManifest FROM-CACHE
+> Task :apps:watch:processDebugManifest FROM-CACHE
+> Task :apps:watch:processDebugManifestForPackage FROM-CACHE
+> Task :apps:watch:preDebugAndroidTestBuild SKIPPED
+> Task :apps:watch:extractProguardFiles
+> Task :apps:watch:generateDebugLintReportModel
+> Task :apps:watch:preDebugUnitTestBuild UP-TO-DATE
+> Task :apps:watch:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :apps:watch:generateDebugAssets UP-TO-DATE
+> Task :apps:watch:mergeDebugAssets
+> Task :apps:watch:compressDebugAssets FROM-CACHE
+> Task :apps:watch:generateDebugGlobalSynthetics FROM-CACHE
+> Task :apps:watch:processDebugJavaRes
+> Task :apps:watch:checkDebugDuplicateClasses
+> Task :apps:watch:desugarDebugFileDependencies FROM-CACHE
+> Task :apps:watch:mergeExtDexDebug FROM-CACHE
+> Task :apps:watch:mergeLibDexDebug FROM-CACHE
+> Task :apps:watch:mergeDebugJniLibFolders
+> Task :apps:watch:mergeDebugNativeLibs
+> Task :apps:watch:validateSigningDebug
+> Task :apps:watch:writeDebugAppMetadata
+> Task :apps:watch:writeDebugSigningConfigVersions
+> Task :apps:watch:mergeDebugJavaResource
+> Task :apps:watch:stripDebugDebugSymbols
+> Task :apps:watch:processDebugResources
+> Task :apps:watch:lintAnalyzeDebug
+
+> Task :apps:watch:processDebugResources FAILED
+vaResource
+> Task :apps:watch:dexBuilderDebug
+> Task :apps:watch:mergeExtDexDebug FROM-CACHE
+> Task :apps:watch:mergeLibDexDebug FROM-CACHE
+> Task :apps:watch:mergeDebugJniLibFolders
+> Task :apps:watch:mergeProjectDexDebug
+> Task :apps:watch:mergeDebugNativeLibs
+> Task :apps:watch:validateSigningDebug
+> Task :apps:watch:writeDebugAppMetadata
+> Task :apps:watch:writeDebugSigningConfigVersions
+> Task :apps:watch:stripDebugDebugSymbols
+> Task :apps:watch:packageDebug
+> Task :apps:watch:createDebugApkListingFileRedirect
+> Task :apps:watch:assembleDebug
+> Task :apps:watch:lintAnalyzeDebugUnitTest
+> Task :apps:watch:lintAnalyzeDebugAndroidTest
+
+> Task :apps:watch:lintReportDebug
+Wrote HTML report to file:///<user-home>/AppData/Local/Temp/wristbridge-update2-sq2o8fme/apps/watch/reports/lint-results-debug.html
+Wrote SARIF report to file:///<user-home>/AppData/Local/Temp/wristbridge-update2-sq2o8fme/apps/watch/reports/lint-results-debug.sarif
+
+> Task :apps:watch:lintDebug
+
+[Incubating] Problems report is available at: file:///<user-home>/AppData/Local/Temp/wristbridge-update2-sq2o8fme/root/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.8.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1m 34s
+60 actionable tasks: 30 executed, 30 from cache

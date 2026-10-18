@@ -5,9 +5,23 @@
     <string name="service_text">Escuchando avisos del iPhone</string>
     <string name="channel_service">Estado del puente</string>
     <string name="channel_alerts">Avisos del iPhone</string>
+    <string name="channel_calls">Llamadas del iPhone</string>
     <string name="channel_quiet">Avisos del iPhone (silenciosos)</string>
+    <string name="channel_media">Música del iPhone</string>
     <string name="card_hidden">Contenido oculto</string>
     <string name="card_details_unavailable">Detalles no disponibles</string>
+    <!-- Fallbacks only: card buttons use the label the iPhone provides for each ANCS action. -->
+    <string name="card_action_positive">Aceptar</string>
+    <string name="card_action_negative">Descartar</string>
+    <string name="card_action_requested">Solicitud enviada al iPhone</string>
+    <string name="card_action_failed">No se pudo completar en el iPhone</string>
+    <string name="card_action_unavailable">Acción ya no disponible</string>
+    <string name="media_previous">Anterior</string>
+    <string name="media_play">Reproducir</string>
+    <string name="media_pause">Pausar</string>
+    <string name="media_next">Siguiente</string>
+    <string name="media_playing">Reproduciendo</string>
+    <string name="media_paused">En pausa</string>
     <string name="permissions_needed">Se necesitan permisos de Bluetooth y notificaciones</string>
     <string name="grant_permissions">Conceder permisos</string>
     <string name="start_bridge">Iniciar puente</string>

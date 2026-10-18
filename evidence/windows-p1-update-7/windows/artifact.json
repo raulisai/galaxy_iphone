@@ -1,0 +1,12 @@
+{
+  "applicationId": "dev.wristbridge.watch",
+  "versionName": "0.3.1-lab",
+  "versionCode": 8,
+  "apk": "build/releases/wristbridge-watch-0.3.1-lab-8.apk",
+  "sha256": "3adda21dc6ae0999f193ecea0deb4955d25a8d99f45bbf61755f74207558012b",
+  "bytes": 35804990,
+  "build": "PASS", "lint": "PASS", "jvmTests": "PASS (70 tests)",
+  "installation": "PASS (installedSha256Matches true); bridge auto-resumed, ANCS and AMS ready",
+  "physicalChecks": "NOT_RUN: native CallStyle notification, tap opens call screen, crown volume, layout on 160/192 dp",
+  "G1": "NOT_RUN"
+}

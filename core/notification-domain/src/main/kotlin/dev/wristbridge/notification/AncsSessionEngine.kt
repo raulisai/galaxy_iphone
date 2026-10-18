@@ -1,5 +1,6 @@
 package dev.wristbridge.notification
 
+import dev.wristbridge.protocol.ancs.ActionId
 import dev.wristbridge.protocol.ancs.AncsCommands
 import dev.wristbridge.protocol.ancs.AncsError
 import dev.wristbridge.protocol.ancs.AncsResponse
@@ -31,10 +32,19 @@ class AncsSessionEngine(
     private val limits: AncsLimits = AncsLimits(),
     private val writeTimeoutNanos: Long = 5_000_000_000L,
     private val responseTimeoutNanos: Long = 10_000_000_000L,
+    /**
+     * Last generation used by an earlier engine (previous service instance or process). Generations must keep
+     * growing: cards and notification tags of older engines outlive them, and only a higher generation's
+     * [SessionEffect.RemoveCardsBefore] retires them.
+     */
+    initialGeneration: Long = 0,
 ) {
     private sealed interface Fetch {
         data class Notification(val uid: AncsUid) : Fetch
         data class App(val appIdentifier: String) : Fetch
+
+        /** PerformNotificationAction: completes on the confirmed write; ANCS sends no Data Source reply. */
+        data class Action(val uid: AncsUid, val action: ActionId) : Fetch
     }
 
     private class Entry(
@@ -49,14 +59,14 @@ class AncsSessionEngine(
     private class Transaction(
         val id: Long,
         val fetch: Fetch,
-        val expected: ExpectedResponse,
+        val expected: ExpectedResponse?,
         val version: Int,
         var phase: Phase,
         var deadline: Long,
         var cancelled: Boolean = false,
     )
 
-    var generation: Long = 0
+    var generation: Long = initialGeneration
         private set
     var sourceDeviceId: String? = null
         private set
@@ -118,10 +128,29 @@ class AncsSessionEngine(
         return out
     }
 
+    /**
+     * P2-07: requests the iPhone to perform the positive or negative action of a visible card. Only
+     * actions the iPhone advertised for that notification (flag plus label) are accepted. Success means
+     * "requested": ANCS confirms the write, not the final effect (Removed/Modified reports that later).
+     */
+    fun performAction(key: NotificationKey, action: ActionId): List<SessionEffect> {
+        val unavailable = listOf(SessionEffect.ActionResult(key, action, ActionStatus.UNAVAILABLE))
+        if (!isCurrent(key.sessionGeneration)) return unavailable
+        val entry = entries[key.uid.value] ?: return unavailable
+        if (!entry.offers(action)) return unavailable
+        val fetch = Fetch.Action(key.uid, action)
+        if (fetch in queue) return emptyList()
+        // Ahead of attribute fetches: a call must be answered before its backlog is read.
+        queue.addFirst(fetch)
+        val out = mutableListOf<SessionEffect>()
+        pump(out)
+        return out
+    }
+
     fun onDataSource(generation: Long, bytes: ByteArray): List<SessionEffect> {
         if (!isCurrent(generation)) return emptyList()
         val t = tx
-        if (t == null) {
+        if (t == null || t.expected == null) {
             counters = counters.copy(unsolicitedData = counters.unsolicitedData + 1)
             return emptyList()
         }
@@ -142,7 +171,7 @@ class AncsSessionEngine(
                 is AssemblyFailure.AppMismatch, AssemblyFailure.Unsolicited -> {
                     // Late bytes of an expired transaction (U10): drop them and keep waiting for ours.
                     counters = counters.copy(discardedResponses = counters.discardedResponses + 1)
-                    assembler.begin(t.expected)
+                    t.expected?.let(assembler::begin)
                 }
                 is AssemblyFailure.UnexpectedAttribute, is AssemblyFailure.ResponseTooLarge -> {
                     fail(t, out)
@@ -160,7 +189,12 @@ class AncsSessionEngine(
         if (t == null || t.id != transactionId || t.phase != Phase.WRITING) return emptyList()
         val out = mutableListOf<SessionEffect>()
         when (outcome) {
-            GattOutcome.Success -> {
+            GattOutcome.Success -> if (t.fetch is Fetch.Action) {
+                tx = null
+                counters = counters.copy(actionsRequested = counters.actionsRequested + 1)
+                out += SessionEffect.ActionResult(key(t.fetch.uid), t.fetch.action, ActionStatus.REQUESTED)
+                pump(out)
+            } else {
                 // A confirmed write is not an ANCS response (U15): wait for Data Source.
                 t.phase = Phase.AWAITING_DATA
                 t.deadline = clock.nowNanos() + responseTimeoutNanos
@@ -231,6 +265,7 @@ class AncsSessionEngine(
         counters = counters.copy(removed = counters.removed + 1)
         val entry = entries.remove(uid.value) ?: return
         queue.remove(Fetch.Notification(uid))
+        queue.removeAll { it is Fetch.Action && it.uid == uid }
         tx?.let { if (it.fetch == Fetch.Notification(uid)) it.cancelled = true }
         if (entry.card != null) {
             counters = counters.copy(cardsRemoved = counters.cardsRemoved + 1)
@@ -241,6 +276,19 @@ class AncsSessionEngine(
     private fun pump(out: MutableList<SessionEffect>) {
         while (tx == null && active) {
             val fetch = queue.removeFirstOrNull() ?: return
+            if (fetch is Fetch.Action) {
+                val entry = entries[fetch.uid.value]
+                if (entry == null || !entry.offers(fetch.action)) {
+                    out += SessionEffect.ActionResult(key(fetch.uid), fetch.action, ActionStatus.UNAVAILABLE)
+                    continue
+                }
+                tx = Transaction(
+                    id = nextTxId++, fetch = fetch, expected = null, version = entry.version,
+                    phase = Phase.WRITING, deadline = clock.nowNanos() + writeTimeoutNanos,
+                )
+                out += SessionEffect.WriteControlPoint(generation, tx!!.id, AncsCommands.performNotificationAction(fetch.uid, fetch.action))
+                continue
+            }
             val (bytes, expected, version) = when (fetch) {
                 is Fetch.Notification -> {
                     val entry = entries[fetch.uid.value] ?: continue
@@ -255,6 +303,7 @@ class AncsSessionEngine(
                     ExpectedResponse.app(fetch.appIdentifier, listOf(AppAttributeId.DISPLAY_NAME)),
                     0,
                 )
+                is Fetch.Action -> continue
             }
             val t = Transaction(
                 id = nextTxId++, fetch = fetch, expected = expected, version = version,
@@ -308,6 +357,18 @@ class AncsSessionEngine(
                 val entry = entries[f.uid.value] ?: return
                 if (!t.cancelled && entry.card == null) postFallback(entry, out)
             }
+            is Fetch.Action -> {
+                counters = counters.copy(actionsFailed = counters.actionsFailed + 1)
+                out += SessionEffect.ActionResult(key(f.uid), f.action, ActionStatus.FAILED)
+            }
+        }
+    }
+
+    private fun Entry.offers(action: ActionId): Boolean {
+        val c = card ?: return false
+        return when (action) {
+            ActionId.POSITIVE -> c.positiveActionLabel != null
+            ActionId.NEGATIVE -> c.negativeActionLabel != null
         }
     }
 
