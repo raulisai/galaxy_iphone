@@ -1,5 +1,10 @@
 package dev.wristbridge.watch.ui
 
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.paneTitle
+import androidx.compose.ui.semantics.stateDescription
+import dev.wristbridge.notification.AccessibilityText
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -50,6 +55,7 @@ internal fun Tappable(
     pressed: Color = WbColors.CardHigh,
     enabled: Boolean = true,
     description: String? = null,
+    stateDescription: String? = null,
     contentAlignment: Alignment = Alignment.Center,
     content: @Composable BoxScope.() -> Unit,
 ) {
@@ -67,7 +73,14 @@ internal fun Tappable(
                 role = Role.Button,
                 onClick = onClick,
             )
-            .then(if (description != null) Modifier.semantics { contentDescription = description } else Modifier),
+            .then(
+                if (description != null || stateDescription != null) {
+                    Modifier.semantics {
+                        if (description != null) contentDescription = description
+                        if (stateDescription != null) this.stateDescription = stateDescription
+                    }
+                } else Modifier,
+            ),
         contentAlignment = contentAlignment,
         content = content,
     )
@@ -77,7 +90,7 @@ internal fun Tappable(
 @Composable
 internal fun IconBadge(kind: GlyphKind, accent: Color, diameter: androidx.compose.ui.unit.Dp) {
     Box(
-        modifier = Modifier.size(diameter).clip(CircleShape).background(accent),
+        modifier = Modifier.size(diameter).clip(CircleShape).background(accent).decorative(),
         contentAlignment = Alignment.Center,
     ) {
         Glyph(kind, Color.White, Modifier.size(diameter * 0.56f))
@@ -87,8 +100,9 @@ internal fun IconBadge(kind: GlyphKind, accent: Color, diameter: androidx.compos
 /** Circle with a text monogram (notification app badge). */
 @Composable
 internal fun MonogramBadge(text: String, accent: Color, diameter: androidx.compose.ui.unit.Dp) {
+    // The card already reads the app name; the 1-3 letter monogram would only be spelled out noise.
     Box(
-        modifier = Modifier.size(diameter).clip(CircleShape).background(accent),
+        modifier = Modifier.size(diameter).clip(CircleShape).background(accent).decorative(),
         contentAlignment = Alignment.Center,
     ) {
         WbText(
@@ -104,7 +118,8 @@ internal fun MonogramBadge(text: String, accent: Color, diameter: androidx.compo
 
 @Composable
 internal fun StatusDot(color: Color, diameter: androidx.compose.ui.unit.Dp) {
-    Box(Modifier.size(diameter).clip(CircleShape).background(color))
+    // Colour is never the only carrier: every dot sits next to a sentence that states the same status.
+    Box(Modifier.size(diameter).clip(CircleShape).background(color).decorative())
 }
 
 /** Hub row of the Home screen: icon badge, title, secondary line and optional trailing content. */
@@ -123,11 +138,17 @@ internal fun Tile(
     titleColor: Color = WbColors.Label,
     subtitleColor: Color = WbColors.Secondary,
     trailing: (@Composable () -> Unit)? = null,
+    /** Replaces the merged title + subtitle reading (for example a status sentence with a tone prefix). */
+    description: String? = null,
+    /** True when the subtitle is a status that changes over time: announced politely. */
+    liveStatus: Boolean = false,
 ) {
     val m = LocalMetrics.current
     Tappable(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth().heightIn(min = m.dp(60)),
+        modifier = modifier.fillMaxWidth().heightIn(min = m.dp(60).atLeastTouchTarget())
+            .then(if (liveStatus) Modifier.politeLiveRegion() else Modifier),
+        description = description,
         shape = RoundedCornerShape(m.dp(26)),
         container = container,
         pressed = pressed,
@@ -165,7 +186,8 @@ internal fun CountBadge(count: Int) {
     val m = LocalMetrics.current
     Box(
         modifier = Modifier.sizeIn(minWidth = m.dp(22), minHeight = m.dp(22)).clip(CircleShape).background(WbColors.Red)
-            .padding(horizontal = m.dp(5)),
+            .padding(horizontal = m.dp(5))
+            .clearAndSetSemantics { contentDescription = AccessibilityText.describeCount(count) },
         contentAlignment = Alignment.Center,
     ) {
         WbText(
@@ -189,15 +211,18 @@ internal fun Pill(
     textColor: Color = WbColors.Label,
     enabled: Boolean = true,
     maxLines: Int = 2,
+    /** State of a button that behaves as a toggle, e.g. AccessibilityText.ON / OFF. */
+    stateDescription: String? = null,
 ) {
     val m = LocalMetrics.current
     Tappable(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth().heightIn(min = m.dp(48)),
+        modifier = modifier.fillMaxWidth().heightIn(min = m.dp(48).atLeastTouchTarget()),
         shape = RoundedCornerShape(percent = 50),
         container = container,
         pressed = pressed,
         enabled = enabled,
+        stateDescription = stateDescription,
     ) {
         WbText(
             text = label,
@@ -226,23 +251,25 @@ internal fun CircleButton(
 ) {
     Tappable(
         onClick = onClick,
-        modifier = modifier.size(diameter),
+        modifier = modifier.size(diameter.atLeastTouchTarget()),
         shape = CircleShape,
         container = container,
         pressed = pressed,
         enabled = enabled,
         description = description,
     ) {
-        Glyph(kind, tint, Modifier.size(diameter * 0.5f))
+        Glyph(kind, tint, Modifier.size(diameter.atLeastTouchTarget() * 0.5f))
     }
 }
 
 /** Screen title (big, bold) with an optional grey caption below. */
 @Composable
-internal fun ScreenTitle(title: String, caption: String? = null) {
+internal fun ScreenTitle(title: String, caption: String? = null, liveCaption: Boolean = false) {
     val m = LocalMetrics.current
     Column(
-        modifier = Modifier.fillMaxWidth().padding(bottom = m.dp(2)),
+        modifier = Modifier.fillMaxWidth().padding(bottom = m.dp(2))
+            .semantics(mergeDescendants = true) { heading() }
+            .then(if (liveCaption) Modifier.politeLiveRegion() else Modifier),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         WbText(
@@ -274,11 +301,12 @@ internal fun Caption(text: String, modifier: Modifier = Modifier, color: Color =
 
 /** Dark card container for grouped content. */
 @Composable
-internal fun GroupCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+internal fun GroupCard(modifier: Modifier = Modifier, mergeForReader: Boolean = true, content: @Composable () -> Unit) {
     val m = LocalMetrics.current
     Column(
         modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(m.dp(22))).background(WbColors.Card)
-            .padding(horizontal = m.dp(12), vertical = m.dp(10)),
+            .padding(horizontal = m.dp(12), vertical = m.dp(10))
+            .then(if (mergeForReader) Modifier.semantics(mergeDescendants = true) { } else Modifier),
         verticalArrangement = Arrangement.spacedBy(m.dp(6)),
     ) { content() }
 }
@@ -288,8 +316,9 @@ internal fun GroupCard(modifier: Modifier = Modifier, content: @Composable () ->
 internal fun ToggleRow(label: String, pref: BoolPref, secondary: String? = null) {
     val m = LocalMetrics.current
     Row(
-        modifier = Modifier.fillMaxWidth().heightIn(min = m.dp(56)).clip(RoundedCornerShape(m.dp(22))).background(WbColors.Card)
+        modifier = Modifier.fillMaxWidth().heightIn(min = m.dp(56).atLeastTouchTarget()).clip(RoundedCornerShape(m.dp(22))).background(WbColors.Card)
             .toggleable(value = pref.value, role = Role.Switch, onValueChange = { pref.set(it) })
+            .semantics { stateDescription = AccessibilityText.switchState(pref.value) }
             .padding(horizontal = m.dp(12), vertical = m.dp(8)),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(m.dp(8)),
@@ -311,9 +340,10 @@ private fun ToggleSwitch(on: Boolean) {
     val trackH = m.dp(24)
     val pad = m.dp(2)
     val thumb = trackH - pad * 2
+    // The row announces "Activado"/"Desactivado"; the thumb position (not only the colour) shows it visually.
     Box(
         modifier = Modifier.width(trackW).heightIn(min = trackH, max = trackH).clip(CircleShape)
-            .background(if (on) WbColors.Green else WbColors.Fill),
+            .background(if (on) WbColors.Green else WbColors.Fill).decorative(),
         contentAlignment = if (on) Alignment.CenterEnd else Alignment.CenterStart,
     ) {
         Box(Modifier.padding(horizontal = pad).size(thumb).clip(CircleShape).background(Color.White))
@@ -325,12 +355,13 @@ private fun ToggleSwitch(on: Boolean) {
  * edge insets scale with the watch width. Rotary / crown scrolling comes from the column's defaults.
  */
 @Composable
-internal fun ListScreen(content: ScalingLazyListScope.() -> Unit) {
+internal fun ListScreen(paneTitle: String? = null, content: ScalingLazyListScope.() -> Unit) {
     val m = LocalMetrics.current
     val state = rememberScalingLazyListState()
     ScreenScaffold(scrollState = state) { padding ->
         ScalingLazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize()
+                .then(if (paneTitle != null) Modifier.semantics { this.paneTitle = paneTitle } else Modifier),
             state = state,
             contentPadding = PaddingValues(
                 start = m.dp(14),

@@ -1,5 +1,9 @@
 package dev.wristbridge.watch.ui
 
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -94,9 +98,15 @@ private fun TextUnit.scaled(k: Float): TextUnit = if (isSpecified) this * k else
 
 internal enum class GlyphKind { PLAY, PAUSE, NEXT, PREVIOUS, PLUS, MINUS, CHEVRON, NOTE, BELL, GEAR, PHONE, PHONE_DOWN, RADIO }
 
+/** [description] names a glyph that stands alone; without it the glyph is decorative and hidden from TalkBack. */
 @Composable
-internal fun Glyph(kind: GlyphKind, tint: Color, modifier: Modifier = Modifier) {
-    Canvas(modifier) {
+internal fun Glyph(kind: GlyphKind, tint: Color, modifier: Modifier = Modifier, description: String? = null) {
+    val semanticsModifier = if (description != null) {
+        Modifier.semantics { contentDescription = description; role = Role.Image }
+    } else {
+        Modifier.decorative()
+    }
+    Canvas(modifier.then(semanticsModifier)) {
         val s = size.minDimension / 24f
         fun p(x: Float, y: Float) = Offset(x * s, y * s)
         fun triangle(x1: Float, y1: Float, x2: Float, y2: Float, x3: Float, y3: Float) {

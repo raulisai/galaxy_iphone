@@ -1,5 +1,7 @@
 package dev.wristbridge.watch.ui
 
+import androidx.compose.ui.Modifier
+import dev.wristbridge.notification.AccessibilityText
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.*
@@ -41,7 +43,7 @@ internal fun HealthScreen() {
             launcher.launch(HealthCapture.permission(isHeart))
         } else HealthCapture.schedule(context)
     }
-    ListScreen {
+    ListScreen(paneTitle = "Salud") {
         item { ScreenTitle("Salud", "Datos locales del reloj") }
         item {
             GroupCard {
@@ -62,12 +64,12 @@ internal fun HealthScreen() {
         item {
             Pill(if (steps) "Detener pasos" else "Activar pasos", {
                 steps = !steps; changed(HealthCapture.STEPS, steps, false)
-            })
+            }, stateDescription = AccessibilityText.switchState(steps))
         }
         item {
             Pill(if (heart) "Detener pulso" else "Activar pulso", {
                 heart = !heart; changed(HealthCapture.HEART, heart, true)
-            })
+            }, stateDescription = AccessibilityText.switchState(heart))
         }
         if (heart && HealthCapture.granted(context, HealthCapture.permission(true)) &&
             !HealthCapture.granted(context, HealthCapture.backgroundPermission())) {
@@ -79,7 +81,7 @@ internal fun HealthScreen() {
         }
         item {
             GroupCard {
-                WbText(status, style = MaterialTheme.typography.bodyExtraSmall)
+                WbText(status, modifier = Modifier.politeLiveRegion(), style = MaterialTheme.typography.bodyExtraSmall)
                 WbText("La recepción es por lotes; no es una medición en vivo.",
                     style = MaterialTheme.typography.bodyExtraSmall, color = WbColors.Secondary)
                 WbText("iPhone: envío pendiente del canal seguro y del receptor Swift.",

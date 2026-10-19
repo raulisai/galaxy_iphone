@@ -1,0 +1,6380 @@
+{
+  "cacheOnly": [
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.activity",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "activity",
+      "resolved": null,
+      "version": "1.13.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.activity",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "activity",
+      "resolved": null,
+      "version": "1.8.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.activity",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "activity",
+      "resolved": null,
+      "version": "1.8.2"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.activity",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "activity-compose",
+      "resolved": null,
+      "version": "1.8.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.activity",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "activity-compose",
+      "resolved": null,
+      "version": "1.8.2"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.activity",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "activity-ktx",
+      "resolved": null,
+      "version": "1.13.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.activity",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "activity-ktx",
+      "resolved": null,
+      "version": "1.8.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.activity",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "activity-ktx",
+      "resolved": null,
+      "version": "1.8.2"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.annotation",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "annotation",
+      "resolved": null,
+      "version": "1.10.0"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.annotation",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "annotation",
+      "resolved": null,
+      "version": "1.7.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.annotation",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "annotation-experimental",
+      "resolved": null,
+      "version": "1.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.annotation",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "annotation-jvm",
+      "resolved": null,
+      "version": "1.10.0"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.annotation",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "annotation-jvm",
+      "resolved": null,
+      "version": "1.7.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "androidx.annotation",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "annotation-jvm",
+      "resolved": null,
+      "version": "1.9.1"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.arch.core",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "core-common",
+      "resolved": null,
+      "version": "2.1.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "androidx.arch.core",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "core-common",
+      "resolved": null,
+      "version": "2.2.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.arch.core",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "core-runtime",
+      "resolved": null,
+      "version": "2.2.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.autofill",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "autofill",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "androidx.collection",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "collection",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.collection",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "collection",
+      "resolved": null,
+      "version": "1.4.2"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.collection",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "collection-jvm",
+      "resolved": null,
+      "version": "1.4.2"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "androidx.collection",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "collection-jvm",
+      "resolved": null,
+      "version": "1.5.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "androidx.collection",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "collection-ktx",
+      "resolved": null,
+      "version": "1.5.0"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.animation",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "animation",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.animation",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "animation-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.animation",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "animation-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.animation",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "animation-core",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.animation",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "animation-core-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.animation",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "animation-core-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.animation",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "animation-graphics",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.animation",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "animation-graphics-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.foundation",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "foundation",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.foundation",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "foundation-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.foundation",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "foundation-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.foundation",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "foundation-layout",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.foundation",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "foundation-layout-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.foundation",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "foundation-layout-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.material",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "material-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.material",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "material-icons-core",
+      "resolved": null,
+      "version": "1.7.8"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.material",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "material-icons-core-android",
+      "resolved": null,
+      "version": "1.7.8"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.material",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "material-icons-core-desktop",
+      "resolved": null,
+      "version": "1.7.8"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.material",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "material-ripple",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.material",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "material-ripple-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.material",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "material-ripple-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.material3",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "material3-android",
+      "resolved": null,
+      "version": "1.4.0"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.runtime",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "runtime",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.runtime",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "runtime",
+      "resolved": null,
+      "version": "1.7.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.runtime",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "runtime-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.runtime",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "runtime-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.runtime",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "runtime-annotation",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.runtime",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "runtime-annotation-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.runtime",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "runtime-annotation-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.runtime",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "runtime-retain",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.runtime",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "runtime-retain-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.runtime",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "runtime-retain-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.runtime",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "runtime-saveable",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.runtime",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "runtime-saveable",
+      "resolved": null,
+      "version": "1.7.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.runtime",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "runtime-saveable-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.runtime",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "runtime-saveable-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui",
+      "resolved": null,
+      "version": "1.0.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "ui-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-geometry",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "ui-geometry-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-geometry-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-graphics",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "ui-graphics-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-graphics-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "ui-test-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "ui-test-junit4-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "ui-test-manifest",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-text",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "ui-text-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-text-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "ui-tooling-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-tooling-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-tooling-data",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "ui-tooling-data-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-tooling-data-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "ui-tooling-preview-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-tooling-preview-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-unit",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "ui-unit-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-unit-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-util",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "ui-util-android",
+      "resolved": null,
+      "version": "1.10.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-util-android",
+      "resolved": null,
+      "version": "1.12.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "androidx.concurrent",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "concurrent-futures",
+      "resolved": null,
+      "version": "1.1.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.concurrent",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "concurrent-futures",
+      "resolved": null,
+      "version": "1.2.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.concurrent",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "concurrent-futures-ktx",
+      "resolved": null,
+      "version": "1.1.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.concurrent",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "concurrent-futures-ktx",
+      "resolved": null,
+      "version": "1.2.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.core",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "core",
+      "resolved": null,
+      "version": "1.10.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.core",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "core",
+      "resolved": null,
+      "version": "1.16.0"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.core",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "core",
+      "resolved": null,
+      "version": "1.19.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.core",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "core-ktx",
+      "resolved": null,
+      "version": "1.10.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.core",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "core-ktx",
+      "resolved": null,
+      "version": "1.16.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.core",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "core-viewtree",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.customview",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "customview-poolingcontainer",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "androidx.databinding",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "databinding-common",
+      "resolved": null,
+      "version": "9.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.databinding",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "databinding-common",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "androidx.databinding",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "databinding-compiler-common",
+      "resolved": null,
+      "version": "9.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.databinding",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "databinding-compiler-common",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.documentfile",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "documentfile",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.dynamicanimation",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "dynamicanimation",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.emoji2",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "emoji2",
+      "resolved": null,
+      "version": "1.3.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.emoji2",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "emoji2",
+      "resolved": null,
+      "version": "1.4.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.graphics",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "graphics-path",
+      "resolved": null,
+      "version": "1.0.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.graphics",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "graphics-shapes",
+      "resolved": null,
+      "version": "1.0.1"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.graphics",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "graphics-shapes-android",
+      "resolved": null,
+      "version": "1.0.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.graphics",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "graphics-shapes-desktop",
+      "resolved": null,
+      "version": "1.0.1"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.health",
+      "inCache": true,
+      "licence": "BSD-3-Clause",
+      "licenceSource": "pom",
+      "name": "health-services-client-external-protobuf",
+      "resolved": null,
+      "version": "1.1.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.health",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "health-services-client-proto",
+      "resolved": null,
+      "version": "1.1.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.interpolator",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "interpolator",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.legacy",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "legacy-support-core-utils",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-common",
+      "resolved": null,
+      "version": "2.10.0"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-common",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-common",
+      "resolved": null,
+      "version": "2.3.1"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-common-java8",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-common-java8",
+      "resolved": null,
+      "version": "2.9.4"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-common-jvm",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-common-jvm",
+      "resolved": null,
+      "version": "2.8.7"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-common-jvm",
+      "resolved": null,
+      "version": "2.9.4"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-livedata",
+      "resolved": null,
+      "version": "2.9.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-livedata-core",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-livedata-core",
+      "resolved": null,
+      "version": "2.8.7"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-livedata-core",
+      "resolved": null,
+      "version": "2.9.4"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-livedata-core-ktx",
+      "resolved": null,
+      "version": "2.9.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-process",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-process",
+      "resolved": null,
+      "version": "2.9.4"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-runtime",
+      "resolved": null,
+      "version": "2.10.0"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-runtime",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-runtime-android",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-runtime-android",
+      "resolved": null,
+      "version": "2.8.7"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-runtime-android",
+      "resolved": null,
+      "version": "2.9.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-runtime-compose-android",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-runtime-compose-android",
+      "resolved": null,
+      "version": "2.8.7"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-runtime-compose-android",
+      "resolved": null,
+      "version": "2.9.4"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-runtime-ktx",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-runtime-ktx-android",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-runtime-ktx-android",
+      "resolved": null,
+      "version": "2.8.7"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-runtime-ktx-android",
+      "resolved": null,
+      "version": "2.9.4"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-viewmodel",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-viewmodel",
+      "resolved": null,
+      "version": "2.9.4"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-viewmodel-android",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-viewmodel-android",
+      "resolved": null,
+      "version": "2.8.7"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-viewmodel-android",
+      "resolved": null,
+      "version": "2.9.4"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-viewmodel-compose",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-viewmodel-compose-android",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-viewmodel-ktx",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-viewmodel-ktx",
+      "resolved": null,
+      "version": "2.8.7"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-viewmodel-ktx",
+      "resolved": null,
+      "version": "2.9.4"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-viewmodel-savedstate",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-viewmodel-savedstate",
+      "resolved": null,
+      "version": "2.8.7"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-viewmodel-savedstate-android",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lifecycle-viewmodel-savedstate-android",
+      "resolved": null,
+      "version": "2.9.4"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.loader",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "loader",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.localbroadcastmanager",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "localbroadcastmanager",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.navigationevent",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "navigationevent",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.navigationevent",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "navigationevent-android",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.navigationevent",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "navigationevent-compose",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.navigationevent",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "navigationevent-compose-android",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.print",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "print",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.profileinstaller",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "profileinstaller",
+      "resolved": null,
+      "version": "1.4.0"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.savedstate",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "savedstate",
+      "resolved": null,
+      "version": "1.4.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.savedstate",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "savedstate-android",
+      "resolved": null,
+      "version": "1.3.2"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.savedstate",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "savedstate-android",
+      "resolved": null,
+      "version": "1.4.0"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.savedstate",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "savedstate-compose",
+      "resolved": null,
+      "version": "1.4.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.savedstate",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "savedstate-compose-android",
+      "resolved": null,
+      "version": "1.3.2"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.savedstate",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "savedstate-compose-android",
+      "resolved": null,
+      "version": "1.4.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.savedstate",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "savedstate-ktx",
+      "resolved": null,
+      "version": "1.3.2"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.savedstate",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "savedstate-ktx",
+      "resolved": null,
+      "version": "1.4.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.startup",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "startup-runtime",
+      "resolved": null,
+      "version": "1.1.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.test",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "annotation",
+      "resolved": null,
+      "version": "1.0.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.test",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "core",
+      "resolved": null,
+      "version": "1.5.0"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.test",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "core",
+      "resolved": null,
+      "version": "1.7.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.test",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "monitor",
+      "resolved": null,
+      "version": "1.6.1"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.test",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "monitor",
+      "resolved": null,
+      "version": "1.8.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.test",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "runner",
+      "resolved": null,
+      "version": "1.5.2"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.test.espresso",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "espresso-core",
+      "resolved": null,
+      "version": "3.5.1"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.test.espresso",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "espresso-core",
+      "resolved": null,
+      "version": "3.7.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.test.espresso",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "espresso-idling-resource",
+      "resolved": null,
+      "version": "3.5.1"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.test.espresso",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "espresso-idling-resource",
+      "resolved": null,
+      "version": "3.7.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.test.ext",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "junit",
+      "resolved": null,
+      "version": "1.1.5"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.test.services",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "storage",
+      "resolved": null,
+      "version": "1.4.2"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.test.services",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "storage",
+      "resolved": null,
+      "version": "1.6.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.tracing",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "tracing",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.tracing",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "tracing",
+      "resolved": null,
+      "version": "1.1.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.tracing",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "tracing",
+      "resolved": null,
+      "version": "1.2.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.transition",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "transition",
+      "resolved": null,
+      "version": "1.6.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.versionedparcelable",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "versionedparcelable",
+      "resolved": null,
+      "version": "1.1.1"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.wear",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "wear-core",
+      "resolved": null,
+      "version": "1.1.0"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "androidx.wear.compose",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "compose-material-core",
+      "resolved": null,
+      "version": "1.7.1"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.window",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "window",
+      "resolved": null,
+      "version": "1.5.0"
+    },
+    {
+      "artifactFiles": [
+        "aar"
+      ],
+      "declared": false,
+      "group": "androidx.window",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "window-core-android",
+      "resolved": null,
+      "version": "1.5.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "signflinger",
+      "resolved": null,
+      "version": "9.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "signflinger",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "zipflinger",
+      "resolved": null,
+      "version": "9.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "zipflinger",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.application",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "com.android.application.gradle.plugin",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.databinding",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "baseLibrary",
+      "resolved": null,
+      "version": "9.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.databinding",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "baseLibrary",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.library",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "com.android.library.gradle.plugin",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "annotations",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "annotations",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "common",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "common",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "dvlib",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "dvlib",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "play-sdk-proto",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "repository",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "repository",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "sdk-common",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "sdk-common",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "sdklib",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "sdklib",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.analytics-library",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "crash",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.analytics-library",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "crash",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.analytics-library",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "protos",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.analytics-library",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "protos",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.analytics-library",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "shared",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.analytics-library",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "shared",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.analytics-library",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "tracker",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.analytics-library",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "tracker",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "aapt2",
+      "resolved": null,
+      "version": "9.4.1-15978811"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "aapt2-proto",
+      "resolved": null,
+      "version": "9.4.0-15978811"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "aapt2-proto",
+      "resolved": null,
+      "version": "9.4.1-15978811"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "aaptcompiler",
+      "resolved": null,
+      "version": "9.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "aaptcompiler",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "apksig",
+      "resolved": null,
+      "version": "9.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "apksig",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "apkzlib",
+      "resolved": null,
+      "version": "9.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "apkzlib",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "builder",
+      "resolved": null,
+      "version": "9.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "builder",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "builder-model",
+      "resolved": null,
+      "version": "9.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "builder-model",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "builder-test-api",
+      "resolved": null,
+      "version": "9.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "builder-test-api",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "bundletool",
+      "resolved": null,
+      "version": "1.18.3"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "gradle",
+      "resolved": null,
+      "version": "9.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "gradle",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "gradle-api",
+      "resolved": null,
+      "version": "9.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "gradle-api",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "gradle-common-api",
+      "resolved": null,
+      "version": "9.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "gradle-common-api",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "gradle-settings-api",
+      "resolved": null,
+      "version": "9.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "gradle-settings-api",
+      "resolved": null,
+      "version": "9.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "manifest-merger",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "manifest-merger",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build.jetifier",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "jetifier-core",
+      "resolved": null,
+      "version": "1.0.0-beta10"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.build.jetifier",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "jetifier-processor",
+      "resolved": null,
+      "version": "1.0.0-beta10"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.ddms",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "ddmlib",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.ddms",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ddmlib",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.external.com-intellij",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "intellij-core",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.external.com-intellij",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-compiler",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.external.org-jetbrains",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "uast",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.layoutlib",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "layoutlib-api",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.layoutlib",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "layoutlib-api",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.lint",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lint",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.lint",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lint-api",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.lint",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lint-checks",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.lint",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lint-gradle",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.lint",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lint-model",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.lint",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lint-model",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.lint",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "lint-typedef-remover",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.lint",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lint-typedef-remover",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.android.tools.utp",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "gradle-work-action-api",
+      "resolved": null,
+      "version": "32.4.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.android.tools.utp",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "gradle-work-action-api",
+      "resolved": null,
+      "version": "32.4.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.auto.value",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "auto-value-annotations",
+      "resolved": null,
+      "version": "1.6.2"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.code.findbugs",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "jsr305",
+      "resolved": null,
+      "version": "2.0.2"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.code.findbugs",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "jsr305",
+      "resolved": null,
+      "version": "3.0.2"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.code.gson",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "gson",
+      "resolved": null,
+      "version": "2.11.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.crypto.tink",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "tink",
+      "resolved": null,
+      "version": "1.7.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.dagger",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "dagger",
+      "resolved": null,
+      "version": "2.28.3"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.errorprone",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "error_prone_annotations",
+      "resolved": null,
+      "version": "2.18.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.google.errorprone",
+      "inCache": true,
+      "licence": "Apache 2.0",
+      "licenceSource": "pom",
+      "name": "error_prone_annotations",
+      "resolved": null,
+      "version": "2.30.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.errorprone",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "error_prone_annotations",
+      "resolved": null,
+      "version": "2.36.0"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.google.errorprone",
+      "inCache": true,
+      "licence": "Apache 2.0",
+      "licenceSource": "pom",
+      "name": "error_prone_parent",
+      "resolved": null,
+      "version": "2.30.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.flatbuffers",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "flatbuffers-java",
+      "resolved": null,
+      "version": "1.12.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.google.guava",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "parent-pom",
+      "name": "failureaccess",
+      "resolved": null,
+      "version": "1.0.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.guava",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "failureaccess",
+      "resolved": null,
+      "version": "1.0.2"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.google.guava",
+      "inCache": true,
+      "licence": "Apache License, Version 2.0",
+      "licenceSource": "parent-pom",
+      "name": "guava",
+      "resolved": null,
+      "version": "32.0.1-android"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.guava",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "guava",
+      "resolved": null,
+      "version": "33.4.0-jre"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.google.guava",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "guava-parent",
+      "resolved": null,
+      "version": "26.0-android"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.google.guava",
+      "inCache": true,
+      "licence": "Apache License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "guava-parent",
+      "resolved": null,
+      "version": "32.0.1-android"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.guava",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "listenablefuture",
+      "resolved": null,
+      "version": "1.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.guava",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "listenablefuture",
+      "resolved": null,
+      "version": "9999.0-empty-to-avoid-conflict-with-guava"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.j2objc",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "j2objc-annotations",
+      "resolved": null,
+      "version": "2.8"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.j2objc",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "j2objc-annotations",
+      "resolved": null,
+      "version": "3.0.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.jimfs",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "jimfs",
+      "resolved": null,
+      "version": "1.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.protobuf",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "protobuf-java",
+      "resolved": null,
+      "version": "3.25.5"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.google.protobuf",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "protobuf-java-util",
+      "resolved": null,
+      "version": "3.25.5"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.google.zxing",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "parent-pom",
+      "name": "core",
+      "resolved": null,
+      "version": "3.5.4"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.google.zxing",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "zxing-parent",
+      "resolved": null,
+      "version": "3.5.4"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.googlecode.juniversalchardet",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "juniversalchardet",
+      "resolved": null,
+      "version": "1.0.3"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "com.journeyapps",
+      "inCache": true,
+      "licence": "The Apache License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "zxing-android-embedded",
+      "resolved": null,
+      "version": "4.3.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.squareup",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "javapoet",
+      "resolved": null,
+      "version": "1.13.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.squareup",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "javawriter",
+      "resolved": null,
+      "version": "2.1.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.squareup",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "javawriter",
+      "resolved": null,
+      "version": "2.5.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.sun.istack",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "istack-commons-runtime",
+      "resolved": null,
+      "version": "3.0.8"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "com.sun.xml.fastinfoset",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "FastInfoset",
+      "resolved": null,
+      "version": "1.2.16"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "commons-codec",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "commons-codec",
+      "resolved": null,
+      "version": "1.17.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "commons-io",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "commons-io",
+      "resolved": null,
+      "version": "2.16.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "commons-logging",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "commons-logging",
+      "resolved": null,
+      "version": "1.2"
+    },
+    {
+      "artifactFiles": [
+        "zip"
+      ],
+      "declared": false,
+      "group": "gradle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "gradle",
+      "resolved": null,
+      "version": "9.6.0"
+    },
+    {
+      "artifactFiles": [
+        "zip"
+      ],
+      "declared": false,
+      "group": "gradle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "gradle",
+      "resolved": null,
+      "version": "9.8.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "jakarta.activation",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "jakarta.activation-api",
+      "resolved": null,
+      "version": "1.2.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "jakarta.xml.bind",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "jakarta.xml.bind-api",
+      "resolved": null,
+      "version": "2.3.2"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "javax.inject",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "javax.inject",
+      "resolved": null,
+      "version": "1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "junit",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "junit",
+      "resolved": null,
+      "version": "4.13.2"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "net.java.dev.jna",
+      "inCache": true,
+      "licence": "Apache-2.0; LGPL-2.1-or-later",
+      "licenceSource": "pom",
+      "name": "jna",
+      "resolved": null,
+      "version": "5.19.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "net.java.dev.jna",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "jna",
+      "resolved": null,
+      "version": "5.6.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "net.java.dev.jna",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "jna-platform",
+      "resolved": null,
+      "version": "5.6.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "net.sf.jopt-simple",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "jopt-simple",
+      "resolved": null,
+      "version": "4.9"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "net.sf.kxml",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kxml2",
+      "resolved": null,
+      "version": "2.3.0"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.apache",
+      "inCache": true,
+      "licence": "Apache License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "apache",
+      "resolved": null,
+      "version": "18"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.apache.commons",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "commons-compress",
+      "resolved": null,
+      "version": "1.27.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.apache.commons",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "commons-lang3",
+      "resolved": null,
+      "version": "3.16.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.apache.groovy",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "groovy",
+      "resolved": null,
+      "version": "4.0.29"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.apache.groovy",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "groovy-bom",
+      "resolved": null,
+      "version": "4.0.29"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.apache.httpcomponents",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "httpclient",
+      "resolved": null,
+      "version": "4.5.14"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.apache.httpcomponents",
+      "inCache": true,
+      "licence": "Apache License, Version 2.0",
+      "licenceSource": "parent-pom",
+      "name": "httpclient",
+      "resolved": null,
+      "version": "4.5.6"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.apache.httpcomponents",
+      "inCache": true,
+      "licence": "Apache License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "httpcomponents-client",
+      "resolved": null,
+      "version": "4.5.6"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.apache.httpcomponents",
+      "inCache": true,
+      "licence": "Apache License, Version 2.0",
+      "licenceSource": "parent-pom",
+      "name": "httpcomponents-parent",
+      "resolved": null,
+      "version": "10"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.apache.httpcomponents",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "httpcore",
+      "resolved": null,
+      "version": "4.4.16"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.apache.httpcomponents",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "httpmime",
+      "resolved": null,
+      "version": "4.5.6"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.apiguardian",
+      "inCache": true,
+      "licence": "The Apache License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "apiguardian-api",
+      "resolved": null,
+      "version": "1.1.2"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.bitbucket.b_c",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "jose4j",
+      "resolved": null,
+      "version": "0.9.5"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.bouncycastle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "bcpkix-jdk18on",
+      "resolved": null,
+      "version": "1.80.2"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.bouncycastle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "bcprov-jdk18on",
+      "resolved": null,
+      "version": "1.80.2"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.bouncycastle",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "bcutil-jdk18on",
+      "resolved": null,
+      "version": "1.80.2"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.checkerframework",
+      "inCache": true,
+      "licence": "The MIT License",
+      "licenceSource": "pom",
+      "name": "checker-qual",
+      "resolved": null,
+      "version": "3.33.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.checkerframework",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "checker-qual",
+      "resolved": null,
+      "version": "3.43.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.glassfish.jaxb",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "jaxb-runtime",
+      "resolved": null,
+      "version": "2.3.2"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.glassfish.jaxb",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "txw2",
+      "resolved": null,
+      "version": "2.3.2"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.gradle.toolchains",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "foojay-resolver",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.hamcrest",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "hamcrest-core",
+      "resolved": null,
+      "version": "1.3"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.hamcrest",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "hamcrest-integration",
+      "resolved": null,
+      "version": "1.3"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.hamcrest",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "hamcrest-library",
+      "resolved": null,
+      "version": "1.3"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jdom",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "jdom2",
+      "resolved": null,
+      "version": "2.0.6"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "annotations",
+      "resolved": null,
+      "version": "13.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "annotations",
+      "resolved": null,
+      "version": "23.0.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "abi-tools-api",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "compose-compiler-gradle-plugin",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "compose-compiler-gradle-plugin",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "fus-statistics-gradle-plugin",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "fus-statistics-gradle-plugin",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-build-statistics",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-build-statistics",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-build-tools-api",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-build-tools-api",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-build-tools-compat",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-build-tools-cri-impl",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-build-tools-impl",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-compiler-embeddable",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-compiler-runner",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-compiler-runner",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-compose-compiler-plugin-embeddable",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-compose-compiler-plugin-embeddable",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-daemon-client",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-daemon-client",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-daemon-embeddable",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-gradle-plugin",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-gradle-plugin",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-gradle-plugin-annotations",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-gradle-plugin-annotations",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-gradle-plugin-api",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-gradle-plugin-api",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-gradle-plugin-idea",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-gradle-plugin-idea",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-gradle-plugin-idea-proto",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-gradle-plugin-idea-proto",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-gradle-plugin-model",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-gradle-plugins-bom",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-klib-commonizer-api",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-klib-commonizer-api",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-native-utils",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-native-utils",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "The Apache License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-reflect",
+      "resolved": null,
+      "version": "1.6.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "The Apache License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-reflect",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-reflect",
+      "resolved": null,
+      "version": "2.3.21"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-reflect",
+      "resolved": null,
+      "version": "2.4.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-script-runtime",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-scripting-common",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-scripting-compiler-embeddable",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-scripting-compiler-impl-embeddable",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-scripting-jvm",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "The Apache License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-stdlib",
+      "resolved": null,
+      "version": "1.9.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-stdlib",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-stdlib",
+      "resolved": null,
+      "version": "2.3.21"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-stdlib",
+      "resolved": null,
+      "version": "2.4.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-stdlib",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-stdlib-common",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-stdlib-jdk7",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-stdlib-jdk8",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-test-junit5",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-tooling-core",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-tooling-core",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-util-io",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-util-io",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-util-klib",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-util-klib",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlin-util-klib-metadata",
+      "resolved": null,
+      "version": "2.2.10"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-util-klib-metadata",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin.jvm",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "org.jetbrains.kotlin.jvm.gradle.plugin",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlin.plugin.compose",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "org.jetbrains.kotlin.plugin.compose.gradle.plugin",
+      "resolved": null,
+      "version": "2.4.21"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlinx",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlinx-coroutines-android",
+      "resolved": null,
+      "version": "1.9.0"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlinx",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlinx-coroutines-bom",
+      "resolved": null,
+      "version": "1.11.0"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlinx",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "kotlinx-coroutines-bom",
+      "resolved": null,
+      "version": "1.8.0"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlinx",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "kotlinx-coroutines-bom",
+      "resolved": null,
+      "version": "1.8.1"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlinx",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlinx-coroutines-core",
+      "resolved": null,
+      "version": "1.11.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlinx",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlinx-coroutines-core-jvm",
+      "resolved": null,
+      "version": "1.11.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlinx",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "kotlinx-coroutines-core-jvm",
+      "resolved": null,
+      "version": "1.8.0"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlinx",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "kotlinx-coroutines-core-jvm",
+      "resolved": null,
+      "version": "1.8.1"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlinx",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlinx-coroutines-core-jvm",
+      "resolved": null,
+      "version": "1.9.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlinx",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlinx-coroutines-test-jvm",
+      "resolved": null,
+      "version": "1.9.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jetbrains.kotlinx",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "kotlinx-serialization-core-jvm",
+      "resolved": null,
+      "version": "1.7.3"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jspecify",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "jspecify",
+      "resolved": null,
+      "version": "1.0.0"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.junit.jupiter",
+      "inCache": true,
+      "licence": "Eclipse Public License v2.0",
+      "licenceSource": "pom",
+      "name": "junit-jupiter-api",
+      "resolved": null,
+      "version": "6.1.3"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.junit.jupiter",
+      "inCache": true,
+      "licence": "Eclipse Public License v2.0",
+      "licenceSource": "pom",
+      "name": "junit-jupiter-engine",
+      "resolved": null,
+      "version": "6.1.3"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.junit.jupiter",
+      "inCache": true,
+      "licence": "Eclipse Public License v2.0",
+      "licenceSource": "pom",
+      "name": "junit-jupiter-params",
+      "resolved": null,
+      "version": "6.1.3"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.junit.platform",
+      "inCache": true,
+      "licence": "Eclipse Public License v2.0",
+      "licenceSource": "pom",
+      "name": "junit-platform-commons",
+      "resolved": null,
+      "version": "6.1.3"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.junit.platform",
+      "inCache": true,
+      "licence": "Eclipse Public License v2.0",
+      "licenceSource": "pom",
+      "name": "junit-platform-engine",
+      "resolved": null,
+      "version": "6.1.3"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.jvnet.staxex",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "stax-ex",
+      "resolved": null,
+      "version": "1.8.1"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.opentest4j",
+      "inCache": true,
+      "licence": "The Apache License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "opentest4j",
+      "resolved": null,
+      "version": "1.3.0"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.ow2.asm",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "asm",
+      "resolved": null,
+      "version": "9.9"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.ow2.asm",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "asm-analysis",
+      "resolved": null,
+      "version": "9.9"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.ow2.asm",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "asm-commons",
+      "resolved": null,
+      "version": "9.9"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.ow2.asm",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "asm-tree",
+      "resolved": null,
+      "version": "9.9"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.ow2.asm",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "asm-util",
+      "resolved": null,
+      "version": "9.9"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.slf4j",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "slf4j-api",
+      "resolved": null,
+      "version": "1.7.30"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": false,
+      "group": "org.sonatype.oss",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "oss-parent",
+      "resolved": null,
+      "version": "9"
+    },
+    {
+      "artifactFiles": [
+        "jar"
+      ],
+      "declared": false,
+      "group": "org.tensorflow",
+      "inCache": true,
+      "licence": "unverified",
+      "licenceSource": "none",
+      "name": "tensorflow-lite-metadata",
+      "resolved": null,
+      "version": "0.2.0"
+    }
+  ],
+  "cacheRootsScanned": [
+    "project-g3",
+    "project-p1-home",
+    "user-gradle"
+  ],
+  "dependencies": [
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": true,
+      "group": "androidx.activity",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "activity-compose",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "implementation",
+          "module": "apps/watch"
+        }
+      ],
+      "version": "1.13.0",
+      "versionSource": "toml:androidx-activity-compose"
+    },
+    {
+      "artifactFiles": [
+        "pom"
+      ],
+      "declared": true,
+      "group": "androidx.compose",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "compose-bom",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "implementation",
+          "module": "apps/watch"
+        }
+      ],
+      "version": "2026.09.00",
+      "versionSource": "toml:androidx-compose-bom (platform/BOM)"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": true,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "implementation",
+          "module": "apps/watch"
+        }
+      ],
+      "version": "1.12.1",
+      "versionSource": "BOM"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": true,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-tooling",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "debugImplementation",
+          "module": "apps/watch"
+        }
+      ],
+      "version": "1.12.1",
+      "versionSource": "BOM"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": true,
+      "group": "androidx.compose.ui",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "ui-tooling-preview",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "implementation",
+          "module": "apps/watch"
+        }
+      ],
+      "version": "1.12.1",
+      "versionSource": "BOM"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": true,
+      "group": "androidx.core",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "core-ktx",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "implementation",
+          "module": "apps/watch"
+        }
+      ],
+      "version": "1.19.1",
+      "versionSource": "toml:androidx-core-ktx"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": true,
+      "group": "androidx.health",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "health-services-client",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "implementation",
+          "module": "apps/watch"
+        }
+      ],
+      "version": "1.1.0",
+      "versionSource": "build-file"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": true,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-runtime-compose",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "implementation",
+          "module": "apps/watch"
+        }
+      ],
+      "version": "2.11.0",
+      "versionSource": "toml:androidx-lifecycle-runtime-compose"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": true,
+      "group": "androidx.lifecycle",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "lifecycle-service",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "implementation",
+          "module": "apps/watch"
+        }
+      ],
+      "version": "2.11.0",
+      "versionSource": "toml:androidx-lifecycle-service"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "pom"
+      ],
+      "declared": true,
+      "group": "androidx.test",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "runner",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "androidTestImplementation",
+          "module": "apps/watch"
+        }
+      ],
+      "version": "1.7.0",
+      "versionSource": "toml:androidx-test-runner"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "pom"
+      ],
+      "declared": true,
+      "group": "androidx.test.ext",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "junit",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "androidTestImplementation",
+          "module": "apps/watch"
+        }
+      ],
+      "version": "1.3.0",
+      "versionSource": "toml:androidx-test-ext-junit"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": true,
+      "group": "androidx.wear.compose",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "compose-foundation",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "implementation",
+          "module": "apps/watch"
+        }
+      ],
+      "version": "1.7.1",
+      "versionSource": "toml:wear-compose-foundation"
+    },
+    {
+      "artifactFiles": [
+        "aar",
+        "module",
+        "pom"
+      ],
+      "declared": true,
+      "group": "androidx.wear.compose",
+      "inCache": true,
+      "licence": "The Apache Software License, Version 2.0",
+      "licenceSource": "pom",
+      "name": "compose-material3",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "implementation",
+          "module": "apps/watch"
+        }
+      ],
+      "version": "1.7.1",
+      "versionSource": "toml:wear-compose-material3"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": true,
+      "group": "org.jetbrains.kotlin",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlin-test",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "testImplementation",
+          "module": "core/assistant-domain"
+        },
+        {
+          "configuration": "testImplementation",
+          "module": "core/notification-domain"
+        },
+        {
+          "configuration": "testImplementation",
+          "module": "core/protocol-kotlin"
+        }
+      ],
+      "version": "2.4.21",
+      "versionSource": "kotlin-plugin version"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": true,
+      "group": "org.jetbrains.kotlinx",
+      "inCache": true,
+      "licence": "Apache-2.0",
+      "licenceSource": "pom",
+      "name": "kotlinx-coroutines-android",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "implementation",
+          "module": "apps/watch"
+        }
+      ],
+      "version": "1.11.0",
+      "versionSource": "toml:kotlinx-coroutines-android"
+    },
+    {
+      "artifactFiles": [
+        "module",
+        "pom"
+      ],
+      "declared": true,
+      "group": "org.junit",
+      "inCache": true,
+      "licence": "Eclipse Public License v2.0",
+      "licenceSource": "pom",
+      "name": "junit-bom",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "testImplementation",
+          "module": "core/assistant-domain"
+        },
+        {
+          "configuration": "testImplementation",
+          "module": "core/notification-domain"
+        },
+        {
+          "configuration": "testImplementation",
+          "module": "core/protocol-kotlin"
+        }
+      ],
+      "version": "6.1.3",
+      "versionSource": "toml:junit-bom (platform/BOM)"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": true,
+      "group": "org.junit.jupiter",
+      "inCache": true,
+      "licence": "Eclipse Public License v2.0",
+      "licenceSource": "pom",
+      "name": "junit-jupiter",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "testImplementation",
+          "module": "core/assistant-domain"
+        },
+        {
+          "configuration": "testImplementation",
+          "module": "core/notification-domain"
+        },
+        {
+          "configuration": "testImplementation",
+          "module": "core/protocol-kotlin"
+        }
+      ],
+      "version": "6.1.3",
+      "versionSource": "BOM"
+    },
+    {
+      "artifactFiles": [
+        "jar",
+        "module",
+        "pom"
+      ],
+      "declared": true,
+      "group": "org.junit.platform",
+      "inCache": true,
+      "licence": "Eclipse Public License v2.0",
+      "licenceSource": "pom",
+      "name": "junit-platform-launcher",
+      "resolved": null,
+      "usedBy": [
+        {
+          "configuration": "testRuntimeOnly",
+          "module": "core/assistant-domain"
+        },
+        {
+          "configuration": "testRuntimeOnly",
+          "module": "core/notification-domain"
+        },
+        {
+          "configuration": "testRuntimeOnly",
+          "module": "core/protocol-kotlin"
+        }
+      ],
+      "version": "6.1.3",
+      "versionSource": "BOM"
+    }
+  ],
+  "generatedBy": "scripts/windows/dependency-inventory.py",
+  "inputs": {
+    "apps/watch/build.gradle.kts": "db1f6dca49de58b12f0e2d5a2aee126bd09ea19fc6671d5ce0282e766c43dd50",
+    "core/assistant-domain/build.gradle.kts": "495b8234a1f7391c84c13eee538a6a6daca130e15ad875484c090372f8ea8c77",
+    "core/notification-domain/build.gradle.kts": "a99a5f94b2a999d054deccf32a58237594619add8eee6a07e34092ca3b818de1",
+    "core/protocol-kotlin/build.gradle.kts": "4874b85338d85a59a4bc4025097f0d218b938e27596f8e03ac3c01ffafd86f41",
+    "gradle/libs.versions.toml": "f5edafa5f4dd94343a9ee885eec1a0612f6ca686bf96c6699a8ee9074b1688c0"
+  },
+  "kind": "dependency-inventory",
+  "limitations": [
+    "Transitive dependencies and implicit ones (for example kotlin-stdlib added by the Kotlin plugin) are not derived unless a Gradle dependencies report is passed with --resolved.",
+    "cacheOnly lists module versions present in the scanned Gradle caches, including build tooling and other projects; presence in a cache does not mean the module ships in the APK.",
+    "licence is the POM <license><name> (or its parent POM's); \"unverified\" means none was readable offline."
+  ],
+  "notSbom": "Inventory of declared and cached Gradle modules; it is not a formal SBOM (no CycloneDX/SPDX, no artifact hashes, no vulnerability data). Licences are copied from POMs and not verified.",
+  "plugins": [
+    {
+      "alias": "android-application",
+      "id": "com.android.application",
+      "version": "9.4.1"
+    },
+    {
+      "alias": "kotlin-compose",
+      "id": "org.jetbrains.kotlin.plugin.compose",
+      "version": "2.4.21"
+    },
+    {
+      "alias": "kotlin-jvm",
+      "id": "org.jetbrains.kotlin.jvm",
+      "version": "2.4.21"
+    }
+  ],
+  "projectDependencies": [
+    {
+      "configuration": "implementation",
+      "module": "apps/watch",
+      "project": ":core:notification-domain"
+    },
+    {
+      "configuration": "api",
+      "module": "core/notification-domain",
+      "project": ":core:protocol-kotlin"
+    }
+  ],
+  "resolutionKnown": false,
+  "unparsedDependencyLines": []
+}

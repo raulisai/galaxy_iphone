@@ -1,5 +1,6 @@
 package dev.wristbridge.watch.ui
 
+import dev.wristbridge.notification.AccessibilityText
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,7 +36,7 @@ internal fun HomeScreen(
     val hiddenText = stringResource(R.string.card_hidden)
     val connectionColor = statusColor(model.headline, model.bridge.serviceRunning)
 
-    ListScreen {
+    ListScreen(paneTitle = stringResource(R.string.app_name)) {
         item(key = "title") { ScreenTitle(stringResource(R.string.app_name)) }
 
         // Without permissions nothing works: the request goes first.
@@ -102,10 +103,12 @@ internal fun HomeScreen(
                     title = title,
                     subtitle = artist,
                     trailing = {
+                        // Icon shows the action; TalkBack gets the current state instead.
                         Glyph(
                             if (media.isPlaying) GlyphKind.PAUSE else GlyphKind.PLAY,
                             WbColors.Pink,
                             Modifier.size(m.dp(22)),
+                            description = AccessibilityText.playbackState(media.isPlaying),
                         )
                     },
                 )
@@ -136,6 +139,8 @@ internal fun HomeScreen(
                 subtitle = model.headline.text,
                 subtitleLines = 2,
                 dot = connectionColor,
+                description = "Conexión, " + describeStatus(model.headline),
+                liveStatus = true,
             )
         }
 

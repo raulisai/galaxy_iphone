@@ -1,5 +1,10 @@
 package dev.wristbridge.watch.ui
 
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
+import dev.wristbridge.notification.AccessibilityText
 import android.os.SystemClock
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
@@ -120,7 +125,12 @@ internal fun VolumeOverlay(crown: CrownVolume, modifier: Modifier = Modifier) {
     val m = LocalMetrics.current
     Column(
         modifier = modifier.clip(RoundedCornerShape(m.dp(18))).background(WbColors.CardHigh)
-            .padding(horizontal = m.dp(14), vertical = m.dp(8)),
+            .padding(horizontal = m.dp(14), vertical = m.dp(8))
+            // Appears for ~2 s after every crown tick: announced politely as "Volumen 50 por ciento".
+            .semantics(mergeDescendants = true) {
+                contentDescription = AccessibilityText.describeVolume(crown.volume)
+                liveRegion = LiveRegionMode.Polite
+            },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(m.dp(4)),
     ) {

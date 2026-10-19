@@ -1,5 +1,12 @@
 package dev.wristbridge.watch.ui
 
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.paneTitle
+import androidx.compose.ui.semantics.semantics
+import dev.wristbridge.notification.AccessibilityText
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -44,7 +51,7 @@ internal fun CallScreen(
     val scroll = rememberScrollState()
     val crown = rememberCrownVolume(music, onMedia)
     ScreenScaffold(scrollState = scroll) { padding ->
-        BoxWithConstraints(Modifier.fillMaxSize().then(crown.modifier)) {
+        BoxWithConstraints(Modifier.fillMaxSize().then(crown.modifier).semantics { paneTitle = "Llamada entrante" }) {
             // Round bezel safe area: about 12% at the top/bottom and 9% at the sides.
             val sideInset = maxWidth * 0.09f
             val vertInset = maxHeight * 0.06f
@@ -55,14 +62,23 @@ internal fun CallScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(m.dp(8), Alignment.CenterVertically),
             ) {
-                // App badge (source) on top, then the caller in large type.
+                // App badge (source) on top, then the caller in large type. The caller text carries the
+                // whole reading ("Llamada entrante de <app>. <caller>"), so the source label is hidden to avoid repeats.
+                val callerText = p.body.ifBlank { p.title }
                 WbText(
                     p.source.label.uppercase(),
+                    modifier = Modifier.decorative(),
                     style = MaterialTheme.typography.labelSmall, color = WbColors.Green,
                     weight = FontWeight.SemiBold, align = TextAlign.Center, maxLines = 1,
                 )
                 WbText(
-                    p.body.ifBlank { p.title },
+                    callerText,
+                    // Assertive on purpose: a ringing call must interrupt the current speech.
+                    modifier = Modifier.semantics {
+                        heading()
+                        contentDescription = AccessibilityText.describeIncomingCall(p.source.label, callerText)
+                        liveRegion = LiveRegionMode.Assertive
+                    },
                     style = MaterialTheme.typography.titleMedium, weight = FontWeight.Bold,
                     align = TextAlign.Center, maxLines = 2,
                 )
@@ -109,7 +125,11 @@ private fun CallChoice(
 ) {
     val m = LocalMetrics.current
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(m.dp(4))) {
-        CircleButton(kind, onClick, diameter, label, container = color, pressed = color.copy(alpha = 0.7f), tint = Color.White, enabled = enabled)
-        WbText(label, style = MaterialTheme.typography.labelSmall, color = WbColors.Label, align = TextAlign.Center, maxLines = 2)
+        CircleButton(
+            kind, onClick, diameter, AccessibilityText.describeCallAction(label, positive = kind == GlyphKind.PHONE),
+            container = color, pressed = color.copy(alpha = 0.7f), tint = Color.White, enabled = enabled,
+        )
+        // The visible label is already part of the button's accessible name.
+        WbText(label, modifier = Modifier.decorative(), style = MaterialTheme.typography.labelSmall, color = WbColors.Label, align = TextAlign.Center, maxLines = 2)
     }
 }

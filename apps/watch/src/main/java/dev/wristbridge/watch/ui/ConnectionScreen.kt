@@ -1,5 +1,7 @@
 package dev.wristbridge.watch.ui
 
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import android.os.SystemClock
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,10 +34,12 @@ internal fun ConnectionScreen(
     val bridge = model.bridge
     val color = statusColor(model.headline, bridge.serviceRunning)
 
-    ListScreen {
+    ListScreen(paneTitle = "Conexión") {
         item(key = "status") {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(bottom = m.dp(2)),
+                // Headline = the screen's title and a live status; the dot colour is never the only signal.
+                modifier = Modifier.fillMaxWidth().padding(bottom = m.dp(2))
+                    .statusSemantics(model.headline).semantics { heading() },
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(m.dp(6)),
             ) {
@@ -79,7 +83,7 @@ internal fun ConnectionScreen(
         }
 
         item(key = "details") {
-            GroupCard {
+            GroupCard(mergeForReader = false) {
                 DetailRow("Puente", if (bridge.serviceRunning) "Activo" else "Detenido")
                 DetailRow("Bluetooth", radioLabel(bridge.radio))
                 DetailRow(
@@ -102,7 +106,7 @@ internal fun ConnectionScreen(
 /** Label above value so long values wrap instead of overflowing the round edge. */
 @Composable
 internal fun DetailRow(label: String, value: String, detail: String = "") {
-    Column(Modifier.fillMaxWidth()) {
+    Column(Modifier.fillMaxWidth().semantics(mergeDescendants = true) { }) {
         WbText(label, style = MaterialTheme.typography.labelSmall, color = WbColors.Secondary, maxLines = 1)
         WbText(value, style = MaterialTheme.typography.bodySmall, maxLines = 3)
         if (detail.isNotBlank()) {

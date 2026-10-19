@@ -26,7 +26,7 @@ internal class Prefs(
 @Composable
 internal fun SettingsScreen(prefs: Prefs, onOpenDiagnostics: () -> Unit) {
     val m = LocalMetrics.current
-    ListScreen {
+    ListScreen(paneTitle = "Ajustes") {
         item(key = "title") { ScreenTitle("Ajustes") }
         item(key = "hide") { ToggleRow("Ocultar contenido", prefs.hidePreview, "Oculta textos de avisos y música") }
         item(key = "actions") { ToggleRow("Acciones en avisos", prefs.actions) }
@@ -53,7 +53,7 @@ internal fun DiagnosticsScreen(model: UiModel) {
     val campaign by recorder.stats.collectAsStateWithLifecycle()
     // Two taps on purpose: resetting wipes the evidence of a 24/72 h run.
     var resetArmed by remember { mutableStateOf(false) }
-    ListScreen {
+    ListScreen(paneTitle = "Diagnóstico") {
         item(key = "title") { ScreenTitle("Diagnóstico", "Versión ${BuildConfig.VERSION_NAME} · ${BuildConfig.GIT_COMMIT}") }
         item(key = "counters") {
             GroupCard {

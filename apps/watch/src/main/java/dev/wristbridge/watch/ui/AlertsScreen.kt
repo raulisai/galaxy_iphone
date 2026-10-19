@@ -1,5 +1,6 @@
 package dev.wristbridge.watch.ui
 
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,14 +28,14 @@ import dev.wristbridge.watch.bridge.ActiveCard
 @Composable
 internal fun AlertsScreen(model: UiModel, onAction: (PresentedCard, ActionId) -> Unit) {
     val m = LocalMetrics.current
-    ListScreen {
+    ListScreen(paneTitle = "Avisos") {
         item(key = "title") {
-            ScreenTitle("Avisos", if (model.alerts.isEmpty()) null else "${model.alerts.size} en el reloj")
+            ScreenTitle("Avisos", if (model.alerts.isEmpty()) null else "${model.alerts.size} en el reloj", liveCaption = true)
         }
         if (model.alerts.isEmpty()) {
             item(key = "empty") {
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(top = m.dp(10)),
+                    modifier = Modifier.fillMaxWidth().padding(top = m.dp(10)).semantics(mergeDescendants = true) { },
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(m.dp(8)),
                 ) {
@@ -59,8 +60,10 @@ internal fun NotificationCardView(item: PresentedCard, actionsEnabled: Boolean, 
     val card = item.active.card
     val accent = Color(p.source.accentArgb)
     Column(
+        // One reading per card (app, title, body); the action pills stay separate focus targets.
         modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(m.dp(22))).background(WbColors.Card)
-            .padding(horizontal = m.dp(12), vertical = m.dp(10)),
+            .padding(horizontal = m.dp(12), vertical = m.dp(10))
+            .semantics(mergeDescendants = true) { },
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(m.dp(6))) {
             MonogramBadge(p.source.badge, accent, m.dp(24))
@@ -107,7 +110,7 @@ internal fun ActionStatusLine(active: ActiveCard) {
     val m = LocalMetrics.current
     WbText(
         text = "$name: ${actionStatusLabel(status)}",
-        modifier = Modifier.fillMaxWidth().padding(top = m.dp(6)),
+        modifier = Modifier.fillMaxWidth().padding(top = m.dp(6)).politeLiveRegion(),
         style = MaterialTheme.typography.labelSmall,
         color = if (status == ActionStatus.REQUESTED) WbColors.Secondary else WbColors.Red,
         align = TextAlign.Center,

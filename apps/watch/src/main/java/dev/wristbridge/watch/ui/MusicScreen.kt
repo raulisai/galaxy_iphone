@@ -1,5 +1,9 @@
 package dev.wristbridge.watch.ui
 
+import androidx.compose.ui.semantics.paneTitle
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.heading
+import dev.wristbridge.notification.AccessibilityText
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,7 +54,7 @@ internal fun MusicScreen(model: UiModel, onCommand: (RemoteCommand) -> Unit) {
     val scroll = rememberScrollState()
 
     ScreenScaffold(scrollState = scroll) { padding ->
-        BoxWithConstraints(Modifier.fillMaxSize().then(crown.modifier)) {
+        BoxWithConstraints(Modifier.fillMaxSize().then(crown.modifier).semantics { paneTitle = "Música" }) {
             // Round bezel: keep content out of the corners, a little wider than the scaffold's own inset.
             val side = maxWidth * 0.08f
             val tall = maxHeight >= m.dp(230)
@@ -62,11 +66,12 @@ internal fun MusicScreen(model: UiModel, onCommand: (RemoteCommand) -> Unit) {
             ) {
                 if (!playerVisible) {
                     Glyph(GlyphKind.NOTE, WbColors.Fill, Modifier.size(m.dp(44)))
-                    WbText("Música", style = MaterialTheme.typography.titleSmall, weight = FontWeight.SemiBold, align = TextAlign.Center)
+                    WbText("Música", modifier = Modifier.semantics { heading() }, style = MaterialTheme.typography.titleSmall, weight = FontWeight.SemiBold, align = TextAlign.Center)
                     Caption(musicUnavailableLine(music))
                 } else {
                     if (tall) Artwork()
-                    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(m.dp(2))) {
+                    // Title, artist and player read as one item.
+                    Column(Modifier.fillMaxWidth().semantics(mergeDescendants = true) { }, horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(m.dp(2))) {
                         if (model.hidePreview) {
                             WbText(hiddenText, style = MaterialTheme.typography.titleSmall, weight = FontWeight.Bold, align = TextAlign.Center, maxLines = 2)
                         } else {
@@ -100,7 +105,7 @@ private fun Artwork() {
     val m = LocalMetrics.current
     Box(
         modifier = Modifier.size(m.dp(64)).clip(RoundedCornerShape(m.dp(16)))
-            .background(Brush.linearGradient(listOf(WbColors.Pink, Color(0xFF7D2AE8)))),
+            .background(Brush.linearGradient(listOf(WbColors.Pink, Color(0xFF7D2AE8)))).decorative(),
         contentAlignment = Alignment.Center,
     ) {
         Glyph(GlyphKind.NOTE, Color.White, Modifier.size(m.dp(34)))
@@ -123,7 +128,11 @@ private fun Progress(media: MediaState) {
     val elapsed = rememberElapsedSeconds(media)
     val duration = media.durationSeconds
     val fraction = if (elapsed != null && duration != null && duration > 0.0) (elapsed / duration).toFloat() else 0f
-    Column(Modifier.fillMaxWidth().padding(horizontal = m.dp(4)), verticalArrangement = Arrangement.spacedBy(m.dp(4))) {
+    // One progress-bar node ("1 minuto y 5 segundos de 3 minutos") instead of the bar plus two time labels.
+    Column(
+        Modifier.fillMaxWidth().padding(horizontal = m.dp(4)).progressSemantics(elapsed, duration),
+        verticalArrangement = Arrangement.spacedBy(m.dp(4)),
+    ) {
         LevelBar(fraction, Color.White, Modifier.fillMaxWidth())
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             WbText(formatMediaTime(elapsed), style = MaterialTheme.typography.labelSmall, color = WbColors.Secondary, maxLines = 1)
@@ -174,7 +183,7 @@ private fun VolumeBar(media: MediaState, onCommand: (RemoteCommand) -> Unit) {
             GlyphKind.MINUS, { onCommand(RemoteCommand.VOLUME_DOWN) }, m.dp(48), "Bajar volumen",
             enabled = media.supports(RemoteCommand.VOLUME_DOWN),
         )
-        Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(m.dp(3))) {
+        Column(Modifier.weight(1f).volumeSemantics(media.volume), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(m.dp(3))) {
             LevelBar((media.volume ?: 0.0).toFloat(), WbColors.Label, Modifier.fillMaxWidth())
             media.volume?.let {
                 WbText(volumePercent(it), style = MaterialTheme.typography.labelSmall, color = WbColors.Secondary, align = TextAlign.Center, maxLines = 1)

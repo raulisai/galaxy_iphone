@@ -1,0 +1,15 @@
+{
+  "applicationId": "dev.wristbridge.watch",
+  "versionName": "0.5.1-lab",
+  "versionCode": 12,
+  "apk": "build/releases/wristbridge-watch-0.5.1-lab-12.apk",
+  "sha256": "cdbb1df349c0de10275d9f8432d8f0cd03a73dd8dfa56b866f7aec7fc80d3893",
+  "bytes": 40971490,
+  "build": "PASS",
+  "lint": "PASS (0 errors)",
+  "jvmTests": "PASS (217 tests across protocol, notification and assistant domains)",
+  "installation": "PASS (adb install -r; installed SHA-256 matches)",
+  "onDevice": { "bridgeResumed": "PASS", "ancsReady": "PASS", "amsReady": "PASS" },
+  "physicalChecks": "NOT_RUN: TalkBack, real Telegram call, health permissions and sampling, native player and crown volume",
+  "G1": "NOT_RUN"
+}
