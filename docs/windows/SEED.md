@@ -91,3 +91,6 @@ Canal P2 expuesto en el GATT del reloj (Capabilities/Requests/Events), identidad
 
 ## 0.6.1-lab (19-oct-2026)
 Health sync en formato del libro de Apple, find.phone (K7) y find.watch (K8) por el canal P2, X25519 propio (el proveedor Android rechaza NamedParameterSpec). Instalado en el reloj: autoprueba cripto correcta; pairing/Keystore NOT_RUN. developer unificado con todo el lado Kotlin.
+
+## 0.6.3-lab (19-oct-2026)
+Merge de iPhone 0.4.1 (Apple). Reloj: frame de entrada inferido, DATA anticipado en cola hasta confirmar el codigo, textos de cierre claros, boton Buscar iPhone en Inicio. Evidencia en el reloj (0.6.2): 3974 muestras de pulso y 26 de pasos; acked hasta cursor 6187 => el iPhone ya confirmo lotes (sync de salud funcionando). Buscar iPhone fisico: NOT_RUN. K3 abierto.

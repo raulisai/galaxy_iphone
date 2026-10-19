@@ -171,17 +171,36 @@ class P2ResponderTest {
     }
 
     @Test
-    fun dataBeforeConfirmationIsRejected() {
+    fun dataBeforeConfirmationWaitsAndIsServedAfterwards() {
         val policy = Policy(open = true)
         val l = Listener()
         val r = newResponder(policy, l)
         val phone = Phone(X25519Key.generate(), mtu)
         phone.hello(r)
         val frames = phone.session!!.send(HealthSync.requestCursor(1, 0, 10)).second
-        frames.forEach { r.onWrite(it, 0) }
+        val early = frames.flatMap { r.onWrite(it, 0) }
+        assertTrue(early.isEmpty())
+        assertNull(policy.pinned)
+        val out = r.confirmCode(true)
+        assertTrue(r.isReady)
+        assertTrue(out.isNotEmpty())
+        var got: Any? = null
+        for (f in out) { val x = phone.session!!.receive(f, 0); if (x is SecureSession.Inbound.Message) got = x.json }
+        assertEquals(10, HealthSync.parseBatch(got).size)
+    }
+
+    @Test
+    fun codeMismatchDropsEarlyData() {
+        val policy = Policy(open = true)
+        val r = newResponder(policy, Listener())
+        val phone = Phone(X25519Key.generate(), mtu)
+        phone.hello(r)
+        phone.session!!.send(HealthSync.requestCursor(1, 0, 10)).second.forEach { r.onWrite(it, 0) }
+        r.confirmCode(false)
         assertTrue(r.isClosed)
         assertNull(policy.pinned)
     }
+
     @Test
     fun ledgerFormatSkipsSamplesTheIphoneWouldRejectButAdvancesTheCursor() {
         val bad = listOf(

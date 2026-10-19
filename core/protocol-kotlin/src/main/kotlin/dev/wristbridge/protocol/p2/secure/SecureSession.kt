@@ -16,8 +16,10 @@ import dev.wristbridge.protocol.p2.ParseResult
 class SecureSession(
     private val keys: TransportKeys,
     private val maxAttValueBytes: Int,
+    /** Inbound frame capacity when known; null infers it from the first frame (K1 rule), as the iPhone does. */
+    knownInboundMaxAttValueBytes: Int? = maxAttValueBytes,
 ) {
-    private val reassembler = MessageReassembler(knownMaxAttValueBytes = maxAttValueBytes)
+    private val reassembler = MessageReassembler(knownMaxAttValueBytes = knownInboundMaxAttValueBytes)
     private var nextMessageId = FIRST_DATA_MESSAGE_ID
 
     /** Six-digit code to show on both screens at registration. */

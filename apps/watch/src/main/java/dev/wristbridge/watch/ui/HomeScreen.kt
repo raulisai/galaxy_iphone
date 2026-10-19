@@ -1,5 +1,10 @@
 package dev.wristbridge.watch.ui
 
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.runtime.getValue
+import dev.wristbridge.watch.p2.P2Bridge
+import dev.wristbridge.watch.p2.P2Phase
+
 import dev.wristbridge.notification.AccessibilityText
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -129,6 +134,20 @@ internal fun HomeScreen(
             Tile(
                 onClick = { onOpen(Screen.HEALTH) }, glyph = GlyphKind.PHONE,
                 accent = WbColors.Green, title = "Salud", subtitle = "Pasos y pulso del reloj",
+            )
+        }
+
+        item(key = "findphone") {
+            val p2 by P2Bridge.state.collectAsStateWithLifecycle()
+            Tile(
+                onClick = { P2Bridge.findPhone() },
+                glyph = GlyphKind.BELL,
+                accent = WbColors.Amber,
+                title = "Buscar iPhone",
+                subtitle = p2.findPhone.ifBlank { if (p2.phase == P2Phase.READY) "Hacer sonar tu iPhone" else "Requiere vincular el iPhone" },
+                subtitleLines = 2,
+                description = "Buscar iPhone. " + p2.findPhone.ifBlank { "Hace sonar el iPhone vinculado" },
+                liveStatus = true,
             )
         }
 

@@ -138,9 +138,24 @@ object P2Bridge {
         if (!match) update { it.copy(phase = P2Phase.IDLE, registrationUntil = 0, code = null) }
     }
 
+    private val main = Handler(android.os.Looper.getMainLooper())
+
+    /** Ring the paired iPhone through the secure channel. The result is "requested", never "rang". */
     fun findPhone() {
         update { it.copy(findPhone = "Enviando…") }
-        channel?.requestFindPhone()
+        val c = channel
+        if (c == null) {
+            update { it.copy(findPhone = "Inicia el puente y vincula el iPhone") }
+            return
+        }
+        c.requestFindPhone()
+        main.postDelayed({
+            if (state.value.findPhone == "Enviando…") update { it.copy(findPhone = "El iPhone no respondió") }
+        }, 8_000)
+        main.postDelayed({
+            val t = state.value.findPhone
+            if (t != "Enviando…" && t.isNotBlank()) update { it.copy(findPhone = "") }
+        }, 30_000)
     }
 
     fun stopFindingWatch(context: Context) {
@@ -221,7 +236,7 @@ class P2Channel(
                 BridgeStatus.event("P2: sesión lista peer=$id registrado=$registered sesion=$sessionId")
             }
             override fun onClosed(reason: String) {
-                P2Bridge.update { it.copy(phase = if (it.phase == P2Phase.READY || it.phase == P2Phase.CODE) P2Phase.CLOSED else it.phase, code = null, lastClosed = reason) }
+                P2Bridge.update { it.copy(phase = if (it.phase == P2Phase.READY || it.phase == P2Phase.CODE) P2Phase.CLOSED else it.phase, code = null, lastClosed = closeText(reason)) }
                 BridgeStatus.event("P2: sesión cerrada peer=$id motivo=$reason")
             }
             override fun onDiagnostic(text: String) = BridgeStatus.event("P2: $text")
@@ -323,6 +338,14 @@ class P2Channel(
             handler.postDelayed({ pump(peer) }, 50)
         }
     }
+}
+
+/** Plain-language reason shown on the pairing screen. */
+internal fun closeText(reason: String): String = when (reason) {
+    "E_NOT_AUTHORIZED" -> "un iPhone intentó vincularse con la ventana cerrada; pulsa Vincular iPhone y repite"
+    "E_IDENTITY_CHANGED" -> "otro iPhone distinto del vinculado; olvida el iPhone para vincular uno nuevo"
+    "E_BAD_TAG" -> "mensaje no válido o repetido"
+    else -> reason
 }
 
 /** Runs a full in-process handshake with the platform providers to prove X25519 and ChaCha20-Poly1305 exist on this watch. */

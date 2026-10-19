@@ -68,7 +68,9 @@ class P2Responder(
     private enum class State { AWAIT_M1, AWAIT_M3, AWAIT_CONFIRM, READY, CLOSED }
 
     private var state = State.AWAIT_M1
-    private val handshakeAssembler = MessageReassembler(knownMaxAttValueBytes = maxAttValueBytes)
+    // Inbound capacity is inferred from the first frame: the iPhone writes with its own maximumWriteValueLength.
+    private val handshakeAssembler = MessageReassembler(knownMaxAttValueBytes = null)
+    private val earlyData = ArrayDeque<ByteArray>()
     private val noise = NoiseXX(false, localKey, P2Profile.prologue())
     private var keys: TransportKeys? = null
     private var session: SecureSession? = null
@@ -94,7 +96,11 @@ class P2Responder(
 
     private fun handle(bytes: ByteArray, now: Long): List<ByteArray> {
         if (state == State.READY) return handleData(bytes, now)
-        if (state == State.AWAIT_CONFIRM) throw P2Exception(P2Error.SEQUENCE, "waiting for user confirmation")
+        if (state == State.AWAIT_CONFIRM) {
+            if (earlyData.size >= MAX_EARLY_FRAMES) throw P2Exception(P2Error.BUSY, "too many frames before confirmation")
+            earlyData += bytes.copyOf()
+            return emptyList()
+        }
         val frame: Frame = when (val p = FrameCodec.parse(bytes)) {
             is ParseResult.Parsed -> p.frame
             is ParseResult.Rejected -> throw P2Exception(p.error, p.detail)
@@ -140,10 +146,13 @@ class P2Responder(
     }
 
     private fun becomeReady(t: TransportKeys, registered: Boolean): List<ByteArray> {
-        session = SecureSession(t, maxAttValueBytes)
+        session = SecureSession(t, maxAttValueBytes, knownInboundMaxAttValueBytes = null)
         state = State.READY
         listener.onReady(sessionId(t), registered)
-        return emptyList()
+        // DATA the iPhone sent while the user was still comparing the code is replayed in order, not lost.
+        val out = ArrayList<ByteArray>()
+        while (earlyData.isNotEmpty()) out += handleData(earlyData.removeFirst(), System.nanoTime())
+        return out
     }
 
     private fun sessionId(t: TransportKeys): String = t.handshakeHash.take(8).joinToString("") { "%02x".format(it) }
@@ -162,6 +171,10 @@ class P2Responder(
     }
 
     private var nextRequestId = 1L
+
+    private companion object {
+        const val MAX_EARLY_FRAMES = 64
+    }
 
     /** Watch -> iPhone request (for example "find.phone"). Returns the request id and the frames to notify; empty if not ready. */
     fun request(capability: String, payload: Map<String, Any?> = emptyMap()): Pair<Long, List<ByteArray>> {
