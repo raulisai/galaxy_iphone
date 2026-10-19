@@ -144,7 +144,7 @@ internal fun HomeScreen(
                 glyph = GlyphKind.BELL,
                 accent = WbColors.Amber,
                 title = "Buscar iPhone",
-                subtitle = p2.findPhone.ifBlank { if (p2.phase == P2Phase.READY) "Hacer sonar tu iPhone" else "Requiere vincular el iPhone" },
+                subtitle = p2.findPhone.ifBlank { when { p2.phase == P2Phase.READY -> "Hacer sonar tu iPhone"; p2.paired -> "Sesión cerrada" + (if (p2.lastClosed.isNotBlank()) ": ${p2.lastClosed}" else ". Abre WristBridge en el iPhone") else -> "Requiere vincular el iPhone" } },
                 subtitleLines = 2,
                 description = "Buscar iPhone. " + p2.findPhone.ifBlank { "Hace sonar el iPhone vinculado" },
                 liveStatus = true,
