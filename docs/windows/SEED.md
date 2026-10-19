@@ -94,3 +94,6 @@ Health sync en formato del libro de Apple, find.phone (K7) y find.watch (K8) por
 
 ## 0.6.3-lab (19-oct-2026)
 Merge de iPhone 0.4.1 (Apple). Reloj: frame de entrada inferido, DATA anticipado en cola hasta confirmar el codigo, textos de cierre claros, boton Buscar iPhone en Inicio. Evidencia en el reloj (0.6.2): 3974 muestras de pulso y 26 de pasos; acked hasta cursor 6187 => el iPhone ya confirmo lotes (sync de salud funcionando). Buscar iPhone fisico: NOT_RUN. K3 abierto.
+
+## 0.6.4-lab (19-oct-2026)
+Buscar iPhone con respaldo ANCS (app cerrada) y bajo consumo (anuncio LOW_POWER, conexion LOW_POWER). Tareas Apple K10 en handoff-apple-p2-health.md. Sin tarjeta armada en el iPhone en la prueba; sonido real NOT_RUN. Bateria NOT_RUN.

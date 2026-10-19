@@ -140,22 +140,42 @@ object P2Bridge {
 
     private val main = Handler(android.os.Looper.getMainLooper())
 
-    /** Ring the paired iPhone through the secure channel. The result is "requested", never "rang". */
-    fun findPhone() {
+    /**
+     * Ring the paired iPhone. With a live secure session the order goes through P2 (`find.phone`). Without one (the
+     * iPhone app is closed or suspended), or if the iPhone does not acknowledge in 5 s, the watch presses
+     * "Hacer sonar" on the armed "Buscar iPhone" notification through ANCS: iOS delivers that action to the app in the
+     * background, so it works with the app closed (not after a force quit of the iPhone app is guaranteed by iOS, but
+     * the notification action still relaunches it). The result is always "requested", never "rang".
+     */
+    fun findPhone(context: Context) {
+        val app = context.applicationContext
         update { it.copy(findPhone = "Enviando…") }
         val c = channel
-        if (c == null) {
-            update { it.copy(findPhone = "Inicia el puente y vincula el iPhone") }
-            return
+        if (c != null && state.value.phase == P2Phase.READY) {
+            c.requestFindPhone()
+            main.postDelayed({
+                if (state.value.findPhone == "Enviando…") ancsFindPhone(app, "Sin respuesta por el canal seguro; ")
+            }, 5_000)
+        } else {
+            ancsFindPhone(app, "")
         }
-        c.requestFindPhone()
-        main.postDelayed({
-            if (state.value.findPhone == "Enviando…") update { it.copy(findPhone = "El iPhone no respondió") }
-        }, 8_000)
         main.postDelayed({
             val t = state.value.findPhone
-            if (t != "Enviando…" && t.isNotBlank()) update { it.copy(findPhone = "") }
+            if (t == "Enviando…") update { it.copy(findPhone = "El iPhone no respondió") }
+            else if (t.isNotBlank()) update { it.copy(findPhone = "") }
         }, 30_000)
+    }
+
+    private fun ancsFindPhone(context: Context, prefix: String) {
+        val armed = dev.wristbridge.watch.bridge.ActiveCards.state.value.firstOrNull {
+            it.card.title == "Buscar iPhone" && it.card.positiveActionLabel != null
+        }
+        if (armed == null) {
+            update { it.copy(findPhone = prefix + "abre WristBridge en el iPhone y pulsa «Armar Buscar iPhone» una vez") }
+            return
+        }
+        dev.wristbridge.watch.bridge.BridgeService.sendCardAction(context, armed.card.key, dev.wristbridge.protocol.ancs.ActionId.POSITIVE)
+        update { it.copy(findPhone = prefix + "orden enviada por avisos; funciona con la app cerrada") }
     }
 
     fun stopFindingWatch(context: Context) {

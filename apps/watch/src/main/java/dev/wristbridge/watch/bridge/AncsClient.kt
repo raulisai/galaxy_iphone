@@ -295,6 +295,8 @@ class AncsClient(
                 BridgeStatus.update { it.copy(ancs = AncsState.READY, ancsDetail = "", generation = engine.generation) }
                 BridgeStatus.event("ANCS listo gen=${engine.generation}")
                 apply(effects)
+                // Battery: a relaxed connection interval is enough for notifications and media commands.
+                runCatching { g.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_LOW_POWER) }
                 // Music only after notifications are live; its outcome never feeds back into ANCS.
                 ams.setup(g)
             }

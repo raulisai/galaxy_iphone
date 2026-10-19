@@ -138,13 +138,14 @@ internal fun HomeScreen(
         }
 
         item(key = "findphone") {
+            val context = androidx.compose.ui.platform.LocalContext.current
             val p2 by P2Bridge.state.collectAsStateWithLifecycle()
             Tile(
-                onClick = { P2Bridge.findPhone() },
+                onClick = { P2Bridge.findPhone(context) },
                 glyph = GlyphKind.BELL,
                 accent = WbColors.Amber,
                 title = "Buscar iPhone",
-                subtitle = p2.findPhone.ifBlank { when { p2.phase == P2Phase.READY -> "Hacer sonar tu iPhone"; p2.paired -> "Sesión cerrada" + (if (p2.lastClosed.isNotBlank()) ": ${p2.lastClosed}" else ". Abre WristBridge en el iPhone") else -> "Requiere vincular el iPhone" } },
+                subtitle = p2.findPhone.ifBlank { when { p2.phase == P2Phase.READY -> "Hacer sonar tu iPhone"; p2.paired -> "Por avisos del iPhone (app cerrada)" else -> "Requiere vincular el iPhone" } },
                 subtitleLines = 2,
                 description = "Buscar iPhone. " + p2.findPhone.ifBlank { "Hace sonar el iPhone vinculado" },
                 liveStatus = true,

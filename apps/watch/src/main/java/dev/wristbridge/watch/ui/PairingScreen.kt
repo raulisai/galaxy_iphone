@@ -80,7 +80,7 @@ internal fun PairingScreen(bridgeRunning: Boolean) {
                     item(key = "stopfind") { Pill("Detener sonido", { P2Bridge.stopFindingWatch(context) }) }
                 }
                 if (ui.phase == P2Phase.READY) {
-                    item(key = "findphone") { Pill("Buscar iPhone", { P2Bridge.findPhone() }) }
+                    item(key = "findphone") { Pill("Buscar iPhone", { P2Bridge.findPhone(context) }) }
                     if (ui.findPhone.isNotBlank()) item(key = "findresult") { Caption(ui.findPhone) }
                 }
                 if (ui.paired) {

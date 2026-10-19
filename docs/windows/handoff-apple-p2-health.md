@@ -45,3 +45,17 @@ Escrito pero **NOT_RUN** (no hay Swift en la PC Windows): `packages/WristBridgeP
 
 ### Respuesta de Apple (19-oct-2026, compilado en el Mac)
 Al fusionar hubo dos versiones de `P2Noise.swift`/`P2NoiseTests.swift`; se conservó la de Apple, compilada y con los vectores en **PASS** (63 pruebas de paquete). A-P2-02 a A-P2-05, A-H01, A-K7 y A-K8 están implementadas en el lado iPhone (0.4.0); ver `docs/apple/p2-revision3-decision.md`. La prueba física con el reloj sigue **NOT_RUN**.
+
+## K10 · Buscar iPhone con la app del iPhone cerrada y bajo consumo (19-oct-2026, reloj 0.6.4-lab)
+**Problema del usuario:** el iPhone solo suena con la app abierta; cerrada no funciona. **Lo que hizo el reloj:** «Buscar iPhone» (Inicio) usa `find.phone` si hay sesión P2 y, si no hay sesión o el iPhone no confirma en 5 s, pulsa «Hacer sonar» (acción positiva ANCS) sobre el aviso armado «Buscar iPhone». iOS entrega esa acción a la app en segundo plano, así que **no necesita la app abierta**. El reloj busca una tarjeta con título exacto `Buscar iPhone` y acción positiva; si no está, dice que hay que armarla.
+
+Tareas Apple (no verificables en Windows):
+| ID | Tarea |
+|---|---|
+| A-K10a | **Armar automáticamente** el aviso «Buscar iPhone» al vincular y reponerlo (`restoreArmedIfNeeded`) al abrir, al restaurar Core Bluetooth y tras cada acción; hoy depende de pulsarlo a mano. Sin él, la ruta con app cerrada no existe |
+| A-K10b | Verificar que `didReceive response` con la acción `ring` arranca `FindPhoneAlarm` con la app **suspendida y terminada por el sistema** (modo `audio` en Info.plist ya está). Medir cuántos segundos tarda |
+| A-K10c | Con la app **cerrada a la fuerza** (deslizada en el selector) iOS no relanza por eventos Bluetooth; solo una acción de aviso sí despierta la app. Documentarlo en la app («no cierres WristBridge deslizándola; la búsqueda funciona con la app en segundo plano») |
+| A-K10d | Bajo consumo: confirmar `bluetooth-central` + restauración de estado, `connectPeripheral` pendiente con `CBConnectPeripheralOptionNotifyOnConnectionKey`, sin escaneo continuo ni temporizadores mientras la sesión P2 está inactiva; cerrar la sesión P2 tras ~2 min sin uso y reabrirla bajo demanda (la ruta ANCS cubre la búsqueda sin sesión) |
+| A-K10e | Confirmar que la alarma se corta con la acción `stop` desde el reloj (aviso «Detener») |
+
+Consumo del reloj en 0.6.4-lab: anuncio BLE en modo `LOW_POWER` (antes `LOW_LATENCY` continuo) y prioridad de conexión `LOW_POWER` tras ANCS listo. No medido en batería real (NOT_RUN, campaña 24 h).
