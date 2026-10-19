@@ -39,3 +39,9 @@ APK `build/releases/wristbridge-watch-0.6.1-lab-15.apk` instalado en el reloj; l
 - **K7 Buscar iPhone**: el reloj envía `{kind:"req", requestId, capability:"find.phone", payload:{}}` (botón «Buscar iPhone» en Conexión › Vincular iPhone, con sesión lista). El iPhone responde con `{kind:"res", requestId, capability:"find.phone", payload:{status:"started"}}` o `error:"E_..."`. El reloj muestra «Solicitado al iPhone» al recibir el ACK del mensaje y «aceptó la orden» con el `res`; nunca dice «sonó».
 - **K8 Buscar reloj**: el iPhone envía `{kind:"req", requestId, capability:"find.watch", payload:{}}`; el reloj suena y vibra 30 s (botón «Detener sonido») y responde `payload:{status:"requested"}`.
 - Tareas nuevas para Apple: A-K7 (`find.phone` → `FindPhoneAlarm`), A-K8 (enviar `find.watch`), y actualizar el parser de lotes a los campos de arriba.
+
+## Estado de las tareas Apple en Swift (19-oct-2026, escritas en Windows, SIN compilar)
+Escrito pero **NOT_RUN** (no hay Swift en la PC Windows): `packages/WristBridgeProtocol/Sources/WristBridgeProtocol/P2Noise.swift` (A-P2-02: Noise XX con CryptoKit) y `Tests/.../P2NoiseTests.swift` (reproduce `test/fixtures/shared/p2-noise-xx-vectors.json`). En el Mac: `git pull origin developer && bash scripts/apple/test-package.sh`; si los vectores no coinciden, revisar primero el orden de tokens y el relleno de `h`. Pendientes: A-P2-03 (sesión DATA y JSON estricto), A-P2-04/05 (Core Bluetooth, Keychain, pantalla de código), A-H01 (cableado a `HealthStore.ingest`), A-K7/K8.
+
+### Respuesta de Apple (19-oct-2026, compilado en el Mac)
+Al fusionar hubo dos versiones de `P2Noise.swift`/`P2NoiseTests.swift`; se conservó la de Apple, compilada y con los vectores en **PASS** (63 pruebas de paquete). A-P2-02 a A-P2-05, A-H01, A-K7 y A-K8 están implementadas en el lado iPhone (0.4.0); ver `docs/apple/p2-revision3-decision.md`. La prueba física con el reloj sigue **NOT_RUN**.
