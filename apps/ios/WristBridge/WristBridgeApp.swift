@@ -4,7 +4,7 @@ import SwiftUI
 struct WristBridgeApp: App {
     @UIApplicationDelegateAdaptor(BridgeAppDelegate.self) private var appDelegate
     @StateObject private var model: BridgeModel
-    @StateObject private var fixtures = NotificationFixtureAdapter()
+    @StateObject private var fixtures = NotificationFixtureAdapter.shared
 
     init() {
         #if DEBUG

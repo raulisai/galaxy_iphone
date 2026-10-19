@@ -5,6 +5,9 @@ import WristBridgeProtocol
 
 @MainActor
 final class NotificationFixtureAdapter: NSObject, ObservableObject, UNUserNotificationCenterDelegate {
+    /// One instance for the whole process, created at launch so a notification action that
+    /// wakes the app in the background always finds its delegate.
+    static let shared = NotificationFixtureAdapter()
     @Published private(set) var permission = "Sin comprobar"
     @Published private(set) var records: [FixtureRecord] = []
     @Published private(set) var message = "Los avisos de prueba pertenecen únicamente a esta app."
@@ -186,6 +189,17 @@ final class NotificationFixtureAdapter: NSObject, ObservableObject, UNUserNotifi
             try resource.setResourceValues(values)
         } catch {
             persistenceWarning = "No se pudo guardar el registro de pruebas. Expórtalo antes de cerrar la app."
+        }
+    }
+
+    nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                            didReceive response: UNNotificationResponse,
+                                            withCompletionHandler completionHandler: @escaping () -> Void) {
+        let action = response.actionIdentifier
+        let category = response.notification.request.content.categoryIdentifier
+        Task { @MainActor in
+            FindViaNotifications.shared.handle(actionIdentifier: action, categoryIdentifier: category)
+            completionHandler()
         }
     }
 

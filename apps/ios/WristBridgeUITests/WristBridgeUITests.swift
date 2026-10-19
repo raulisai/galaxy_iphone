@@ -114,8 +114,8 @@ final class WristBridgeUITests: XCTestCase {
             shot.name = "feature-\(id)"; shot.lifetime = .keepAlways; add(shot)
             // Capabilities that need the watch are never offered as enabled.
             let actionable = app.buttons.matching(NSPredicate(
-                format: "label CONTAINS[c] 'Enviar al reloj' OR label CONTAINS[c] 'Hacer sonar' OR label CONTAINS[c] 'Activar sincronización'"))
-            XCTAssertEqual(actionable.count, 0)
+                format: "label CONTAINS[c] 'Enviar al reloj' OR label CONTAINS[c] 'Activar sincronización'"))
+            XCTAssertEqual(actionable.count, 0, "\(title): " + actionable.allElementsBoundByIndex.map { $0.label }.joined(separator: " | "))
             app.navigationBars[title].buttons.firstMatch.tap()
         }
     }
@@ -138,8 +138,11 @@ final class WristBridgeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Sonando'")).firstMatch.waitForExistence(timeout: 5))
         toggle.tap()
         XCTAssertTrue(app.staticTexts["Detenido."].waitForExistence(timeout: 5))
-        // The watch-initiated trigger is not offered as a control.
-        XCTAssertEqual(app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Activar «Buscar iPhone»'")).count, 0)
+        // In demo the notification-based finder is visible but disabled (no real watch).
+        let arm = app.buttons["armFindPhone"]
+        for _ in 0..<4 where !arm.exists { app.swipeUp() }
+        XCTAssertTrue(arm.exists)
+        XCTAssertFalse(arm.isEnabled)
     }
 
     func testHealthScreenShowsLabeledSampleDataOnlyInDemo() {

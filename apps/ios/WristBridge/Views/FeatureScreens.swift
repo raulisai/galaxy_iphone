@@ -395,6 +395,7 @@ private struct HeartRateChart: View {
 
 struct FindWatchScreen: View {
     @ObservedObject var model: BridgeModel
+    @ObservedObject private var finder = FindViaNotifications.shared
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -438,9 +439,23 @@ struct FindWatchScreen: View {
                 tip("Pulsa Reconectar en la pantalla Reloj; la app también reintenta sola.", "arrow.clockwise")
                 tip("Comprueba en el reloj que su app WristBridge está abierta.", "applewatch")
             }
-            LockedAction(title: "Hacer sonar el reloj", symbol: "bell.and.waves.left.and.right.fill")
-            GateCard(items: [.init(text: "Comando «buscar» aprobado en el contrato compartido"),
-                             .init(text: "Canal seguro y confirmación del reloj")])
+            Card(title: "Hacer sonar el reloj") {
+                Button {
+                    Task { if finder.watchBurstActive { finder.stopWatch() } else { await finder.ringWatch() } }
+                } label: {
+                    Label(finder.watchBurstActive ? "Detener" : "Hacer sonar el reloj",
+                          systemImage: finder.watchBurstActive ? "stop.fill" : "bell.and.waves.left.and.right.fill")
+                        .frame(maxWidth: .infinity).padding(.vertical, 4)
+                }
+                .buttonStyle(.glassProminent)
+                .tint(finder.watchBurstActive ? .red : .teal)
+                .disabled(model.isDemo)
+                .sensoryFeedback(.impact, trigger: finder.watchBurstActive)
+                .accessibilityIdentifier("ringWatch")
+                Text(finder.message).font(.footnote).foregroundStyle(.secondary)
+                Text("Envía 8 avisos al reloj en 30 s por el mismo camino que tus notificaciones. Que vibre o suene depende de los ajustes de avisos del reloj; el iPhone también sonará. Es «solicitado»: la app no puede confirmar que el reloj sonó.")
+                    .font(.caption).foregroundStyle(.tertiary)
+            }
         }
     }
 
@@ -466,9 +481,10 @@ private extension String {
 struct FindPhoneScreen: View {
     @ObservedObject var model: BridgeModel
     @ObservedObject private var alarm = FindPhoneAlarm.shared
+    @ObservedObject private var finder = FindViaNotifications.shared
 
     var body: some View {
-        FeatureScroll(feature: .findPhone, subtitle: "Haz sonar este iPhone para encontrarlo. Prueba el sonido aquí; el aviso desde el reloj llegará con el canal seguro.") {
+        FeatureScroll(feature: .findPhone, subtitle: "Haz sonar este iPhone para encontrarlo: desde aquí o pulsando un aviso en el reloj.") {
             VStack(spacing: 16) {
                 ZStack {
                     Circle().stroke(Color.secondary.opacity(0.15), lineWidth: 12)
@@ -502,20 +518,36 @@ struct FindPhoneScreen: View {
                 Text(alarm.message).font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
                     .accessibilityIdentifier("findPhoneStatus")
             }
-            Card(title: "Cómo funcionará desde el reloj") {
-                IconRow(symbol: "applewatch", color: .teal, title: "Pulsas «Buscar iPhone» en el reloj",
-                        subtitle: "El reloj envía la orden por el canal seguro.")
-                Divider()
-                IconRow(symbol: "bolt.horizontal.fill", color: .indigo, title: "Bluetooth despierta la app",
-                        subtitle: "Aunque esté en segundo plano; suena hasta \(FindPhoneAlarm.maxSeconds) s y se detiene en pantalla.")
-                Divider()
-                IconRow(symbol: "speaker.wave.2.fill", color: .blue, title: "Se oye aunque esté en silencio",
-                        subtitle: "El volumen es el del sistema: súbelo si no se oye.")
+            Card(title: "Desde el reloj") {
+                IconRow(symbol: finder.phoneArmed ? "bell.badge.fill" : "bell.slash.fill",
+                        color: finder.phoneArmed ? .green : .gray,
+                        title: finder.phoneArmed ? "Armado" : "Desarmado",
+                        subtitle: finder.phoneArmed
+                            ? "El aviso «Buscar iPhone» está en el centro de avisos y el reloj lo recibe."
+                            : "Arma el aviso para poder pulsar «Hacer sonar» desde el reloj.")
+                Button {
+                    Task { if finder.phoneArmed { finder.disarmPhoneFinder() } else { await finder.armPhoneFinder() } }
+                } label: {
+                    Label(finder.phoneArmed ? "Desarmar" : "Armar «Buscar iPhone» en el reloj",
+                          systemImage: finder.phoneArmed ? "xmark.circle.fill" : "applewatch.radiowaves.left.and.right")
+                        .frame(maxWidth: .infinity).padding(.vertical, 4)
+                }
+                .buttonStyle(.glass)
+                .disabled(model.isDemo)
+                .accessibilityIdentifier("armFindPhone")
+                Text(finder.message).font(.footnote).foregroundStyle(.secondary)
+                    .accessibilityIdentifier("findPhoneArmStatus")
             }
-            LockedAction(title: "Activar «Buscar iPhone» desde el reloj", symbol: "applewatch.radiowaves.left.and.right")
-            GateCard(items: [.init(text: "Canal seguro iPhone ↔ reloj aprobado (G2) y formato de mensajes congelado"),
-                             .init(text: "Comando «buscar iPhone» aprobado en el contrato compartido y botón en la app del reloj"),
-                             .init(text: "Prueba física con la app en segundo plano y el iPhone bloqueado")])
+            Card(title: "Cómo funciona") {
+                IconRow(symbol: "applewatch", color: .teal, title: "Abre el aviso en el reloj",
+                        subtitle: "Lo recibe como cualquier aviso del iPhone (ANCS). Pulsa «Hacer sonar».")
+                Divider()
+                IconRow(symbol: "bolt.horizontal.fill", color: .indigo, title: "iOS despierta la app",
+                        subtitle: "Suena hasta \(FindPhoneAlarm.maxSeconds) s aunque la app esté en segundo plano; se detiene aquí o con «Detener».")
+                Divider()
+                IconRow(symbol: "exclamationmark.triangle.fill", color: .orange, title: "Ruta experimental",
+                        subtitle: "Depende de que el reloj muestre los botones del aviso y de que iOS permita el audio en segundo plano. Se confirma en el reloj; esta app solo registra «solicitado».")
+            }
         }
     }
 }

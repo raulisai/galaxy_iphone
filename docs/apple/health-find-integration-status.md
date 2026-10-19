@@ -11,6 +11,7 @@
 | **Libro de salud** `HealthLedger` + `HealthLedgerRepository` (paquete): idempotencia por `syncId`/`syncVersion`, rechazo de valores negativos/inválidos (nunca se fabrica actividad negativa), huecos sin interpolar, caducidad que impide resucitar datos viejos, cursor por métrica, retención 7/30/90, archivo protegido y fuera de copias, archivos ilegibles o futuros se conservan | PASS: 12 pruebas nuevas (S02–S06 del plan), 38 en total |
 | **Regla de confirmación**: `ingest` devuelve solo tras guardar; un lote con rechazos no es «totalmente aceptado»; reenviar tras un fallo entre guardar y confirmar no duplica | PASS en pruebas (S03) |
 | **Pantalla Salud** lee el libro: pasos, ritmo cardiaco (con rango), distancia, energía, gráficas del día, huecos y estado de sincronización; «Datos de muestra» solo en demostración, rotulado | PASS en pruebas de interfaz; revisión visual en simulador |
+| **Buscar iPhone y Buscar reloj por avisos (ruta experimental, sin canal propio)**: «Buscar reloj» envía 8 avisos sonoros al reloj por ANCS; «Buscar iPhone» deja un aviso armado con botones «Hacer sonar/Detener» que el reloj recibe y, al pulsar, iOS despierta la app y suena la alarma (`FindViaNotifications`) | Implementado; **NOT_RUN en el par físico**. Depende de que el reloj muestre los botones y de que iOS permita iniciar audio desde segundo plano |
 | **Buscar iPhone**: alarma real (audio de reproducción que ignora el interruptor de silencio, 60 s, se corta con Detener o una interrupción), prueba local desde la app | PASS en simulador (inicia/detiene); **audio audible no verificado** (sin dispositivo) |
 | Permiso de segundo plano `audio` en `Info.plist` para que la alarma pueda sonar con la app en segundo plano cuando el reloj la pida | Añadido; `validate_structure.py` actualizado. **Decisión a confirmar**: Apple revisa el uso de este modo si se publica en la tienda. |
 | Medición `att-capacity` en el diagnóstico (solo lectura) | Añadida; sin medir en un iPhone real |
@@ -29,7 +30,7 @@
 | 8 | Copia opcional a Apple Salud con `HKMetadataKeySyncIdentifier`/`SyncVersion`, permiso por métrica | Apple (opcional) | — |
 | 9 | Pruebas físicas: tres importaciones repetidas sin duplicados, crash en cada frontera, alarma con iPhone bloqueado y app en segundo plano | Ambos + usuario | Aprobar G7 / la función |
 
-«Buscar reloj» (hacer sonar el reloj desde el iPhone) también necesita los pasos 1–6 más un comando aprobado y su botón; sigue bloqueado en la app.
+«Buscar» ya tiene una ruta experimental por avisos (arriba) que no necesita el canal propio; el comando definitivo por canal seguro (pasos 1–7) sigue pendiente y sustituiría esa ruta si se prueba mejor.
 
 ## Qué NO se ha hecho a propósito
 
