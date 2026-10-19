@@ -34,3 +34,12 @@
 ## Integración
 
 `origin/developer` y `origin/development_codex` están en el mismo commit; fusiona `developer` en `development`/`development_claude` antes de seguir. Apple no toca esas ramas.
+
+## K9 · Buscar iPhone: el botón no se ve en el reloj del usuario (19-oct-2026)
+
+El iPhone 0.4.2 ya atiende `find.phone` (probado en simulador y con el canal **listo** en el par físico; el sonido real, sin verificar). El usuario **no ve el botón «Buscar iPhone»** en el reloj. En el código (`PairingScreen.kt`, 0.6.1-lab) el botón solo aparece dentro de «Vincular iPhone» y **únicamente con `phase == READY`**, debajo de la tarjeta de estado; si la sesión está `CLOSED` o hay que desplazar la lista, no se ve. Tareas Kotlin:
+1. Mostrar «Buscar iPhone» en la pantalla principal (Inicio) cuando haya un iPhone vinculado, no solo dentro de Vincular iPhone.
+2. Si la sesión no está lista, el botón debe intentar reabrirla o explicar por qué está inactivo («Sesión cerrada: …») en vez de desaparecer.
+3. Confirmar que el APK instalado del reloj es 0.6.1-lab (15) (Ajustes › Acerca de) y que en «Vincular iPhone» aparece «Sesión segura activa.».
+4. Mantener el texto honesto: «Solicitado al iPhone» / «aceptó la orden»; nunca «sonó».
+Mientras tanto, el iPhone ofrece una ruta sin botón nuevo: en Buscar iPhone → «Armar», el reloj recibe un aviso «Buscar iPhone» con acciones «Hacer sonar/Detener» (ANCS).
