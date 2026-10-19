@@ -29,3 +29,13 @@ La implementación Noise del reloj es propia y **no está revisada** (K3). Mient
 
 ## Prompt listo para pegar en la sesión de Apple
 > Lee `docs/windows/handoff-apple-p2-health.md`, `docs/windows/p2-seguridad-y-salud-kotlin.md` y la sección «Revisión 3» de `contracts/proposals/p2-channel-draft.md`. Implementa A-P2-01 a A-P2-05 y A-H01 en Swift sin tocar Kotlin ni contratos; usa `test/fixtures/shared/p2-noise-xx-vectors.json` como oráculo. Documenta cualquier discrepancia en `docs/apple/` y no cambies el contrato sin dejarlo anotado para Windows.
+
+## Actualización 0.6.1-lab (19 de octubre de 2026): alineado con `health-ingest-spec.md` y K7/K8
+APK `build/releases/wristbridge-watch-0.6.1-lab-15.apk` instalado en el reloj; la autoprueba criptográfica del reloj (handshake Noise + ChaCha20-Poly1305 + código) da **correcta**. Keystore y pairing real: NOT_RUN (falta el iPhone).
+
+- **X25519 propio** (RFC 7748, BigInteger): el proveedor de Android rechaza las especificaciones que acepta el JDK. Produce los mismos bytes (vector RFC y vector Noise sin cambios). No es de tiempo constante: entra en la revisión K3.
+- **Muestras `health.sync` ya en formato del libro de Apple**. Respuesta `batch`: `{op, deviceId, after, last, more, samples[]}`; cada muestra `{c, m, s, e, v, src:"watch-sensor", id, ver:1}` y, solo en `heartRate`, `min` y `max` (= `v`). `m` ∈ {`stepsDaily`, `heartRate`}; `deviceId` = `watch-` + 12 hex derivados de la clave pública del reloj; `id` = `syncId` (SHA-256 hex, 64 caracteres). El pulso del reloj llega con inicio = fin; el reloj fija `s = e − 1000 ms` para cumplir `end > start`.
+- El reloj **no envía** muestras que el iPhone rechazaría (pulso fuera de 20–250, pasos > 300 000 o duración > 25 h, intervalo vacío en pasos). Aun así avanza `last` más allá de ellas: el iPhone debe pedir el siguiente lote con `after = last`, y solo enviar `ack` con `through = last` cuando `HealthStore.ingest` devuelva `true`.
+- **K7 Buscar iPhone**: el reloj envía `{kind:"req", requestId, capability:"find.phone", payload:{}}` (botón «Buscar iPhone» en Conexión › Vincular iPhone, con sesión lista). El iPhone responde con `{kind:"res", requestId, capability:"find.phone", payload:{status:"started"}}` o `error:"E_..."`. El reloj muestra «Solicitado al iPhone» al recibir el ACK del mensaje y «aceptó la orden» con el `res`; nunca dice «sonó».
+- **K8 Buscar reloj**: el iPhone envía `{kind:"req", requestId, capability:"find.watch", payload:{}}`; el reloj suena y vibra 30 s (botón «Detener sonido») y responde `payload:{status:"requested"}`.
+- Tareas nuevas para Apple: A-K7 (`find.phone` → `FindPhoneAlarm`), A-K8 (enviar `find.watch`), y actualizar el parser de lotes a los campos de arriba.

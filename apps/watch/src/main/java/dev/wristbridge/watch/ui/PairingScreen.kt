@@ -76,6 +76,13 @@ internal fun PairingScreen(bridgeRunning: Boolean) {
                 } else if (!ui.paired) {
                     item(key = "register") { Pill("Vincular iPhone", { P2Bridge.openRegistration() }) }
                 }
+                if (ui.findingWatch) {
+                    item(key = "stopfind") { Pill("Detener sonido", { P2Bridge.stopFindingWatch(context) }) }
+                }
+                if (ui.phase == P2Phase.READY) {
+                    item(key = "findphone") { Pill("Buscar iPhone", { P2Bridge.findPhone() }) }
+                    if (ui.findPhone.isNotBlank()) item(key = "findresult") { Caption(ui.findPhone) }
+                }
                 if (ui.paired) {
                     item(key = "forget") {
                         Pill("Olvidar iPhone", { P2Bridge.forget(context) }, container = WbColors.Red, pressed = WbColors.Red.copy(alpha = 0.7f), textColor = androidx.compose.ui.graphics.Color.White)

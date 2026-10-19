@@ -106,6 +106,9 @@ data class P2Ui(
     val registrationUntil: Long = 0,
     val lastClosed: String = "",
     val cryptoSelfTest: String = "sin ejecutar",
+    /** Result of the last "find iPhone" request, in plain words; empty when none. */
+    val findPhone: String = "",
+    val findingWatch: Boolean = false,
 )
 
 /** Process-wide state and entry points used by the UI (all work is re-posted to the BLE thread). */
@@ -114,6 +117,7 @@ object P2Bridge {
     val state: StateFlow<P2Ui> = mutable
     internal fun update(f: (P2Ui) -> P2Ui) = mutable.update(f)
     @Volatile internal var channel: P2Channel? = null
+    @Volatile internal var appContext: Context? = null
     private const val REGISTRATION_WINDOW_MS = 120_000L
 
     fun refreshPaired(context: Context) {
@@ -132,6 +136,15 @@ object P2Bridge {
     fun confirmCode(match: Boolean) {
         channel?.confirmCode(match)
         if (!match) update { it.copy(phase = P2Phase.IDLE, registrationUntil = 0, code = null) }
+    }
+
+    fun findPhone() {
+        update { it.copy(findPhone = "Enviando…") }
+        channel?.requestFindPhone()
+    }
+
+    fun stopFindingWatch(context: Context) {
+        FindWatch.stop(context)
     }
 
     fun forget(context: Context) {
@@ -160,6 +173,7 @@ class P2Channel(
         var inFlight = false
     }
 
+    private var pendingFindMessage = -1
     private val mtus = HashMap<String, Int>()
     private val peers = HashMap<String, Peer>()
 
@@ -171,9 +185,14 @@ class P2Channel(
             P2Bridge.update { it.copy(paired = true) }
         }
         override val health: HealthSource get() = HealthStoreSource(store)
+        override val deviceId: String by lazy {
+            "watch-" + java.security.MessageDigest.getInstance("SHA-256").digest(identity.localKey().publicKey)
+                .take(6).joinToString("") { "%02x".format(it) }
+        }
     }
 
     fun attach() {
+        P2Bridge.appContext = context.applicationContext
         P2Bridge.channel = this
         P2Bridge.refreshPaired(context)
     }
@@ -206,6 +225,21 @@ class P2Channel(
                 BridgeStatus.event("P2: sesión cerrada peer=$id motivo=$reason")
             }
             override fun onDiagnostic(text: String) = BridgeStatus.event("P2: $text")
+            override fun onFindWatch() {
+                BridgeStatus.event("P2: el iPhone pidió buscar el reloj peer=$id")
+                FindWatch.ring(context)
+            }
+            override fun onPeerAck(messageId: Int) {
+                if (pendingFindMessage == messageId) {
+                    pendingFindMessage = -1
+                    P2Bridge.update { it.copy(findPhone = "Solicitado al iPhone") }
+                }
+            }
+            override fun onResponse(capability: String, requestId: Long, error: String?) {
+                if (capability == "find.phone") {
+                    P2Bridge.update { it.copy(findPhone = if (error == null) "El iPhone aceptó la orden" else "El iPhone no pudo: $error") }
+                }
+            }
         }
         peers[device.address] = Peer(device, P2Responder(identity.localKey(), policy, maxAtt, listener))
         BridgeStatus.event("P2: suscrito peer=$id maxAtt=$maxAtt")
@@ -229,6 +263,21 @@ class P2Channel(
     fun confirmCode(match: Boolean) {
         handler.post {
             for (peer in peers.values.toList()) enqueue(peer, peer.responder.confirmCode(match))
+        }
+    }
+
+    /** "Find iPhone" through the authenticated channel; the result is "requested", never "rang". */
+    fun requestFindPhone() {
+        handler.post {
+            val ready = peers.values.firstOrNull { it.responder.isReady }
+            if (ready == null) {
+                P2Bridge.update { it.copy(findPhone = "Sin sesión segura con el iPhone") }
+                return@post
+            }
+            val (_, frames) = ready.responder.request("find.phone")
+            // The first frame carries the message id at bytes 3..4 (big endian).
+            pendingFindMessage = if (frames.isNotEmpty()) ((frames[0][3].toInt() and 0xFF) shl 8) or (frames[0][4].toInt() and 0xFF) else -1
+            enqueue(ready, frames)
         }
     }
 
@@ -290,6 +339,50 @@ object P2SelfTest {
         val ok = String(tr.receive.open(byteArrayOf(1), ct)) == "ok" && ti.securityCode() == tr.securityCode()
         if (ok) "correcta" else "datos distintos"
     } catch (e: Exception) {
-        "falló: ${e.javaClass.simpleName}"
+        "falló: ${e.javaClass.simpleName} ${e.message?.take(60)} @${e.stackTrace.firstOrNull { it.className.contains("wristbridge") }?.let { it.methodName + ":" + it.lineNumber }}"
+    }
+}
+
+/** Rings and vibrates the watch when the iPhone asks to find it (30 s at most, stoppable from the pairing screen). */
+object FindWatch {
+    private const val DURATION_MS = 30_000L
+    private var ringtone: android.media.Ringtone? = null
+    private val main = Handler(android.os.Looper.getMainLooper())
+    private val stopper = Runnable { stop(null) }
+
+    fun ring(context: Context) {
+        main.post {
+            stop(null)
+            val app = context.applicationContext
+            runCatching {
+                val uri = android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_ALARM)
+                    ?: android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_RINGTONE)
+                ringtone = android.media.RingtoneManager.getRingtone(app, uri)?.apply {
+                    audioAttributes = android.media.AudioAttributes.Builder()
+                        .setUsage(android.media.AudioAttributes.USAGE_ALARM)
+                        .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION).build()
+                    isLooping = true
+                    play()
+                }
+            }
+            runCatching {
+                val vib = app.getSystemService(android.os.VibratorManager::class.java).defaultVibrator
+                vib.vibrate(android.os.VibrationEffect.createWaveform(longArrayOf(0, 600, 400), 0))
+            }
+            P2Bridge.update { it.copy(findingWatch = true) }
+            main.postDelayed(stopper, DURATION_MS)
+        }
+    }
+
+    fun stop(context: Context?) {
+        main.post {
+            main.removeCallbacks(stopper)
+            runCatching { ringtone?.stop() }
+            ringtone = null
+            runCatching {
+                (context?.applicationContext ?: P2Bridge.appContext)?.getSystemService(android.os.VibratorManager::class.java)?.defaultVibrator?.cancel()
+            }
+            P2Bridge.update { it.copy(findingWatch = false) }
+        }
     }
 }

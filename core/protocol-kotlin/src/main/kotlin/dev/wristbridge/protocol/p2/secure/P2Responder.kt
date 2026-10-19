@@ -32,6 +32,9 @@ interface P2Policy {
     fun pinnedPeer(): ByteArray?
     fun pin(peerStaticKey: ByteArray)
     val health: HealthSource
+
+    /** Stable pseudonymous id of this watch for the iPhone ledger (ASCII, 1-64). */
+    val deviceId: String
 }
 
 interface P2Listener {
@@ -40,6 +43,15 @@ interface P2Listener {
     fun onReady(sessionId: String, registered: Boolean)
     fun onClosed(reason: String)
     fun onDiagnostic(text: String)
+
+    /** The iPhone asked the watch to ring/vibrate ("find.watch"). */
+    fun onFindWatch() = Unit
+
+    /** The iPhone confirmed receipt of a request this watch sent (message-level ACK, not a domain result). */
+    fun onPeerAck(messageId: Int) = Unit
+
+    /** The iPhone answered a request this watch sent. [error] is the wire error name or null. */
+    fun onResponse(capability: String, requestId: Long, error: String?) = Unit
 }
 
 /**
@@ -149,6 +161,16 @@ class P2Responder(
         return becomeReady(t, registered = true)
     }
 
+    private var nextRequestId = 1L
+
+    /** Watch -> iPhone request (for example "find.phone"). Returns the request id and the frames to notify; empty if not ready. */
+    fun request(capability: String, payload: Map<String, Any?> = emptyMap()): Pair<Long, List<ByteArray>> {
+        val s = session
+        if (state != State.READY || s == null) return 0L to emptyList()
+        val id = nextRequestId++
+        return id to s.send(mapOf("kind" to "req", "requestId" to id, "capability" to capability, "payload" to payload)).second
+    }
+
     fun close(reason: String) {
         if (state == State.CLOSED) return
         state = State.CLOSED
@@ -160,11 +182,16 @@ class P2Responder(
         val out = ArrayList<ByteArray>()
         when (val inbound = s.receive(bytes, now)) {
             SecureSession.Inbound.None -> Unit
-            is SecureSession.Inbound.PeerAck -> Unit
+            is SecureSession.Inbound.PeerAck -> listener.onPeerAck(inbound.messageId)
             is SecureSession.Inbound.PeerError -> listener.onDiagnostic("el iPhone informó un error")
             is SecureSession.Inbound.Message -> {
                 out += s.ackFrame(inbound.messageId)
-                out += s.send(respond(inbound.json)).second
+                val env = inbound.json as? Map<*, *>
+                if (env?.get("kind") == "res") {
+                    listener.onResponse(env["capability"] as? String ?: "", env["requestId"] as? Long ?: 0L, env["error"] as? String)
+                } else {
+                    out += s.send(respond(inbound.json)).second
+                }
             }
         }
         return out
@@ -183,7 +210,11 @@ class P2Responder(
                         "sessionId" to sessionId(keys!!),
                     ),
                 )
-                HealthSync.CAPABILITY -> HealthSync.respond(json, policy.health)
+                HealthSync.CAPABILITY -> HealthSync.respond(json, policy.health, policy.deviceId)
+                "find.watch" -> {
+                    listener.onFindWatch()
+                    mapOf("kind" to "res", "requestId" to requestId, "capability" to capability, "payload" to mapOf("status" to "requested"))
+                }
                 else -> throw P2Exception(P2Error.UNKNOWN_CAPABILITY, "capability")
             }
         } catch (e: P2Exception) {

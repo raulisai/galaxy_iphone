@@ -21,7 +21,7 @@ class P2ResponderTest {
     private val mtu = 23 - 3 + 60
 
     private class Source : HealthSource {
-        val all = (1..30).map { HealthSample(it.toLong(), "heart_rate_bpm", it * 1000L, it * 1000L + 1, 70.0 + it, "s-$it") }
+        val all = (1..30).map { HealthSample(it.toLong(), "heart_rate_bpm", it * 1000L, it * 1000L, 70.0 + it, "s-$it") }
         var acked = 0L
         override fun samplesAfter(cursor: Long, limit: Int) = all.filter { it.cursor > cursor }.take(limit)
         override fun hasMoreAfter(cursor: Long) = all.any { it.cursor > cursor }
@@ -35,12 +35,17 @@ class P2ResponderTest {
         override fun pinnedPeer() = pinned
         override fun pin(peerStaticKey: ByteArray) { pinned = peerStaticKey.copyOf() }
         override val health: HealthSource get() = src
+        override val deviceId = "watch-test"
     }
 
     private class Listener : P2Listener {
         var code: String? = null
         var ready: Pair<String, Boolean>? = null
         var closed: String? = null
+        var findWatch = 0
+        var response: Triple<String, Long, String?>? = null
+        override fun onFindWatch() { findWatch++ }
+        override fun onResponse(capability: String, requestId: Long, error: String?) { response = Triple(capability, requestId, error) }
         override fun onSecurityCode(code: String) { this.code = code }
         override fun onReady(sessionId: String, registered: Boolean) { ready = sessionId to registered }
         override fun onClosed(reason: String) { closed = reason }
@@ -176,5 +181,49 @@ class P2ResponderTest {
         frames.forEach { r.onWrite(it, 0) }
         assertTrue(r.isClosed)
         assertNull(policy.pinned)
+    }
+    @Test
+    fun ledgerFormatSkipsSamplesTheIphoneWouldRejectButAdvancesTheCursor() {
+        val bad = listOf(
+            HealthSample(1, "heart_rate_bpm", 1000, 1000, 300.0, "a1"),
+            HealthSample(2, "steps_daily_snapshot", 5000, 5000, 10.0, "a2"),
+            HealthSample(3, "heart_rate_bpm", 9000, 9000, 72.0, "ok:3"),
+            HealthSample(4, "steps_daily_snapshot", 0, 86_400_000, 4321.0, "ok-4"),
+        )
+        val src = object : HealthSource {
+            override fun samplesAfter(cursor: Long, limit: Int) = bad.filter { it.cursor > cursor }
+            override fun hasMoreAfter(cursor: Long) = false
+            override fun acknowledge(through: Long) = Unit
+        }
+        val res = HealthSync.respond(HealthSync.requestCursor(1, 0, 100), src, "watch-x")
+        val parsed = HealthSync.parseBatch(res)
+        assertEquals(listOf(3L, 4L), parsed.map { it.cursor })
+        assertEquals(listOf("heartRate", "stepsDaily"), parsed.map { it.metric })
+        assertEquals(4L, HealthSync.batchLast(res))
+        val hr = ((res["payload"] as Map<*, *>)["samples"] as List<*>)[0] as Map<*, *>
+        assertEquals(72.0, hr["min"])
+        assertTrue((hr["e"] as Long) > (hr["s"] as Long))
+    }
+
+    @Test
+    fun findWatchRingsAndFindPhoneIsRequestedByTheWatch() {
+        val policy = Policy(open = true)
+        val l = Listener()
+        val r = newResponder(policy, l)
+        val phone = Phone(X25519Key.generate(), mtu)
+        phone.hello(r)
+        r.confirmCode(true)
+        val res = phone.call(r, mapOf("kind" to "req", "requestId" to 5L, "capability" to "find.watch", "payload" to emptyMap<String, Any?>())) as Map<*, *>
+        assertEquals(1, l.findWatch)
+        assertEquals("requested", (res["payload"] as Map<*, *>)["status"])
+
+        val (id, frames) = r.request("find.phone")
+        var got: Any? = null
+        for (f in frames) { val x = phone.session!!.receive(f, 0); if (x is SecureSession.Inbound.Message) got = x.json }
+        assertEquals("find.phone", (got as Map<*, *>)["capability"])
+        val reply = phone.session!!.send(mapOf("kind" to "res", "requestId" to id, "capability" to "find.phone", "payload" to mapOf("status" to "started"))).second
+        reply.forEach { r.onWrite(it, 0) }
+        assertEquals("find.phone", l.response!!.first)
+        assertNull(l.response!!.third)
     }
 }

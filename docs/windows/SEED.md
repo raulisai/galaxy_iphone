@@ -88,3 +88,6 @@ Noise XX, sesion AEAD, JSON estricto y mensajes health.sync implementados y prob
 
 ## 0.6.0-lab (19-oct-2026)
 Canal P2 expuesto en el GATT del reloj (Capabilities/Requests/Events), identidad X25519 en Keystore, pantalla Conexión > Vincular iPhone con codigo de 6 digitos, responder P2 + health.sync sobre HealthStore. APK build/releases/wristbridge-watch-0.6.0-lab-14.apk (NO instalado: ADB sin conexion; autoprueba XDH/ChaCha en el reloj NOT_RUN). Tareas para Apple: docs/windows/handoff-apple-p2-health.md.
+
+## 0.6.1-lab (19-oct-2026)
+Health sync en formato del libro de Apple, find.phone (K7) y find.watch (K8) por el canal P2, X25519 propio (el proveedor Android rechaza NamedParameterSpec). Instalado en el reloj: autoprueba cripto correcta; pairing/Keystore NOT_RUN. developer unificado con todo el lado Kotlin.

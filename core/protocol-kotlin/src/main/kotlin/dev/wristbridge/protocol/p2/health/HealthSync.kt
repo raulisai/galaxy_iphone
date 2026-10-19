@@ -31,7 +31,38 @@ object HealthSync {
     const val CAPABILITY = "health.sync"
     const val MAX_SAMPLES_PER_BATCH = 200
     const val MAX_ID_CHARS = 128
-    val METRICS = setOf("steps_daily_snapshot", "heart_rate_bpm")
+
+    /** Watch store metric -> name accepted by the iPhone ledger (docs/apple/health-ingest-spec.md). */
+    val LEDGER_METRIC = mapOf("steps_daily_snapshot" to "stepsDaily", "heart_rate_bpm" to "heartRate")
+    val METRICS = LEDGER_METRIC.values.toSet()
+    const val SOURCE = "watch-sensor"
+    private const val HR_SYNTHETIC_DURATION_MS = 1_000L
+    private const val MAX_STEPS_DAILY = 300_000.0
+    private const val MAX_STEPS_DURATION_MS = 25L * 3_600_000
+
+    private fun asciiId(raw: String, max: Int): String =
+        raw.filter { (it in 'a'..'z') || (it in 'A'..'Z') || (it in '0'..'9') || it == '.' || it == '_' || it == ':' || it == '-' }.take(max)
+
+    /** A sample the iPhone would reject must never be sent: one rejection keeps the whole batch unconfirmed forever. */
+    fun toLedger(s: HealthSample): Map<String, Any?>? {
+        val metric = LEDGER_METRIC[s.metric] ?: return null
+        var start = s.startMs
+        val end = s.endMs
+        if (!s.value.isFinite() || s.value < 0) return null
+        val extra = LinkedHashMap<String, Any?>()
+        if (metric == "heartRate") {
+            if (s.value < 20 || s.value > 250) return null
+            if (end <= start) start = end - HR_SYNTHETIC_DURATION_MS
+            extra["min"] = s.value
+            extra["max"] = s.value
+        } else {
+            if (s.value > MAX_STEPS_DAILY || end <= start || end - start > MAX_STEPS_DURATION_MS) return null
+        }
+        if (start < 0) return null
+        val id = asciiId(s.sampleId, MAX_ID_CHARS)
+        if (id.isEmpty()) return null
+        return linkedMapOf<String, Any?>("c" to s.cursor, "m" to metric, "s" to start, "e" to end, "v" to s.value, "src" to SOURCE, "id" to id, "ver" to 1L) + extra
+    }
 
     private fun invalid(m: String): Nothing = throw P2Exception(P2Error.INVALID_PAYLOAD, m)
 
@@ -53,7 +84,7 @@ object HealthSync {
     private fun long(m: Map<String, Any?>, k: String): Long = m[k] as? Long ?: invalid("$k must be an integer")
 
     /** Watch side: answers one request. Unknown capability or operation is rejected without effect. */
-    fun respond(request: Any?, source: HealthSource): Map<String, Any?> {
+    fun respond(request: Any?, source: HealthSource, deviceId: String = "watch"): Map<String, Any?> {
         val env = obj(request, "message")
         if (env["kind"] != "req") invalid("kind must be req")
         val id = long(env, "requestId")
@@ -74,11 +105,9 @@ object HealthSync {
                 envelope(
                     "res", id,
                     mapOf(
-                        "op" to "batch", "after" to after, "last" to last,
+                        "op" to "batch", "deviceId" to deviceId, "after" to after, "last" to last,
                         "more" to (list.isNotEmpty() && source.hasMoreAfter(last)),
-                        "samples" to list.map {
-                            mapOf("c" to it.cursor, "m" to it.metric, "s" to it.startMs, "e" to it.endMs, "v" to it.value, "id" to it.sampleId)
-                        },
+                        "samples" to list.mapNotNull { toLedger(it) },
                     ),
                 )
             }
@@ -98,6 +127,8 @@ object HealthSync {
         if (env["kind"] != "res" || env["capability"] != CAPABILITY) invalid("not a health response")
         val p = obj(env["payload"], "payload")
         if (p["op"] != "batch") invalid("not a batch")
+        val device = p["deviceId"] as? String ?: invalid("deviceId")
+        if (device.isEmpty() || device.length > 64 || asciiId(device, 64) != device) invalid("deviceId")
         val after = long(p, "after")
         val raw = p["samples"] as? List<*> ?: invalid("samples must be an array")
         if (raw.size > MAX_SAMPLES_PER_BATCH) throw P2Exception(P2Error.OVERSIZE, "too many samples")
@@ -113,13 +144,22 @@ object HealthSync {
                 sampleId = m["id"] as? String ?: invalid("id"),
             )
             if (s.metric !in METRICS) invalid("unknown metric")
-            if (s.sampleId.isEmpty() || s.sampleId.length > MAX_ID_CHARS) invalid("id length")
-            if (s.endMs < s.startMs || s.value.isNaN() || s.value.isInfinite()) invalid("sample range")
+            if (s.sampleId.isEmpty() || s.sampleId.length > MAX_ID_CHARS || asciiId(s.sampleId, MAX_ID_CHARS) != s.sampleId) invalid("id")
+            if (m["src"] != SOURCE || (m["ver"] as? Long ?: 0L) < 1) invalid("source/version")
+            if (s.endMs <= s.startMs || s.value.isNaN() || s.value.isInfinite() || s.value < 0) invalid("sample range")
+            if (s.metric == "heartRate") {
+                val lo = (m["min"] as? Number)?.toDouble() ?: invalid("min")
+                val hi = (m["max"] as? Number)?.toDouble() ?: invalid("max")
+                if (s.value !in 20.0..250.0 || lo < 20 || hi > 250 || lo > s.value || s.value > hi) invalid("heart rate range")
+            } else if (m.containsKey("min") || m.containsKey("max")) invalid("min/max only for heartRate")
             if (s.cursor <= prev) invalid("cursor not increasing")
             prev = s.cursor
             s
         }
     }
+
+    /** Last cursor scanned by the watch (valid or skipped); the next request continues after it. */
+    fun batchLast(response: Any?): Long = long(obj(obj(response, "message")["payload"], "payload"), "last")
 
     fun batchHasMore(response: Any?): Boolean = obj(obj(response, "message")["payload"], "payload")["more"] == true
 }

@@ -3,64 +3,101 @@ package dev.wristbridge.protocol.p2.secure
 import dev.wristbridge.protocol.p2.P2Error
 import dev.wristbridge.protocol.p2.P2Exception
 import java.math.BigInteger
-import java.security.KeyFactory
-import java.security.KeyPairGenerator
 import java.security.MessageDigest
 import java.security.SecureRandom
-import java.security.interfaces.XECPrivateKey
-import java.security.interfaces.XECPublicKey
-import java.security.spec.NamedParameterSpec
-import java.security.spec.XECPrivateKeySpec
-import java.security.spec.XECPublicKeySpec
 import javax.crypto.Cipher
-import javax.crypto.KeyAgreement
 import javax.crypto.Mac
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 /**
- * Noise_XX_25519_ChaChaPoly_SHA256 written against the Noise specification (rev 34) using only JCA primitives.
+ * Noise_XX_25519_ChaChaPoly_SHA256 written against the Noise specification (rev 34): own X25519, JCA ChaCha20-Poly1305/SHA-256/HMAC.
  * NOT independently reviewed (draft section 8, K3): own implementation, checked by RFC 7748 vectors, size vectors
  * and round-trips only. Replace with a reviewed library before enabling anything beyond low-risk data.
  */
 class X25519Key(val privateKey: ByteArray, val publicKey: ByteArray) {
     companion object {
-        private val spec = NamedParameterSpec.X25519
+        private val BASE = ByteArray(32).also { it[0] = 9 }
 
         fun generate(rnd: SecureRandom? = null): X25519Key {
-            val g = KeyPairGenerator.getInstance("X25519")
-            if (rnd != null) g.initialize(spec, rnd) else g.initialize(spec)
-            val kp = g.generateKeyPair()
-            return X25519Key((kp.private as XECPrivateKey).scalar.get(), toLe((kp.public as XECPublicKey).u))
+            val priv = ByteArray(32)
+            (rnd ?: SecureRandom()).nextBytes(priv)
+            return fromPrivate(priv)
         }
 
         fun fromPrivate(priv: ByteArray): X25519Key {
-            val base = ByteArray(32).also { it[0] = 9 }
-            return X25519Key(priv.copyOf(), dh(priv, base))
+            require(priv.size == 32)
+            return X25519Key(priv.copyOf(), X25519.scalarMult(priv, BASE))
         }
 
         fun dh(priv: ByteArray, pub: ByteArray): ByteArray {
-            val kf = KeyFactory.getInstance("XDH")
-            val k = kf.generatePrivate(XECPrivateKeySpec(spec, priv))
-            val p = kf.generatePublic(XECPublicKeySpec(spec, fromLe(pub)))
-            val ka = KeyAgreement.getInstance("XDH")
-            ka.init(k)
-            ka.doPhase(p, true)
-            return ka.generateSecret()
-        }
-
-        private fun fromLe(b: ByteArray): BigInteger {
-            val c = b.copyOf()
-            c[31] = (c[31].toInt() and 0x7F).toByte()
-            return BigInteger(1, c.reversedArray())
-        }
-
-        private fun toLe(u: BigInteger): ByteArray {
-            val be = u.toByteArray().dropWhile { it == 0.toByte() }.toByteArray()
-            val out = ByteArray(32)
-            for (i in be.indices) out[i] = be[be.size - 1 - i]
+            val out = X25519.scalarMult(priv, pub)
+            if (out.all { it == 0.toByte() }) throw P2Exception(P2Error.INVALID_PAYLOAD, "low-order public key")
             return out
         }
+    }
+}
+
+/**
+ * X25519 (RFC 7748) with a Montgomery ladder over BigInteger. Pure Kotlin so that JVM tests and the watch run the same
+ * code (the Android provider rejects the parameter specs the JDK accepts). NOT constant time: BigInteger arithmetic and
+ * the branchy swap can leak timing. Part of the K3 review; replace with a reviewed library when one is chosen.
+ */
+internal object X25519 {
+    private val P: BigInteger = BigInteger.ONE.shiftLeft(255).subtract(BigInteger.valueOf(19))
+    private val A24: BigInteger = BigInteger.valueOf(121665)
+
+    private fun decodeLe(b: ByteArray): BigInteger = BigInteger(1, b.reversedArray())
+
+    private fun encodeLe(v: BigInteger): ByteArray {
+        val be = v.toByteArray().dropWhile { it == 0.toByte() }.toByteArray()
+        val out = ByteArray(32)
+        for (i in be.indices) out[i] = be[be.size - 1 - i]
+        return out
+    }
+
+    fun scalarMult(scalar: ByteArray, u: ByteArray): ByteArray {
+        require(scalar.size == 32 && u.size == 32)
+        val k = scalar.copyOf()
+        k[0] = (k[0].toInt() and 248).toByte()
+        k[31] = ((k[31].toInt() and 127) or 64).toByte()
+        val kInt = decodeLe(k)
+        val uc = u.copyOf()
+        uc[31] = (uc[31].toInt() and 0x7F).toByte()
+        val x1 = decodeLe(uc).mod(P)
+        var x2 = BigInteger.ONE
+        var z2 = BigInteger.ZERO
+        var x3 = x1
+        var z3 = BigInteger.ONE
+        var swap = false
+        for (t in 254 downTo 0) {
+            val bit = kInt.testBit(t)
+            if (swap != bit) {
+                val tx = x2; x2 = x3; x3 = tx
+                val tz = z2; z2 = z3; z3 = tz
+            }
+            swap = bit
+            val a = x2.add(z2).mod(P)
+            val aa = a.multiply(a).mod(P)
+            val b = x2.subtract(z2).mod(P)
+            val bb = b.multiply(b).mod(P)
+            val e = aa.subtract(bb).mod(P)
+            val c = x3.add(z3).mod(P)
+            val d = x3.subtract(z3).mod(P)
+            val da = d.multiply(a).mod(P)
+            val cb = c.multiply(b).mod(P)
+            val s1 = da.add(cb).mod(P)
+            val s2 = da.subtract(cb).mod(P)
+            x3 = s1.multiply(s1).mod(P)
+            z3 = x1.multiply(s2.multiply(s2).mod(P)).mod(P)
+            x2 = aa.multiply(bb).mod(P)
+            z2 = e.multiply(aa.add(A24.multiply(e)).mod(P)).mod(P)
+        }
+        if (swap) {
+            val tx = x2; x2 = x3; x3 = tx
+            val tz = z2; z2 = z3; z3 = tz
+        }
+        return encodeLe(x2.multiply(z2.modPow(P.subtract(BigInteger.TWO), P)).mod(P))
     }
 }
 

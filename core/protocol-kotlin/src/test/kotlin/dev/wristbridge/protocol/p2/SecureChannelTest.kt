@@ -117,7 +117,7 @@ class StrictJsonTest {
 
 class SecureHealthSyncTest {
     private class Watch(n: Int) : HealthSource {
-        val all = (1..n).map { HealthSample(it.toLong(), if (it % 2 == 0) "heart_rate_bpm" else "steps_daily_snapshot", it * 1000L, it * 1000L + 500, 60.0 + it, "id-$it") }
+        val all = (1..n).map { HealthSample(it.toLong(), if (it % 2 == 0) "heart_rate_bpm" else "steps_daily_snapshot", it * 1000L, it * 1000L + 500, 60.0 + (it % 100), "id-$it") }
         var acked = 0L
         override fun samplesAfter(cursor: Long, limit: Int) = all.filter { it.cursor > cursor }.take(limit)
         override fun hasMoreAfter(cursor: Long) = all.any { it.cursor > cursor }
