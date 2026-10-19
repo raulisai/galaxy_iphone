@@ -3,6 +3,8 @@
 > **NO CONGELADO · requiere revisión Apple · no implementar hasta aprobar.**
 > Esto es una propuesta de ingeniería del editor del contrato (Windows/Kotlin). No es el contrato `p1-lab-1` ni lo modifica. Ninguna construcción criptográfica de este documento está revisada: es un diseño candidato que Apple y una revisión independiente deben aceptar, cambiar o rechazar.
 
+> **Revisión 2 · decisiones K1/K2/K9 (18 de octubre de 2026, Windows).** K1: carga por frame opción (A), §3.5 reescrita (se elimina la contradicción de «igual longitud»). K2: los diez vectores a mano de Apple verificados uno a uno (10 confirmados, 0 corregidos, con 4 precisiones) y manifiesto `test/fixtures/shared/p2-framing-vectors.json` (draft-2, PROPUESTO). K9 = Q-A9: DATA sin AEAD prohibido en producción. Q-A3 cerrada: **sin intercalado en v1** (§3.6, §5, §8.5). Detalle y razones en `docs/windows/p2-decisions.md`. K3 (revisión independiente de §8 y biblioteca Noise) sigue **ABIERTA**; esta revisión no toca nada criptográfico ni el GATT. Estado: **NO CONGELADO**.
+
 Fecha: 18 de octubre de 2026. Responde a [docs/apple/p2-contract-review.md](../../docs/apple/p2-contract-review.md) (base conjunta `0abcd51`, perfil `p1-lab-1`). Referencias de origen: `Doc/01_CONTRATO_COMPARTIDO.md` §2, §4–§7; `Doc/02_WINDOWS_KOTLIN.md` P2-04/P2-05; `Doc/04_MATRIZ_60_TAREAS.md` (P2-04, P2-05, P2-06, F01–F12, Q01–Q12); plan original §15.2 (significado de F01–F12) y §15 de seguridad (Q01–Q10).
 
 ## 0. Estado, alcance y reglas de lectura
@@ -11,7 +13,7 @@ Fecha: 18 de octubre de 2026. Responde a [docs/apple/p2-contract-review.md](../.
 |---|---|
 | Evidencia física que respalda esta propuesta | Ninguna sobre el canal propio. Solo hay evidencia de ANCS/AMS y del servicio primario (ver ADR-001). Todo lo de este documento es NOT_RUN. |
 | Perfil expuesto hoy por el reloj | Solo el servicio primario `…36a01`; las tres características reservadas **no** están en el GATT (`contracts/ble-profile.json`, `p1Exposure`). |
-| Codec, framer, claves, Keystore/Keychain | No existen. No se crean hasta que Apple apruebe. |
+| Codec, framer, claves, Keystore/Keychain | Existe un codec/reensamblador Kotlin **de borrador, solo framing y sin cifrado** (`core/protocol-kotlin/.../p2/`, puro JVM, no expuesto por BLE) para probar los vectores a mano. Claves, Noise, Keystore/Keychain y GATT: no existen y no se crean hasta que Apple apruebe y se cierre K3. |
 | Alcance | Canal de configuración y datos propios iPhone ↔ reloj. |
 | Fuera de alcance | ANCS/AMS (siguen su formato oficial y no usan este envelope, `Doc/01` §3); efectos de salud y contactos (P7); IA, voz y audio continuo (P4/P5); agente Mac (P6); cualquier comando sensible. **Los comandos sensibles y los efectos sobre salud/contactos permanecen desactivados hasta G2** y hasta que la revisión de seguridad (sección 8) esté aprobada. |
 
@@ -72,8 +74,8 @@ Versiones separadas (no mezclar):
 | 3 | 1 | `frameVersion` | `1`. |
 | 4 | 2 | `maxControlMessageBytes` | Texto plano máximo de un mensaje de control (propuesta 8192). |
 | 6 | 2 | `maxBatchMessageBytes` | Texto plano máximo de un lote en unidades de 1 KiB (propuesta 64 = 64 KiB). |
-| 8 | 1 | `maxPartialMessages` | Propuesta 4. |
-| 9 | 1 | `maxInflightMessages` | Ventana de mensajes sin ACK (propuesta 8). |
+| 8 | 1 | `maxPartialMessages` | **1 en v1** (sin intercalado, Q-A3); el campo se conserva para un futuro intercalado. |
+| 9 | 1 | `maxInflightMessages` | Ventana de mensajes enviados y pendientes de ACK (propuesta 8); no es el número de mensajes parciales en reensamblado. |
 | 10 | 4 | `featureBits` | Bits 0–15 opcionales (ignorar los desconocidos); bits 16–31 **críticos** (un bit crítico desconocido → incompatible). Bit 0: sesión AEAD (obligatorio para efectos). Bit 1 reservado: `bulkWriteNoResponse`. |
 | 14 | 2 | `reserved` | Cero al enviar; ignorado al leer. |
 
@@ -118,6 +120,8 @@ ACK, ERROR y CANCEL son siempre un solo frame (`fragCount=1`, `fragIndex=0`) con
 | ERROR | `u16 errorCode` + `u16 relatedMessageId` (0xFFFF si no aplica). `messageId` de la cabecera = 0. |
 | CANCEL | vacío. Cancela `messageId`; idempotente. |
 
+Formas exactas (Revisión 2): ACK y CANCEL miden exactamente 9 bytes; ERROR mide exactamente 13 bytes y su `messageId` de cabecera es 0; cualquier otra longitud o forma → `E_MALFORMED_FRAME`. ACK, ERROR y CANCEL son de un solo frame y pueden aparecer entre los frames de un mensaje DATA/HANDSHAKE abierto sin alterarlo (3.6).
+
 ### 3.3 Cuerpo de DATA en sesión (AEAD)
 
 `body = counter(u64) ‖ ciphertext ‖ tag(16)`; `totalLength = 8 + len(ciphertext) + 16`. El texto plano es el JSON UTF-8 del mensaje (campos: `kind`, `requestId`, `capability`, `ttlMs`, `payload`; ver 6). Datos asociados autenticados (AD): `frameVersion ‖ type ‖ flags ‖ messageId ‖ totalLength`. Como se autentican los bytes exactos del texto plano, **no se necesita JSON canónico** ni depende el significado del orden de claves.
@@ -126,30 +130,42 @@ Reglas de JSON (para que Swift y Kotlin coincidan): UTF-8 válido sin BOM; profu
 
 ### 3.4 Modos sin AEAD
 
-HANDSHAKE (mensajes del protocolo Noise, sección 8): cuerpo = mensaje de handshake sin añadidos. DATA en texto plano solo existe en builds de laboratorio con un indicador de compilación, nunca en producción ni con efectos. En ese modo `body = payload ‖ CRC-32C(u32)`. La existencia de este modo es una opción: puede eliminarse si Apple prefiere que ningún DATA viaje sin AEAD (entonces las pruebas F usan sesión de prueba con clave fija etiquetada «solo pruebas»).
+HANDSHAKE (mensajes del protocolo Noise, sección 8): cuerpo = mensaje de handshake sin añadidos. DATA en texto plano solo existe en builds de laboratorio con un indicador de compilación, nunca en producción ni con efectos. En ese modo `body = payload ‖ CRC-32C(u32)`. **Decisión (Q-A9, Revisión 2):** ningún DATA viaja sin AEAD en producción. El modo laboratorio solo existe tras un indicador de compilación, y las pruebas con cifrado usan una sesión con clave fija rotulada «solo pruebas» (test-only), nunca presente en una compilación de producción. Los vectores de framing de este documento no necesitan ninguno de los dos: son independientes del cifrado.
 
-### 3.5 Capacidad por frame y MTU
+### 3.5 Capacidad por frame y MTU (regla K1, opción A · Revisión 2)
 
-El framer recibe `maxAttValueBytes` por dirección (nombre acordado en `Doc/01` §4). La carga útil por frame es:
+El framer recibe `maxAttValueBytes` por dirección (nombre acordado en `Doc/01` §4). Un frame es exactamente un valor ATT, así que `len(frame) ≤ maxAttValueBytes`. La carga útil máxima depende de la posición del frame:
 
-- primer frame de DATA/HANDSHAKE: `maxAttValueBytes − 13`
-- demás frames: `maxAttValueBytes − 9`
+- primer frame de DATA/HANDSHAKE (cabecera 9 + `totalLength` 4 = 13 bytes): `maxAttValueBytes − 13`
+- cualquier frame posterior (cabecera 9 bytes): `maxAttValueBytes − 9`
 
-Con la capacidad mínima de 20 bytes (ATT_MTU 23) quedan 7 bytes en el primer frame y 11 en los demás: válido, aunque lento. Con `maxAttValueBytes < 14` el canal no se abre (`E_CAPACITY_TOO_SMALL`).
+Con la capacidad mínima útil de 20 bytes (ATT_MTU 23) quedan 7 bytes en el primer frame y 11 en los demás: válido, aunque lento. Con `maxAttValueBytes < 14` el canal no se abre (`E_CAPACITY_TOO_SMALL`): 13 de cabecera más 1 byte de carga.
+
+Regla de longitud (decisión K1; sustituye a «todas las cargas intermedias tienen igual longitud», que era inalcanzable porque el primer frame lleva 4 bytes menos de carga por su campo `totalLength`):
+
+- **Emisor:** llena cada frame hasta la capacidad de su posición: el primero con `min(L, max−13)` bytes y cada siguiente con `min(restante, max−9)`, donde `L = totalLength`. Número de frames: 1 si `L ≤ max−13`; si no, `1 + ceil((L − (max−13)) / (max−9))`.
+- **Receptor:** todo frame **no final** lleva exactamente la carga completa de su posición (primero `max−13`, resto `max−9`). El frame final lleva el resto: `1..max−9` bytes, nunca vacío (si es el único frame, `L ≤ max−13`). Cualquier desviación (frame no final más corto o más largo que su carga completa, frame final vacío o mayor que `max−9`, fragmento vacío) → `E_MALFORMED_FRAME`. Si la suma de cargas no iguala `totalLength` → `E_LENGTH_MISMATCH`.
+- **Capacidad del emisor:** no viaja en la cabecera. El receptor la deduce del primer frame de un mensaje de varios frames (`max = carga + 13`) y exige a los siguientes `carga del primero + 4` bytes; si la conoce por otra vía (medición propia), exige además que el primer frame llene exactamente `max−13`. `fragCount` debe coincidir con el número de frames derivado de `totalLength` y la carga del primer frame; si no, `E_LENGTH_MISMATCH`, comprobado en el primer frame y antes de reservar memoria.
+- **Ejemplo:** `max = 20`, `L = 24`: cargas 7 + 11 + 6, tres frames de 20, 20 y 15 bytes (vector F02-a). Alternativa (B) descartada: carga uniforme `max−13` en todos (7 + 7 + 7 + 3, cuatro frames, 4 bytes desperdiciados por frame).
+- **Límites por tipo:** el tipo lógico (control o lote) va cifrado dentro del cuerpo, así que antes de descifrar el receptor solo distingue por `type` y por el flag `PRIORITY`: HANDSHAKE (propuesta 1 KiB), DATA con `PRIORITY` = carril de control (8 KiB de texto plano + 24 de contador y tag) y DATA sin `PRIORITY` = lote (64 KiB + 24). `totalLength` se compara con ese límite antes de reservar nada (F07). *Interpretación de Windows, a confirmar por Apple.*
+- **Mínimos:** `totalLength ≥ 24` para DATA (contador 8 + tag 16) y `≥ 1` para HANDSHAKE.
+- **Orden de validación** (determinista, para que los vectores no dependan del orden): valor vacío → `frameVersion` → cabecera truncada (<9) → `type` (bit 7 limpio: se ignora y se cuenta; crítico desconocido: `E_UNSUPPORTED_TYPE`) → flags reservados → `fragCount = 0` o `fragIndex ≥ fragCount` → forma por tipo (ACK/CANCEL/ERROR; primer frame <13) → con estado de reensamblado: límite de `totalLength` (`E_OVERSIZE`) → mínimo de `totalLength` → fragmento vacío → reglas de longitud de arriba.
 
 - Android obtiene el valor del MTU efectivo negociado menos el overhead de la operación; **no** se usa el MTU solicitado. iOS usa `maximumWriteValueLength(for:)` para la tubería Requests y la capacidad efectiva de notificación para Events. Nunca se restan 3 bytes dos veces a un valor ya calculado por iOS. La capacidad es **independiente por dirección** y no viaja en la cabecera.
-- Todas las cargas de un mensaje, salvo la última, tienen igual longitud; el receptor lo exige (una carga intermedia distinta de la primera → `E_MALFORMED_FRAME`). Esto hace comprobables F02/F03 sin ambigüedad.
 - Si la capacidad cae a mitad de mensaje (por ejemplo, por una renegociación MTU durante Service Changed), el emisor envía CANCEL y reinicia el mensaje con un `messageId` nuevo y el mismo `requestId`; no reparte el mensaje en frames de tamaño variable.
-- Fragmentos vacíos no existen: un mensaje DATA mínimo tiene `totalLength ≥ 24` (contador + tag). F03 trata el límite de cero bytes de texto plano a nivel de payload, no de frame.
+- Fragmentos vacíos no existen: un mensaje DATA mínimo tiene `totalLength ≥ 24` (contador + tag). F03 trata el límite de cero bytes de texto plano a nivel de payload, no de frame; a nivel de frame, la regla de longitud de arriba hace comprobables F02/F03 sin ambigüedad.
 
 ### 3.6 Reensamblado y orden
 
 - Los frames de un mismo `messageId` llegan en orden creciente de `fragIndex` (la tubería es fiable y ordenada). Duplicado, salto o retroceso de `fragIndex` → descartar el parcial y `E_SEQUENCE` (F04).
-- Se permite intercalar mensajes distintos (por ejemplo, un mensaje `PRIORITY` entre frames de un lote) hasta `maxPartialMessages` (4). El quinto parcial se rechaza con `E_TOO_MANY_PARTIALS` y un contador, sin evictar silenciosamente (F06).
-- Para que el intercalado sea compatible con AEAD, cada mensaje lleva su `counter` explícito; el receptor mantiene una ventana de 64 contadores para rechazar duplicados y los muy antiguos. Esto exige una API tipo `SetNonce` de Noise (sección 8.5) y es un punto de revisión.
-- **Alternativa más simple:** sin intercalado; el lote se divide en mensajes ≤8 KiB y el control espera como máximo a un mensaje. Quita la ventana y la dependencia de `SetNonce`, a costa de latencia de control (≈ tiempo de 8 KiB) y de que F06/F12 se prueben solo con un par hostil. **Pregunta abierta Q-A3.**
+- **Sin intercalado en v1 (Q-A3, cerrada en Revisión 2):** hay a lo sumo UN mensaje DATA/HANDSHAKE abierto por dirección y sus frames son contiguos. El primer frame de otro mensaje con uno abierto se rechaza con `E_TOO_MANY_PARTIALS` y un contador; el abierto se conserva (sin expulsión silenciosa, F06). `maxPartialMessages` vale 1 en v1.
+- ACK, ERROR y CANCEL son de un solo frame y pueden aparecer entre los frames de un mensaje abierto sin alterarlo, salvo un CANCEL de ese mismo `messageId`, que lo descarta. Un ACK de un mensaje que no está en vuelo (repetido, tardío o inexistente) se ignora y se cuenta: no es error ni cierra la sesión.
+- Los mensajes de control son ≤ 8 KiB y los lotes (salud) se dividen en mensajes de ≤ 8 KiB de texto plano, con un mensaje en vuelo por dirección; el control espera como máximo a un mensaje (≈ tiempo de 8 KiB). La cola de salida sirve el carril `PRIORITY` entre mensajes, nunca dentro de uno. El contador AEAD es estrictamente creciente: no hace falta ventana de contadores ni `SetNonce` (8.5).
+- **Opción futura (no v1):** intercalado de mensajes con `counter` explícito por mensaje, ventana de 64 contadores y `SetNonce` de Noise, solo si la medición de latencia de control lo exige. Se conserva aquí como texto de referencia; requeriría una revisión nueva de 8.5.
+- Plazo: un parcial sin progreso durante 15 s o más (reloj monótono; cada frame aceptado reinicia el plazo) se descarta con un contador (`E_TIMEOUT`); un frame posterior de ese mensaje es huérfano y recibe `E_SEQUENCE` (F11).
+- Un frame de continuación (`fragIndex > 0`) sin mensaje abierto, o de otro `messageId`, recibe `E_SEQUENCE` sin tocar el mensaje abierto. Un reinicio del mismo `messageId` con `fragCount`, `totalLength`, tipo o flags distintos es el conflicto F05: `E_SEQUENCE` y cierre de sesión; un duplicado idéntico solo descarta el parcial.
 - El mensaje se entrega a la capa superior solo cuando está completo, con tag válido y contador aceptado. Nunca se entregan parciales.
-- Finalización: el último frame (`fragIndex == fragCount−1`) cierra el mensaje; la suma de cargas debe igualar `totalLength` (si no, `E_LENGTH_MISMATCH`) y el tag debe verificar.
+- Finalización: el último frame (`fragIndex == fragCount−1`) cierra el mensaje; la suma de cargas debe igualar `totalLength` (si no, `E_LENGTH_MISMATCH`) y el tag debe verificar (la verificación del tag pertenece a la capa de sesión, fuera del framing).
 - Ordenación entre mensajes: el orden de entrega a la aplicación es el orden de **finalización**; los efectos que dependen de orden entre mensajes deben declararlo en su capacidad (no se asume).
 
 ## 4. Sesión y suscripción
@@ -162,14 +178,14 @@ Con la capacidad mínima de 20 bytes (ATT_MTU 23) quedan 7 bytes en el primer fr
 
 | Aspecto | Recomendado *(propuesta)* | Alternativa / compromiso |
 |---|---|---|
-| Escritura iPhone→reloj | Una escritura con respuesta en vuelo; el siguiente frame tras el callback. Prioridad: el planificador intercala `PRIORITY` entre frames de lote. | Sin respuesta + `canSendWriteWithoutResponse`: ver sección 1. |
+| Escritura iPhone→reloj | Una escritura con respuesta en vuelo; el siguiente frame tras el callback. Prioridad: el carril `PRIORITY` se sirve entre mensajes, no dentro de uno (sin intercalado, 3.6). | Sin respuesta + `canSendWriteWithoutResponse`: ver sección 1. |
 | Notificación reloj→iPhone | Una `notify` en vuelo; el siguiente frame tras `onNotificationSent`; si `notify` devuelve «ocupado/falso» → pausa y reanudación exacta en el siguiente frame pendiente (F08), sin reordenar ni duplicar. | Indicate: ver sección 1. |
 | ACK de aplicación | El receptor responde ACK por mensaje reensamblado y válido. | ACK por frame: más tráfico, sin beneficio frente a la fiabilidad GATT. |
-| Ventana | `maxInflightMessages` = 8 mensajes sin ACK por dirección. | Ajustable por capacidades. |
+| Ventana | `maxInflightMessages` = 8 mensajes sin ACK por dirección (cola de envío; el reensamblado sigue siendo de un mensaje abierto, 3.6). | Ajustable por capacidades. |
 | Cola de salida | Máx. 16 mensajes y 128 KiB por dirección; carril de control separado de ≤8 mensajes. | |
 | Política de descarte | Nunca se descarta en silencio: lote antiguo de menor prioridad → CANCEL + contador; control nuevo con carril lleno → `E_BUSY` al emisor. Lo no enviado expira por `ttlMs`. | |
 | Plazos | 15 s sin progreso en un parcial → descarte (valor de `Doc/01` §4); ACK esperado en 5 s *(propuesta, medir)*. | |
-| Memoria | 4 parciales × 64 KiB = 256 KiB por sesión, que es la lectura propuesta de «≤256 KiB acumulados» de `Doc/01` §4. **Pregunta abierta Q-A4: confirmar esa interpretación.** | |
+| Memoria | Techo de 4 parciales × 64 KiB = 256 KiB por sesión, la lectura de «≤256 KiB acumulados» de `Doc/01` §4 (Q-A4 confirmada por Apple). En v1 hay un solo parcial: uso real ≤ 64 KiB + 24 B. | |
 | Límite antes de reservar | `totalLength` se compara con el límite del tipo de mensaje antes de reservar cualquier byte (F07). | |
 
 Las tres confirmaciones se mantienen separadas (`Doc/01` §5): el callback GATT no es ACK de mensaje, y el ACK de mensaje no es resultado de dominio (`result`).
@@ -209,14 +225,14 @@ Service Changed, cambio de MTU, Bluetooth apagado/encendido y pérdida de víncu
 
 | Código | Nombre | Cuándo | Efecto en la sesión |
 |---|---|---|---|
-| 0x0001 | `E_MALFORMED_FRAME` | Cabecera truncada (<9 bytes o <13 en primer frame), reservados distintos de 0, `fragCount=0`, `fragIndex ≥ fragCount`. | Descartar el frame; tras 3 consecutivos o 8 en 60 s → cerrar sesión. |
+| 0x0001 | `E_MALFORMED_FRAME` | Cabecera truncada (<9 bytes o <13 en primer frame), reservados distintos de 0, `fragCount=0`, `fragIndex ≥ fragCount`, ACK/CANCEL/ERROR con forma o longitud incorrecta, ERROR con `messageId` ≠ 0, fragmento vacío, `totalLength` bajo el mínimo del tipo, frame no final que no llena exactamente la carga de su posición, frame final vacío o mayor que `max−9`. | Descartar el frame; tras 3 consecutivos o 8 en 60 s → cerrar sesión. |
 | 0x0002 | `E_INCOMPATIBLE_FRAME` | `frameVersion` desconocido. | Cerrar sesión. |
 | 0x0003 | `E_INCOMPATIBLE_MAJOR` | `protocolMajor` distinto. | Cerrar sesión. |
 | 0x0004 | `E_UNSUPPORTED_TYPE` | Tipo crítico desconocido. | Cerrar sesión. |
 | 0x0005 | `E_OVERSIZE` | `totalLength` > límite del tipo, o mensaje que supera memoria. | Rechazar antes de reservar; descartar el mensaje. |
-| 0x0006 | `E_LENGTH_MISMATCH` | Suma de cargas ≠ `totalLength`, o carga intermedia de longitud distinta. | Descartar el mensaje. |
-| 0x0007 | `E_SEQUENCE` | Duplicado, salto o retroceso de `fragIndex`; `fragCount` o `totalLength` conflictivos para un `messageId` abierto. | Descartar el parcial; si el conflicto es F05, cerrar sesión. |
-| 0x0008 | `E_TOO_MANY_PARTIALS` | Quinto parcial. | Rechazar el nuevo; contador. |
+| 0x0006 | `E_LENGTH_MISMATCH` | Suma de cargas ≠ `totalLength`, `fragCount` incoherente con `totalLength` y la carga del primer frame, o carga mayor que `totalLength`. | Descartar el mensaje. |
+| 0x0007 | `E_SEQUENCE` | Duplicado, salto o retroceso de `fragIndex`; continuación sin mensaje abierto; `fragCount` o `totalLength` conflictivos para un `messageId` abierto. | Descartar el parcial; si el conflicto es F05, cerrar sesión. |
+| 0x0008 | `E_TOO_MANY_PARTIALS` | Primer frame de otro mensaje con uno abierto (límite 1 en v1; el quinto parcial si se activa el intercalado futuro). | Rechazar el nuevo; contador. |
 | 0x0009 | `E_TIMEOUT` | 15 s sin progreso. | Descartar el parcial. |
 | 0x000A | `E_BAD_TAG` | Tag AEAD no verifica o contador repetido/fuera de ventana. | Descartar el mensaje; 3 seguidos → cerrar sesión. Nunca ejecutar efecto. |
 | 0x000B | `E_BUSY` | Cola o carril llenos. | Reintento posterior del emisor. |
@@ -296,10 +312,10 @@ Bibliotecas: la implementación de Noise debe ser una biblioteca mantenida y rev
 
 ### 8.5 Contadores y anti-replay
 
-- Contador de 64 bits por dirección dentro de la sesión, estrictamente creciente en emisor. El receptor acepta solo contadores no vistos dentro de una ventana de 64 (permite el intercalado de 3.6); un duplicado o muy antiguo se rechaza (`E_BAD_TAG` + contador) sin efecto.
+- Contador de 64 bits por dirección dentro de la sesión, estrictamente creciente en emisor. En v1 (sin intercalado, Q-A3) el receptor exige un contador estrictamente mayor que el último aceptado; un duplicado o anterior se rechaza (`E_BAD_TAG` + contador) sin efecto. La ventana de 64 contadores queda solo como opción del intercalado futuro (3.6).
 - Límite de vida: renegociar (nuevo handshake) tras 2^31 mensajes o 24 h *(propuesta)*; Noise `Rekey` es una alternativa.
 - Cada reconexión implica sesión y claves nuevas: un mensaje de una sesión anterior no verifica (Q04).
-- Requiere soporte de contador explícito (`SetNonce` del apartado de transporte fuera de orden de la especificación Noise). **Punto de revisión:** si la biblioteca elegida no lo soporta o se prefiere no intercalar, usar la alternativa de 3.6.
+- En v1 **no** se requiere `SetNonce` (Q-A3 cerrada: sin intercalado, contador implícito en orden). Solo el intercalado futuro necesitaría contador explícito (`SetNonce` del apartado de transporte fuera de orden de la especificación Noise); sería un punto de revisión nuevo.
 
 ### 8.6 Almacenamiento de claves e identidad
 
@@ -322,22 +338,22 @@ Hasta aprobar esta sección y pasar G2, el canal solo puede transportar mensajes
 
 ## 9. Vectores F01–F12 (lista de tareas; sin vectores todavía)
 
-**No se incluyen vectores hexadecimales en este documento.** Cada caso es una tarea de la lista conjunta. Reglas (`Doc/01` §7): el resultado esperado no se genera con el encoder bajo prueba; se produce a mano o con una herramienta independiente y lo revisan ambos lados; Swift→Kotlin y Kotlin→Swift; fragmentar en cada frontera relevante. El significado de F01–F12 proviene de la tabla del plan original §15.2 y puede reformularse para esta propuesta de framing.
+**No se incluyen vectores hexadecimales en este documento.** Los vectores de framing sin cifrado (F01–F07, F10–F12) viven en `test/fixtures/shared/p2-framing-vectors.json` (`draft-2`, todos PROPUESTO, derivados a mano; ver `docs/windows/p2-decisions.md`) y se comprueban en JVM con las pruebas `P2F01…`; no hay ejecución cruzada con Swift, así que el estado conjunto de F01–F12 sigue NOT_RUN. F08, F09 y los vectores con AEAD o handshake siguen sin vectores. Cada caso es una tarea de la lista conjunta. Reglas (`Doc/01` §7): el resultado esperado no se genera con el encoder bajo prueba; se produce a mano o con una herramienta independiente y lo revisan ambos lados; Swift→Kotlin y Kotlin→Swift; fragmentar en cada frontera relevante. El significado de F01–F12 proviene de la tabla del plan original §15.2 y puede reformularse para esta propuesta de framing.
 
 | ID | Qué comprueba | Entrada (esquema) | Resultado esperado | Estado |
 |---|---|---|---|---|
 | F01 | Intercambio cruzado | Mensaje serializado en Swift y decodificado en Kotlin, y al revés, con campos idénticos y varios tipos de payload | Campos idénticos en ambos sentidos con los mismos bytes de referencia | NOT_RUN |
 | F02 | Capacidades por dirección | `maxAttValueBytes` de 20, 64, 185, 512 y valores extremos (14, 13, máximo u16) | Ningún valor ATT excede la capacidad; <14 → `E_CAPACITY_TOO_SMALL` | NOT_RUN |
-| F03 | Fronteras de fragmentación | Mensajes vacíos y tamaños exactos en cada frontera (N−1, N, N+1 frames) | Sin frame imposible ni padding mal interpretado; carga intermedia uniforme | NOT_RUN |
+| F03 | Fronteras de fragmentación | Mensajes vacíos y tamaños exactos en cada frontera (N−1, N, N+1 frames) | Sin frame imposible ni padding mal interpretado; carga exacta por posición (K1/A: primero `max−13`, resto `max−9`) | NOT_RUN |
 | F04 | Orden de frames | Duplicar, omitir y reordenar frames de un mensaje | Rechazo definido (`E_SEQUENCE`); nunca mezcla de mensajes | NOT_RUN |
 | F05 | Identificador conflictivo | Mismo `messageId` con `fragCount` o `totalLength` distintos | Parcial/sesión rechazado según la política (3.6, 7.1) | NOT_RUN |
-| F06 | Límite de parciales | Cinco mensajes parciales con límite de cuatro | `E_TOO_MANY_PARTIALS` explícito con contador; memoria acotada | NOT_RUN |
+| F06 | Límite de parciales | Segundo mensaje mientras hay uno parcial (límite 1 en v1; cinco con límite cuatro si se activa el intercalado) | `E_TOO_MANY_PARTIALS` explícito con contador; memoria acotada | NOT_RUN |
 | F07 | Tamaño total excesivo | `totalLength` > límite con número de frames válido | `E_OVERSIZE` antes de reservar el exceso | NOT_RUN |
 | F08 | Contrapresión | Pausa a mitad de envío y posterior «listo» | Reanuda exactamente el siguiente frame pendiente, sin duplicar ni perder | NOT_RUN |
 | F09 | Desconexión en el último frame | Desconexión tras el último frame, reconexión y reenvío por `requestId` | El mensaje lógico no produce dos efectos | NOT_RUN |
 | F10 | Versionado | Major distinto; campos minor desconocidos; bit crítico desconocido | Major incompatible visible; extensiones compatibles ignoradas; nunca éxito | NOT_RUN |
 | F11 | Parcial caducado | Stream parcial expira y luego llega el final viejo | No se combina con otro mensaje; limpieza | NOT_RUN |
-| F12 | Cancelación y prioridad | Cancelar una transferencia larga mientras llega una acción de control | Cancelación efectiva; el control no queda tras todo el lote | NOT_RUN |
+| F12 | Cancelación y prioridad | Cancelar una transferencia larga mientras llega una acción de control | Cancelación efectiva; el control espera como máximo a un mensaje de ≤ 8 KiB, no a todo el lote | NOT_RUN |
 
 Casos de seguridad relacionados (plan §15, Q01–Q12), a cubrir en el mismo esfuerzo cuando se apruebe la sección 8: Q01 dispositivo ajeno, Q02 mutación de cifrado/cabecera/tag, Q03 repetición, Q04 mensaje de sesión anterior, Q05 cambio de identidad, Q10 flood. Q07–Q09 (persistencia transaccional) pertenecen a P2-06.
 
@@ -349,17 +365,18 @@ Coautoría propuesta: Windows redacta el manifiesto con el formato (caso, esquem
 |---|---|
 | Q-A1 | Método de emparejamiento observado entre iPhone y reloj (Just Works / comparación numérica): ¿se puede afirmar protección MITM del enlace, o se declara solo cifrado? |
 | Q-A2 | ¿Aceptan el registro binario de 16 bytes de Capabilities o prefieren JSON pequeño? |
-| Q-A3 | ¿Intercalado de mensajes con contador explícito, o sin intercalado y lotes divididos? |
-| Q-A4 | ¿Es 4 parciales × 64 KiB = 256 KiB la lectura correcta de «≤256 KiB acumulados por sesión»? |
+| Q-A3 | ¿Intercalado de mensajes con contador explícito, o sin intercalado y lotes divididos? **Cerrada (Windows, Revisión 2; coincide con Apple):** sin intercalado en v1, control ≤ 8 KiB, lotes divididos en mensajes, un mensaje abierto por dirección. Se reevalúa tras medir latencia. |
+| Q-A4 | ¿Es 4 parciales × 64 KiB = 256 KiB la lectura correcta de «≤256 KiB acumulados por sesión»? **Confirmada por Apple** (techo; en v1 hay un solo parcial). |
 | Q-A5 | ¿Capacidad efectiva de `didUpdateValueFor` en notificaciones y de `maximumWriteValueLength` que observan en el iPhone real (por conexión, con y sin MTU grande)? Se necesitan valores medidos, no teóricos. |
 | Q-A6 | Disponibilidad y revisión de bibliotecas Noise/X25519/ChaCha20-Poly1305 en Swift (CryptoKit) y Kotlin; ¿aceptan un componente propio probado solo con los vectores de Noise? |
 | Q-A7 | Ciclo de vida del Keychain al desinstalar/reinstalar la app iPhone y política de «olvidar dispositivo». |
 | Q-A8 | ¿El reloj debe mantener la identidad ante un cambio de vínculo LE, o cada nuevo vínculo obliga a registro nuevo? |
-| Q-A9 | ¿Eliminan el modo DATA sin AEAD de laboratorio (3.4)? |
+| Q-A9 | ¿Eliminan el modo DATA sin AEAD de laboratorio (3.4)? **Cerrada (Windows, Revisión 2; coincide con Apple):** DATA sin AEAD prohibido en producción; solo tras un indicador de compilación de laboratorio y con clave de prueba rotulada «solo pruebas». |
 | Q-A10 | Confirmación de nombre anunciado `WristBridge` y su coexistencia con el filtro ASK (ver `docs/windows/handoff-to-apple.md`). |
 
 ## 11. Qué falta para pasar de borrador a contrato
 
+0. Hecho en Revisión 2 (solo framing): K1 (carga por frame), Q-A3, Q-A9 y K2 (vectores a mano verificados). Pendiente de Apple: confirmar la interpretación de límites por tipo (3.5) y revisar los vectores nuevos de Windows.
 1. Revisión Apple de cada fila de este documento; decisiones por escrito.
 2. Medición física de `maxAttValueBytes`, comportamiento de CCCD con vínculo existente y método de emparejamiento.
 3. Revisión independiente de la sección 8 y elección de biblioteca.
