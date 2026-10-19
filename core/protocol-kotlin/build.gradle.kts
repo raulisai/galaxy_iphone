@@ -26,4 +26,5 @@ val repoRoot = rootProject.layout.projectDirectory.asFile.absolutePath
 tasks.test {
     useJUnitPlatform()
     systemProperty("wristbridge.repoRoot", repoRoot)
+    System.getProperty("wristbridge.writeVectors")?.let { systemProperty("wristbridge.writeVectors", it) }
 }

@@ -5,7 +5,16 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import java.io.File
+import dev.wristbridge.protocol.p2.health.HealthSample
+import dev.wristbridge.protocol.p2.health.HealthSource
 import java.security.MessageDigest
+
+/** Adapter that lets the P2 health responder read this store. */
+class HealthStoreSource(private val store: HealthStore) : HealthSource {
+    override fun samplesAfter(cursor: Long, limit: Int) = store.samplesAfter(cursor, limit)
+    override fun hasMoreAfter(cursor: Long) = store.hasMoreAfter(cursor)
+    override fun acknowledge(through: Long) = store.acknowledge(through)
+}
 
 data class HealthSummary(
     val pending: Long = 0, val dropped: Long = 0,
@@ -81,6 +90,29 @@ class HealthStore internal constructor(context: Context, databaseName: String = 
         return HealthSummary(scalar("SELECT COUNT(*) FROM samples"), scalar("SELECT value FROM metadata WHERE key='dropped'"),
             steps?.first?.toLong(), steps?.second, hr?.first, hr?.second)
     }
+
+    /** Samples with a delivery cursor greater than [cursor], oldest first (P7 pull by cursor). */
+    @Synchronized fun samplesAfter(cursor: Long, limit: Int): List<HealthSample> = readableDatabase.rawQuery(
+        "SELECT cursor,sample_id,metric,start_ms,end_ms,value FROM samples WHERE cursor>? ORDER BY cursor LIMIT ?",
+        arrayOf(cursor.toString(), limit.toString()),
+    ).use { c ->
+        buildList { while (c.moveToNext()) add(HealthSample(c.getLong(0), c.getString(2), c.getLong(3), c.getLong(4), c.getDouble(5), c.getString(1))) }
+    }
+
+    @Synchronized fun hasMoreAfter(cursor: Long): Boolean = readableDatabase.rawQuery(
+        "SELECT 1 FROM samples WHERE cursor>? LIMIT 1", arrayOf(cursor.toString()),
+    ).use { it.moveToFirst() }
+
+    /** Highest cursor the iPhone confirmed it saved. Rows stay for the local screen until the 7-day retention prunes them. */
+    @Synchronized fun acknowledge(through: Long) {
+        val db = writableDatabase
+        db.execSQL("INSERT OR IGNORE INTO metadata VALUES ('acked',0)")
+        db.execSQL("UPDATE metadata SET value=MAX(value,?) WHERE key='acked'", arrayOf(through))
+    }
+
+    @Synchronized fun acknowledgedThrough(): Long = readableDatabase.rawQuery(
+        "SELECT value FROM metadata WHERE key='acked'", null,
+    ).use { if (it.moveToFirst()) it.getLong(0) else 0L }
 
     @Synchronized fun erase() {
         writableDatabase.beginTransaction()

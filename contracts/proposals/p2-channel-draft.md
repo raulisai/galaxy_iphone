@@ -382,3 +382,7 @@ Coautoría propuesta: Windows redacta el manifiesto con el formato (caso, esquem
 3. Revisión independiente de la sección 8 y elección de biblioteca.
 4. Manifiesto de vectores F01–F12 aprobado por ambos lados.
 5. Solo entonces: materializar `contracts/control.schema.json`, `contracts/framing.md`, `contracts/capabilities.json`, `contracts/compatibility.md`, subir `profileRevision` y exponer las características reservadas. Este borrador no cambia `contracts/ble-profile.json`.
+
+## Revisión 3 · candidato a congelar (18 de octubre de 2026, Windows)
+
+Por indicación del usuario, el contrato se deja estable para el alcance «canal seguro + sincronización de salud». **Sigue sin estar congelado hasta que Apple lo confirme y se cierre K3.** Cambios: sobre JSON y mensajes `health.sync` (`cursor`, `batch`, `ack`) definidos en `docs/windows/p2-seguridad-y-salud-kotlin.md`; Noise XX con vector propuesto `test/fixtures/shared/p2-noise-xx-vectors.json`; ids de mensaje DATA desde 16; contador explícito igual al esperado. Implementación Kotlin de referencia en `core/protocol-kotlin/.../p2/{secure,health}`.

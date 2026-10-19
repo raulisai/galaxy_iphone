@@ -1,0 +1,19 @@
+{
+  "status": "PROPOSED",
+  "protocol": "Noise_XX_25519_ChaChaPoly_SHA256",
+  "prologueHex": "77726973746272696467652d70322d766563746f72",
+  "initiatorStaticPrivateHex": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20",
+  "responderStaticPrivateHex": "65666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f8081828384",
+  "initiatorEphemeralPrivateHex": "333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152",
+  "responderEphemeralPrivateHex": "9798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6",
+  "message1Hex": "c15d2265459455c9ff156e6c1da6bfb7910bb8af50f2b2f9f853ea9325259d4d",
+  "message2PayloadUtf8": "p2",
+  "message2Hex": "153864612f5c5d47f684d66899a9de4f7c30b5f74a8ebd699642212bce00d9389d199bb3d37df0bffa10cda77e587257d1f867ee596d264b32e661f0e76670a33be616d3c4fce5d0031d2c2fc5713cb96f5634e65c37607eb9d4191fe0752e547995",
+  "message3PayloadUtf8": "p3",
+  "message3Hex": "1b0d3e137948dc0a07f3eb1bea8c56b41aaf4cac37b1688dc8c5da244ceab2ebcf250b29dbd603d0d78157c82e2abb83d7a2fd4c99e9eef83b9c789069f58742332f",
+  "handshakeHashHex": "4c79a972ec78a2394fb80f2b57f93db21377a19e0aac43954d24df80d04077e9",
+  "securityCode": "126111",
+  "transportAdHex": "0102",
+  "initiatorToResponderHex": "9509a9d06918efeca8266cae737c9c1232646871ce62bba5eee2297503de594f93ed7c3cc12b",
+  "responderToInitiatorHex": "728e83b111dc3b02d409fd20a6fd785f6fcb120b57ffe0bd649868ea2a95b537b5cc611e4f9f"
+}

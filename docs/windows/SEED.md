@@ -82,3 +82,6 @@ HECHO: corrección de CardPresenter sin CallStyle (Android 14+ lo rechaza sin se
 ## Música estilo Spotify · 18 octubre 2026 (0.5.2-lab, build 13)
 
 HECHO: `MusicScreen` rediseñada (anillo de progreso en el bisel, color de la app como fondo, chip con el nombre del reproductor, play grande en el color de la app, anterior/siguiente planos, volumen debajo y en la corona). Arreglo de play: con Spotify en pausa larga, iOS deja de anunciar reproductor pero sigue aceptando PLAY; antes la pantalla ocultaba los controles y no había cómo darle play. Ahora muestra «Nada en reproducción» con botón Reanudar (`resumeCommand`). El botón cambia al instante tras el toque (3 s máximo) para que un segundo toque no mande el comando contrario. Validado: 217 pruebas JVM, lint sin errores, assemble PASS; instalada en el Watch7 (SHA-256 `198137f1…4ef8`); en el reloj, PLAY desde la nueva pantalla puso Spotify a reproducir (el tiempo avanzó). El caso de reanudar sin reproductor es NOT_RUN en físico.
+
+## P2 seguro y salud (Kotlin) · 18-oct-2026
+Noise XX, sesion AEAD, JSON estricto y mensajes health.sync implementados y probados en JVM; HealthStore con cursor/ack. Ver docs/windows/p2-seguridad-y-salud-kotlin.md. NO conectado al GATT; K3 sin revision; contrato = candidato a congelar (falta confirmacion de Apple). Pendiente fisico: XDH/ChaCha en el reloj.
