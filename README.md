@@ -16,6 +16,7 @@ Ramas: `developer` es la integración solicitada por el usuario; `development_co
 - [Revisión del plan y decisiones](docs/apple/review.md).
 - [Entorno y restricciones reales](docs/apple/environment.md).
 - [Instalación y prueba iPhone](docs/apple/installation.md).
+- [Canal seguro: qué se puede implementar y análisis de errores](docs/apple/p2-error-analysis.md).
 - [Salud y Buscar iPhone: estado e integración](docs/apple/health-find-integration-status.md).
 - [Propuesta de salud P7 (en revisión)](docs/apple/health-sync-proposal.md).
 - [Entrega al equipo del reloj](docs/apple/handoff-G0.md).
