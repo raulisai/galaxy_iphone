@@ -11,7 +11,7 @@
       "requests": "6f06b8b1-21d9-4c65-9d7e-118880e36a03",
       "events": "6f06b8b1-21d9-4c65-9d7e-118880e36a04"
     },
-    "p1Exposure": "Primary service only. Reserved characteristics are not added to the GATT database in P1.",
+    "p1Exposure": "Watch 0.6.0-lab exposes the three reserved characteristics as proposed in contracts/proposals/p2-channel-draft.md section 1 (Capabilities READ encrypted, Requests WRITE encrypted, Events NOTIFY with encrypted CCCD). Candidate, NOT FROZEN.",
     "roleUnderTest": "A: watch peripheral/GATT server for the own service, iPhone central. Watch is also ANCS GATT client."
   },
   "advertising": {

@@ -29,6 +29,7 @@ internal fun ConnectionScreen(
     model: UiModel,
     onBridgeCommand: (String) -> Unit,
     onRequestPermissions: () -> Unit,
+    onOpenPairing: () -> Unit,
 ) {
     val m = LocalMetrics.current
     val bridge = model.bridge
@@ -81,6 +82,8 @@ internal fun ConnectionScreen(
                 )
             }
         }
+
+        item(key = "pairing") { Pill("Vincular iPhone (salud)", onOpenPairing) }
 
         item(key = "details") {
             GroupCard(mergeForReader = false) {

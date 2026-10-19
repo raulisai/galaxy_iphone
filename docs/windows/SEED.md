@@ -85,3 +85,6 @@ HECHO: `MusicScreen` rediseñada (anillo de progreso en el bisel, color de la ap
 
 ## P2 seguro y salud (Kotlin) · 18-oct-2026
 Noise XX, sesion AEAD, JSON estricto y mensajes health.sync implementados y probados en JVM; HealthStore con cursor/ack. Ver docs/windows/p2-seguridad-y-salud-kotlin.md. NO conectado al GATT; K3 sin revision; contrato = candidato a congelar (falta confirmacion de Apple). Pendiente fisico: XDH/ChaCha en el reloj.
+
+## 0.6.0-lab (19-oct-2026)
+Canal P2 expuesto en el GATT del reloj (Capabilities/Requests/Events), identidad X25519 en Keystore, pantalla Conexión > Vincular iPhone con codigo de 6 digitos, responder P2 + health.sync sobre HealthStore. APK build/releases/wristbridge-watch-0.6.0-lab-14.apk (NO instalado: ADB sin conexion; autoprueba XDH/ChaCha en el reloj NOT_RUN). Tareas para Apple: docs/windows/handoff-apple-p2-health.md.

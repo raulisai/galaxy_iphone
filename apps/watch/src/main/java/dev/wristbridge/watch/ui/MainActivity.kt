@@ -45,6 +45,7 @@ internal enum class Screen(val parent: Screen?) {
     MUSIC(HOME),
     HEALTH(HOME),
     CONNECTION(HOME),
+    PAIRING(CONNECTION),
     SETTINGS(HOME),
     DIAGNOSTICS(SETTINGS),
 }
@@ -183,7 +184,9 @@ private fun WatchApp(openCallRequest: Int) {
                             model = model,
                             onBridgeCommand = { BridgeService.send(context, it) },
                             onRequestPermissions = requestPermissions,
+                            onOpenPairing = { screen = Screen.PAIRING },
                         )
+                        Screen.PAIRING -> PairingScreen(model.bridge.serviceRunning)
                         Screen.SETTINGS -> SettingsScreen(prefs) { screen = Screen.DIAGNOSTICS }
                         Screen.DIAGNOSTICS -> DiagnosticsScreen(model)
                     }

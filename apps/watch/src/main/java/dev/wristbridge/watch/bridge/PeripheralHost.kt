@@ -17,11 +17,16 @@ import android.bluetooth.le.AdvertiseSettings
 import android.content.Context
 import android.os.Handler
 import android.os.ParcelUuid
+import dev.wristbridge.protocol.contract.AncsUuids
 import dev.wristbridge.protocol.contract.WristBridgeProfile
+import dev.wristbridge.protocol.p2.secure.P2Profile
+import dev.wristbridge.watch.p2.P2Channel
+import dev.wristbridge.watch.p2.P2SelfTest
+import dev.wristbridge.watch.p2.P2Bridge
 
 /**
  * Path A, own service side (P1-04): advertises the reserved service UUID and hosts a GATT server whose
- * primary service exposes no characteristics yet (properties are not frozen until P2-04). The iPhone
+ * primary service exposes the three own-channel characteristics (draft P2 section 1, NOT FROZEN). The iPhone
  * connects as central; each connection is reported to [onPeerConnected] so the ANCS client can start.
  *
  * All callbacks are re-posted to [handler] (the single BLE thread). Every entry point is reached only after
@@ -40,6 +45,8 @@ class PeripheralHost(
     private var advertising = false
     private var includeNameInScanResponse = true
     private val connected = LinkedHashSet<String>()
+    private var events: BluetoothGattCharacteristic? = null
+    private val p2 = P2Channel(context, handler, { server }, { events })
 
     fun start() {
         val a = adapter
@@ -64,10 +71,30 @@ class PeripheralHost(
         }
         server = s
         val service = BluetoothGattService(WristBridgeProfile.SERVICE, BluetoothGattService.SERVICE_TYPE_PRIMARY)
+        val caps = BluetoothGattCharacteristic(
+            WristBridgeProfile.CAPABILITIES, BluetoothGattCharacteristic.PROPERTY_READ, BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED,
+        )
+        val requests = BluetoothGattCharacteristic(
+            WristBridgeProfile.REQUESTS, BluetoothGattCharacteristic.PROPERTY_WRITE, BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED,
+        )
+        val ev = BluetoothGattCharacteristic(WristBridgeProfile.EVENTS, BluetoothGattCharacteristic.PROPERTY_NOTIFY, 0)
+        ev.addDescriptor(
+            BluetoothGattDescriptor(
+                AncsUuids.CCCD,
+                BluetoothGattDescriptor.PERMISSION_READ_ENCRYPTED or BluetoothGattDescriptor.PERMISSION_WRITE_ENCRYPTED,
+            ),
+        )
+        events = ev
+        service.addCharacteristic(caps)
+        service.addCharacteristic(requests)
+        service.addCharacteristic(ev)
+        p2.attach()
+        BridgeStatus.event("P2: autoprueba criptográfica " + P2SelfTest.run().also { r -> P2Bridge.update { it.copy(cryptoSelfTest = r) } })
         if (!s.addService(service)) fail("addService rechazado")
     }
 
     fun stop() {
+        p2.detach()
         stopAdvertising()
         try {
             server?.close()
@@ -192,32 +219,71 @@ class PeripheralHost(
                         it.copy(ownChannel = if (advertising) OwnChannelState.ADVERTISING else OwnChannelState.STOPPED)
                     }
                     BridgeStatus.event("Central desconectado peer=$id estado=$status")
+                    p2.onDisconnected(device)
                     onPeerDisconnected(device)
                 }
             }
         }
 
-        // No characteristics are exposed in P1: answer any request explicitly instead of leaving it pending.
+        override fun onMtuChanged(device: BluetoothDevice, mtu: Int) {
+            handler.post { p2.onMtu(device, mtu) }
+        }
+
+        override fun onNotificationSent(device: BluetoothDevice, status: Int) {
+            handler.post { p2.onNotificationSent(device, status) }
+        }
+
         override fun onCharacteristicReadRequest(
             device: BluetoothDevice, requestId: Int, offset: Int, characteristic: BluetoothGattCharacteristic,
-        ) = reject(device, requestId, offset)
+        ) {
+            if (characteristic.uuid == WristBridgeProfile.CAPABILITIES && offset == 0) {
+                respond(device, requestId, BluetoothGatt.GATT_SUCCESS, offset, P2Profile.CAPABILITIES)
+            } else {
+                reject(device, requestId, offset)
+            }
+        }
 
         override fun onCharacteristicWriteRequest(
             device: BluetoothDevice, requestId: Int, characteristic: BluetoothGattCharacteristic,
             preparedWrite: Boolean, responseNeeded: Boolean, offset: Int, value: ByteArray?,
         ) {
-            if (responseNeeded) reject(device, requestId, offset)
+            if (characteristic.uuid != WristBridgeProfile.REQUESTS || preparedWrite || offset != 0 || value == null) {
+                if (responseNeeded) reject(device, requestId, offset)
+                return
+            }
+            if (responseNeeded) respond(device, requestId, BluetoothGatt.GATT_SUCCESS, offset, null)
+            val copy = value.copyOf()
+            handler.post { p2.onWrite(device, copy) }
         }
 
         override fun onDescriptorReadRequest(
             device: BluetoothDevice, requestId: Int, offset: Int, descriptor: BluetoothGattDescriptor,
-        ) = reject(device, requestId, offset)
+        ) {
+            if (descriptor.uuid == AncsUuids.CCCD) {
+                respond(device, requestId, BluetoothGatt.GATT_SUCCESS, offset, BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE)
+            } else {
+                reject(device, requestId, offset)
+            }
+        }
 
         override fun onDescriptorWriteRequest(
             device: BluetoothDevice, requestId: Int, descriptor: BluetoothGattDescriptor,
             preparedWrite: Boolean, responseNeeded: Boolean, offset: Int, value: ByteArray?,
         ) {
-            if (responseNeeded) reject(device, requestId, offset)
+            if (descriptor.uuid != AncsUuids.CCCD || preparedWrite || offset != 0 || value == null || value.size != 2) {
+                if (responseNeeded) reject(device, requestId, offset)
+                return
+            }
+            if (responseNeeded) respond(device, requestId, BluetoothGatt.GATT_SUCCESS, offset, null)
+            val enable = value.contentEquals(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)
+            handler.post { if (enable) p2.onSubscribed(device) else p2.onUnsubscribed(device) }
+        }
+
+        private fun respond(device: BluetoothDevice, requestId: Int, status: Int, offset: Int, value: ByteArray?) {
+            try {
+                server?.sendResponse(device, requestId, status, offset, value)
+            } catch (_: SecurityException) {
+            }
         }
 
         private fun reject(device: BluetoothDevice, requestId: Int, offset: Int) {

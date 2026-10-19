@@ -21,8 +21,8 @@ android {
         applicationId = "dev.wristbridge.watch"
         minSdk = 33
         targetSdk = 36
-        versionCode = 13
-        versionName = "0.5.2-lab"
+        versionCode = 14
+        versionName = "0.6.0-lab"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // H01: the running build must identify its exact revision. "-dirty" marks uncommitted changes.
         buildConfigField("String", "GIT_COMMIT", "\"$gitCommit\"")
