@@ -1,6 +1,7 @@
 import Combine
 import CoreBluetooth
 import Foundation
+import UIKit
 import WristBridgeProtocol
 
 /// iPhone side of the own secure channel (A-P2-04/05, A-H01, A-K7/K8). It rides on the peripheral that
@@ -290,9 +291,18 @@ final class P2Link: ObservableObject {
     private func handleRequest(_ env: P2Messages.Envelope) {
         switch env.capability {
         case P2Messages.findPhone:
-            FindPhoneAlarm.shared.start(reason: .watchRequest)
-            send(P2Messages.response(env.requestId, env.capability, [("status", .string("started"))]))
             note("orden «buscar iPhone» recibida")
+            // The alarm may start while the app is in the background: keep the process alive long enough to
+            // activate audio (the `audio` background mode then keeps it running while it rings).
+            var task = UIBackgroundTaskIdentifier.invalid
+            task = UIApplication.shared.beginBackgroundTask(withName: "find-iphone") { UIApplication.shared.endBackgroundTask(task) }
+            FindPhoneAlarm.shared.start(reason: .watchRequest)
+            let ringing = FindPhoneAlarm.shared.isRinging
+            note(ringing ? "alarma iniciada" : "alarma NO iniciada: \(FindPhoneAlarm.shared.message)")
+            // Honest result: "started" only if it is really ringing; otherwise a visible error to the watch.
+            send(ringing ? P2Messages.response(env.requestId, env.capability, [("status", .string("started"))])
+                         : P2Messages.errorResponse(env.requestId, env.capability, .busy))
+            if task != .invalid { UIApplication.shared.endBackgroundTask(task) }
         default:
             send(P2Messages.errorResponse(env.requestId, env.capability, .unknownCapability))
         }

@@ -30,7 +30,7 @@ final class FindPhoneAlarm: ObservableObject {
             try session.setCategory(.playback, mode: .default)
             try session.setActive(true)
         } catch {
-            message = "No se pudo activar el audio del iPhone."
+            message = "No se pudo activar el audio del iPhone (\(error.localizedDescription))."
             return
         }
         let engine = AVAudioEngine()
