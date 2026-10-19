@@ -1,0 +1,23 @@
+{
+  "version": "0.3.5",
+  "build": "12",
+  "configuration": "Release",
+  "signedBuild": "PASS",
+  "signatureVerification": "PASS",
+  "profileExpiresAt": "2026-10-24T06:30:31+00:00",
+  "debugLabHookAbsent": true,
+  "installation": "PASS",
+  "physicalAcceptance": "NOT_RUN",
+  "binarySHA256": "875b5e3ca0c56c3df634f90f2b624fb89d199386d278847933bd8b34066c6ada",
+  "sourceManifestSHA256": "e170973973a3ac3b51b5a78c6db3c515da2cd0123039f6548c3832744352b683",
+  "baseCommit": "4296a81e7d58c8f7394c347d0f7468c0e75ed81f",
+  "workspaceChangesPresent": true,
+  "toolchain": "Xcode 27.1\nBuild version 27A9275",
+  "deploymentTarget": "iOS 26.0",
+  "profileRevision": "p1-lab-1",
+  "launch": "BLOCKED",
+  "launchReason": "device locked",
+  "healthDataOnIPhone": "BLOCKED: no secure channel / watch outbox",
+  "uiTestsSimulator": "PASS 11/11 (simulator, not a gate)",
+  "packageTests": "PASS 41/41"
+}

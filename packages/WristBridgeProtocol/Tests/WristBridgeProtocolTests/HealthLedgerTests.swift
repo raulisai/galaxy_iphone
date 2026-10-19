@@ -132,3 +132,37 @@ private func tempFile() -> URL {
 }
 
 private var utc: Calendar { var c = Calendar(identifier: .gregorian); c.timeZone = TimeZone(identifier: "UTC")!; return c }
+
+// Steps arrive from the watch as cumulative daily SNAPSHOTS (docs/windows/health-android-handoff.md).
+private func snapshot(_ id: String, minutesAgo: Double, total: Double, dayStartMinutesAgo: Double = 600) -> HealthSample {
+    HealthSample(deviceId: "watch-1", metric: .stepsDaily, start: at(dayStartMinutesAgo), end: at(minutesAgo),
+                 value: total, syncId: id)
+}
+
+@Test func newestDailySnapshotIsTheDayTotalAndSnapshotsAreNeverSummed() {
+    var ledger = HealthLedger()
+    ledger.commit(snapshot("t-1", minutesAgo: 120, total: 1_000), now: now)
+    ledger.commit(snapshot("t-2", minutesAgo: 60, total: 2_500), now: now)
+    ledger.commit(snapshot("t-3", minutesAgo: 10, total: 4_200), now: now)
+    #expect(ledger.total(.stepsDaily, on: at(60), calendar: utc) == 4_200)
+    #expect(ledger.latest(.stepsDaily)?.value == 4_200)
+    #expect(ledger.cursor(for: .stepsDaily)?.syncId == "t-3")
+}
+
+@Test func snapshotImportedTwiceIsOneSampleAndLowerLaterTotalNeverGoesNegative() {
+    var ledger = HealthLedger()
+    #expect(ledger.commit(snapshot("u-1", minutesAgo: 60, total: 3_000), now: now) == .inserted)
+    #expect(ledger.commit(snapshot("u-1", minutesAgo: 60, total: 3_000), now: now) == .duplicate)
+    // Counter reset on the watch: stored as a new, non-negative total; nothing is subtracted.
+    #expect(ledger.commit(snapshot("u-2", minutesAgo: 5, total: 40), now: now) == .inserted)
+    #expect(ledger.total(.stepsDaily, on: at(5), calendar: utc) == 40)
+    #expect(ledger.commit(snapshot("u-3", minutesAgo: 2, total: -1), now: now) == .rejected(.invalidValue))
+}
+
+@Test func snapshotSpanLongerThanADayIsRejectedAndDeltasStillSum() {
+    var ledger = HealthLedger()
+    #expect(ledger.commit(snapshot("w-1", minutesAgo: 5, total: 10, dayStartMinutesAgo: 27 * 60), now: now) == .rejected(.invalidInterval))
+    ledger.commit(steps("x-1", minutesAgo: 20, value: 100), now: now)
+    ledger.commit(steps("x-2", minutesAgo: 10, value: 50), now: now)
+    #expect(ledger.total(.steps, on: at(15), calendar: utc) == 150)
+}

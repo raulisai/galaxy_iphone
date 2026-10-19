@@ -278,7 +278,7 @@ struct HealthScreen: View {
                     tileView(tile).appear(index)
                 }
             }
-            if store.ledger.latest(.steps) != nil { StepsChart(ledger: store.ledger) }
+            if store.ledger.latest(.steps) != nil || store.ledger.latest(.stepsDaily) != nil { StepsChart(ledger: store.ledger) }
             if store.ledger.latest(.heartRate) != nil { HeartRateChart(ledger: store.ledger) }
             Card(title: "Estado de la sincronización") {
                 IconRow(symbol: "antenna.radiowaves.left.and.right", color: syncColor, title: syncTitle, subtitle: syncDetail)
@@ -295,20 +295,17 @@ struct HealthScreen: View {
                 IconRow(symbol: "internaldrive.fill", color: .gray, title: "Nada sale del dispositivo",
                         subtitle: "Se guarda cifrado por el sistema, fuera de las copias de seguridad. Borra todo desde Ajustes → Privacidad.")
             }
-            if !store.hasData {
-                LockedAction(title: "Activar sincronización de salud", symbol: "heart.text.square.fill")
-                GateCard(items: [.init(text: "Canal seguro iPhone ↔ reloj aprobado (G2) y formato de mensajes congelado"),
-                                 .init(text: "App del reloj enviando pasos y ritmo cardiaco por lotes"),
-                                 .init(text: "Permisos de Apple Salud solo si activas la copia, por métrica")])
-            }
+            ReceiveCard(store: store)
         }
     }
 
-    private var syncTitle: String { store.hasData ? "Última sincronización" : "Sin sincronizar" }
-    private var syncColor: Color { store.hasData ? .green : .gray }
+    private var syncTitle: String {
+        store.hasData ? "Última sincronización" : (store.receiveEnabled ? "Esperando datos del reloj" : "Recepción desactivada")
+    }
+    private var syncColor: Color { store.hasData ? .green : (store.receiveEnabled ? .orange : .gray) }
     private var syncDetail: String {
         guard let end = HealthMetric.allCases.compactMap({ store.ledger.latest($0)?.end }).max() else {
-            return "Aún no ha llegado ningún dato del reloj."
+            return store.receiveEnabled ? "El iPhone está listo; todavía no llega ningún dato del reloj." : "Actívala abajo para que el iPhone acepte datos del reloj."
         }
         return "Dato más reciente: " + end.formatted(.relative(presentation: .named)) + "."
     }
@@ -338,7 +335,7 @@ struct HealthScreen: View {
     private func valueText(_ metric: HealthMetric) -> String? {
         let today = Date()
         switch metric {
-        case .steps: return store.ledger.total(.steps, on: today).map { Int($0).formatted() }
+        case .steps, .stepsDaily: return (store.ledger.total(.stepsDaily, on: today) ?? store.ledger.total(.steps, on: today)).map { Int($0).formatted() }
         case .distance: return store.ledger.total(.distance, on: today).map { String(format: "%.1f km", $0 / 1000) }
         case .activeEnergy: return store.ledger.total(.activeEnergy, on: today).map { "\(Int($0)) kcal" }
         case .heartRate: return store.ledger.latest(.heartRate).map { "\(Int($0.value.rounded())) lpm" }
@@ -353,15 +350,64 @@ struct HealthScreen: View {
     }
 }
 
+/// Real activation: the switch controls whether the iPhone accepts health batches, and the list
+/// shows what is true on each side. Turning it on does not create data; it removes the iPhone as a blocker.
+private struct ReceiveCard: View {
+    @ObservedObject var store: HealthStore
+
+    var body: some View {
+        Card(title: "Recepción de salud") {
+            Toggle(isOn: Binding(get: { store.receiveEnabled }, set: store.setReceiveEnabled)) {
+                IconRow(symbol: "heart.text.square.fill", color: .pink, title: "Recibir datos de salud del reloj",
+                        subtitle: store.receiveEnabled ? "Activada: el iPhone acepta y guarda lotes del reloj."
+                                                        : "Desactivada: el iPhone rechaza cualquier dato de salud.")
+            }
+            .accessibilityIdentifier("healthReceiveToggle")
+            Divider()
+            step("iPhone listo para recibir y guardar", done: store.receiveEnabled, detail: store.receiveEnabled ? "Libro local, validación y confirmación tras guardar" : "Activa el interruptor")
+            step("Reloj captura pasos y ritmo cardiaco", done: nil, detail: "La app del reloj 0.5.0-lab los guarda en el reloj (informado por Windows); el iPhone no puede comprobarlo")
+            step("Canal seguro iPhone ↔ reloj", done: false, detail: "Aún no existe: falta aprobar el contrato (G2) y la seguridad. Es lo único que impide ver los datos aquí")
+            step("Reloj envía por lotes y espera confirmación", done: false, detail: "Pendiente del lado Kotlin (agregación, cursor, outbox)")
+            Text("Activar la recepción no inventa datos: aparecerán cuando el reloj los envíe por el canal.")
+                .font(.caption).foregroundStyle(.secondary)
+        }
+    }
+
+    private func step(_ title: String, done: Bool?, detail: String) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: done == true ? "checkmark.circle.fill" : (done == false ? "hourglass" : "questionmark.circle"))
+                .foregroundStyle(done == true ? .green : (done == false ? .orange : .gray)).frame(width: 22)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).font(.subheadline.weight(.semibold))
+                Text(detail).font(.caption).foregroundStyle(.secondary)
+            }
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
 private struct StepsChart: View {
     let ledger: HealthLedger
     var body: some View {
         let start = Calendar.current.startOfDay(for: Date())
+        let snapshots = ledger.series(.stepsDaily, from: start.addingTimeInterval(-90_000), to: Date().addingTimeInterval(3600))
+            .filter { Calendar.current.isDateInToday($0.end) }
         let data = ledger.series(.steps, from: start, to: Date().addingTimeInterval(3600))
         Card(title: "Pasos de hoy") {
-            Chart(data) { sample in
-                BarMark(x: .value("Hora", sample.start, unit: .hour), y: .value("Pasos", sample.value))
-                    .foregroundStyle(Color.green.gradient).cornerRadius(3)
+            Chart {
+                if snapshots.isEmpty {
+                    ForEach(data) { sample in
+                        BarMark(x: .value("Hora", sample.start, unit: .hour), y: .value("Pasos", sample.value))
+                            .foregroundStyle(Color.green.gradient).cornerRadius(3)
+                    }
+                } else {
+                    ForEach(snapshots) { sample in
+                        AreaMark(x: .value("Hora", sample.end), y: .value("Pasos acumulados", sample.value))
+                            .foregroundStyle(Color.green.opacity(0.2))
+                        LineMark(x: .value("Hora", sample.end), y: .value("Pasos acumulados", sample.value))
+                            .foregroundStyle(Color.green).interpolationMethod(.monotone)
+                    }
+                }
             }
             .chartXAxis { AxisMarks(values: .stride(by: .hour, count: 6)) { _ in AxisGridLine(); AxisValueLabel(format: .dateTime.hour()) } }
             .frame(height: 140)

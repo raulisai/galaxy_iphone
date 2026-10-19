@@ -7,20 +7,25 @@ import Foundation
 
 public enum HealthMetric: String, Codable, CaseIterable, Sendable {
     case steps, distance, activeEnergy, heartRate
+    /// Cumulative steps so far today, as sent by the watch (a SNAPSHOT, never a delta).
+    case stepsDaily
 
     public var unit: String {
         switch self {
-        case .steps: "count"
+        case .steps, .stepsDaily: "count"
         case .distance: "m"
         case .activeEnergy: "kcal"
         case .heartRate: "bpm"
         }
     }
     /// Counters travel as per-interval deltas; heart rate as an interval average.
-    public var isCumulativeDelta: Bool { self != .heartRate }
+    public var isCumulativeDelta: Bool { self == .steps || self == .distance || self == .activeEnergy }
+    /// A running total for the day: the newest snapshot is the day total; snapshots are never summed.
+    public var isDailySnapshot: Bool { self == .stepsDaily }
     fileprivate var maxValue: Double {
         switch self {
         case .steps: 100_000
+        case .stepsDaily: 300_000
         case .distance: 100_000
         case .activeEnergy: 10_000
         case .heartRate: 250
@@ -105,6 +110,8 @@ public struct HealthLedger: Codable, Sendable {
     public static let maxSamples = 50_000
     public static let maxGaps = 500
     public static let maxIntervalSeconds: TimeInterval = 6 * 3600
+    /// A daily snapshot spans from the start of the day to the moment it was taken.
+    public static let maxSnapshotSeconds: TimeInterval = 25 * 3600
     public static let allowedRetention = [7, 30, 90]
 
     public init(retentionDays: Int = 30) {
@@ -151,7 +158,7 @@ public struct HealthLedger: Codable, Sendable {
         guard s.unit == s.metric.unit else { return .unitMismatch }
         let length = s.end.timeIntervalSince(s.start)
         guard s.start.timeIntervalSince1970.isFinite, s.end.timeIntervalSince1970.isFinite,
-              length > 0, length <= maxIntervalSeconds,
+              length > 0, length <= (s.metric.isDailySnapshot ? maxSnapshotSeconds : maxIntervalSeconds),
               s.end <= now.addingTimeInterval(300) else { return .invalidInterval }
         if s.end < now.addingTimeInterval(-Double(retentionDays) * 86_400) { return .expired }
         let limit = s.metric.maxValue
@@ -181,6 +188,12 @@ public struct HealthLedger: Codable, Sendable {
     /// Sum of deltas whose interval *starts* on the given calendar day. Deltas never produce
     /// negative activity: a counter reset on the watch must arrive as a new, non-negative delta.
     public func total(_ metric: HealthMetric, on day: Date, calendar: Calendar = .current) -> Double? {
+        if metric.isDailySnapshot {
+            // The newest snapshot taken on that day (by its end time) is the total so far. A later, lower value (counter
+            // reset on the watch) is recorded as is: it is never subtracted or summed.
+            return store.values.filter { $0.metric == metric && calendar.isDate($0.end, inSameDayAs: day) }
+                .max { ($0.end, $0.syncId) < ($1.end, $1.syncId) }?.value
+        }
         guard metric.isCumulativeDelta else { return nil }
         let matching = store.values.filter { $0.metric == metric && calendar.isDate($0.start, inSameDayAs: day) }
         return matching.isEmpty ? nil : matching.reduce(0) { $0 + $1.value }

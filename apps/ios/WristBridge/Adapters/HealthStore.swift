@@ -10,11 +10,15 @@ final class HealthStore: ObservableObject {
     @Published private(set) var warning: String?
     /// Demonstration builds show clearly labeled synthetic samples; real builds never do.
     let isSample: Bool
+    /// The user's switch. While off, the iPhone refuses health batches (and must not acknowledge them).
+    @Published private(set) var receiveEnabled: Bool
+    private static let receiveKey = "WristBridge.healthReceiveEnabled"
     private let repository: HealthLedgerRepository?
     private var writable = true
 
     init(isDemo: Bool, retentionDays: Int = 30) {
         isSample = isDemo
+        receiveEnabled = isDemo ? true : UserDefaults.standard.bool(forKey: Self.receiveKey)
         if isDemo {
             repository = nil
             ledger = Self.sampleLedger()
@@ -37,11 +41,16 @@ final class HealthStore: ObservableObject {
 
     var hasData: Bool { ledger.count > 0 }
 
+    func setReceiveEnabled(_ enabled: Bool) {
+        receiveEnabled = enabled
+        if !isSample { UserDefaults.standard.set(enabled, forKey: Self.receiveKey) }
+    }
+
     /// Entry point for the future secure channel. Returns true only if the batch was
     /// persisted and fully valid, i.e. when it is safe to acknowledge to the watch.
     @discardableResult
     func ingest(_ batch: [HealthSample], gaps: [HealthGap] = []) -> Bool {
-        guard !isSample, writable, let repository else { return false }
+        guard !isSample, receiveEnabled, writable, let repository else { return false }
         do {
             let result = try repository.ingest(batch, gaps: gaps)
             if let saved = try repository.load() { ledger = saved }

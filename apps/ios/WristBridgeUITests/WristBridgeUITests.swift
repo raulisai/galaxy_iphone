@@ -158,6 +158,28 @@ final class WristBridgeUITests: XCTestCase {
         // Without a real ledger there is nothing to claim; the live app must not show the banner.
     }
 
+    func testHealthReceiveSwitchActivatesIPhoneSideWithoutInventingData() {
+        let app = XCUIApplication()
+        app.launch() // live build: no sample data, no watch
+        let tile = app.buttons["feature-health"]
+        for _ in 0..<8 where !tile.exists || tile.frame.maxY > app.frame.height - 140 { app.swipeUp() }
+        for _ in 0..<6 where !tile.isHittable { app.buttons["feature-faces"].swipeLeft(velocity: .slow) }
+        tile.tap()
+        XCTAssertTrue(app.navigationBars["Salud"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.descendants(matching: .any)["healthSampleBanner"].exists)
+        let toggle = app.switches["healthReceiveToggle"]
+        for _ in 0..<6 where !toggle.exists { app.swipeUp() }
+        XCTAssertTrue(toggle.exists)
+        let before = toggle.value as? String
+        toggle.switches.firstMatch.tap()
+        let changed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value != %@", before ?? ""), object: toggle)
+        XCTAssertEqual(XCTWaiter.wait(for: [changed], timeout: 3), .completed)
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'Esperando datos del reloj' OR label CONTAINS 'Recepción desactivada'")).firstMatch.exists)
+        // No value is claimed: activating never fabricates a reading.
+        XCTAssertTrue(app.staticTexts["Pasos: sin datos, bloqueado"].exists || app.descendants(matching: .any)["Pasos: sin datos, bloqueado"].exists)
+        toggle.switches.firstMatch.tap() // restore the original state
+    }
+
     func testManualObservationDoesNotPromoteAutomaticReadiness() {
         let app = XCUIApplication()
         app.launch()
