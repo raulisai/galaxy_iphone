@@ -16,7 +16,7 @@
 |---|---|---|
 | K4 | Exponer las tres características reservadas con las propiedades del borrador (Capabilities READ, Requests WRITE, Events NOTIFY + CCCD cifrado) y registro de capacidades de 16 bytes | Hoy solo existe el servicio primario |
 | K5 | Framer/codec según el contrato aprobado y pruebas JVM contra los vectores; Keystore para la identidad; registro con código de seguridad (SAS) | No empezar antes de K1–K3 |
-| K6 | **Salud**: Health Services pasivo (pasos, ritmo cardiaco; distancia/energía solo si hay datos), intervalos de 5 min, outbox persistente 7 días con marcadores de hueco, borrar solo tras confirmación de guardado, cursor por métrica | Permisos por métrica en el reloj. iPhone ya tiene el libro (`HealthLedger`) y valida: rechaza negativos, duplica nada, exige `syncId` ASCII ≤128, `deviceId` ≤64, valores acotados |
+| K6 | **Salud** (formato que el iPhone ya acepta: [`health-ingest-spec.md`](health-ingest-spec.md); pasos como instantánea diaria `stepsDaily` están aceptados): Health Services pasivo (pasos, ritmo cardiaco; distancia/energía solo si hay datos), intervalos de 5 min, outbox persistente 7 días con marcadores de hueco, borrar solo tras confirmación de guardado, cursor por métrica | Permisos por métrica en el reloj. iPhone ya tiene el libro (`HealthLedger`) y valida: rechaza negativos, duplica nada, exige `syncId` ASCII ≤128, `deviceId` ≤64, valores acotados |
 | K7 | **Buscar iPhone**: botón en la app del reloj y comando «buscar iPhone» por el canal seguro, con resultado `solicitado` (no «sonó») | iPhone: `FindPhoneAlarm` ya suena 60 s; falta solo la orden |
 | K8 | **Buscar reloj** (iPhone → reloj): recibir el comando y sonar/vibrar en el reloj con confirmación | Pantalla del iPhone bloqueada hasta que exista |
 
