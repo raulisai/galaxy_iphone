@@ -180,6 +180,22 @@ final class WristBridgeUITests: XCTestCase {
         toggle.switches.firstMatch.tap() // restore the original state
     }
 
+    func testSecureChannelScreenOpensAndCannotPairWithoutARealWatch() {
+        let app = XCUIApplication()
+        app.launchArguments = ["--demo"]
+        app.launch()
+        let tile = app.buttons["feature-p2"]
+        for _ in 0..<8 where !tile.exists || tile.frame.maxY > app.frame.height - 140 { app.swipeUp() }
+        XCTAssertTrue(tile.isHittable)
+        tile.tap()
+        XCTAssertTrue(app.navigationBars["Canal seguro"].waitForExistence(timeout: 5))
+        let pair = app.buttons["p2Pair"]
+        XCTAssertTrue(pair.waitForExistence(timeout: 5))
+        XCTAssertFalse(pair.isEnabled)                       // demo: no verified watch link
+        XCTAssertFalse(app.buttons["p2Forget"].exists)       // nothing paired, nothing to forget
+        XCTAssertFalse(app.descendants(matching: .any)["p2Code"].exists)   // no code is ever invented
+    }
+
     func testManualObservationDoesNotPromoteAutomaticReadiness() {
         let app = XCUIApplication()
         app.launch()

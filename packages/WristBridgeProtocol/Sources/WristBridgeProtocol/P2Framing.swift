@@ -180,7 +180,7 @@ public struct P2Limits: Equatable, Sendable {
 
 public enum P2Step: Equatable, Sendable {
     case partial
-    case complete(type: P2FrameType, messageId: UInt16, body: [UInt8])
+    case complete(type: P2FrameType, messageId: UInt16, flags: UInt8, body: [UInt8])
     case failed(P2Error, closeSession: Bool)
     case cancelled
     case cancelNoop
@@ -285,7 +285,7 @@ public struct P2Reassembler: Sendable {
             if let known = knownMaxAttValueBytes, carried > known - P2Codec.firstHeaderBytes { return fail(.malformedFrame, now: now) }
             guard carried == total else { return fail(.lengthMismatch, now: now) }
             consecutiveMalformed = 0
-            return .complete(type: frame.type, messageId: frame.messageId, body: frame.payload)
+            return .complete(type: frame.type, messageId: frame.messageId, flags: frame.flags, body: frame.payload)
         }
         if let known = knownMaxAttValueBytes, carried != known - P2Codec.firstHeaderBytes { return fail(.malformedFrame, now: now) }
         guard carried < total else { return fail(.lengthMismatch, now: now) }
@@ -319,7 +319,7 @@ public struct P2Reassembler: Sendable {
             open = nil
             guard current.body.count == current.totalLength else { return fail(.lengthMismatch, now: now) }
             consecutiveMalformed = 0
-            return .complete(type: current.type, messageId: current.messageId, body: current.body)
+            return .complete(type: current.type, messageId: current.messageId, flags: current.flags, body: current.body)
         }
         current.next += 1
         current.lastProgress = now

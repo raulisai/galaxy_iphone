@@ -1,0 +1,29 @@
+{
+  "version": "0.4.0",
+  "build": "13",
+  "baseCommit": "2951f0d41db240c962f3a79e50bac5d90f893350",
+  "date": "2026-10-19",
+  "installation": "PASS",
+  "launch": "BLOCKED (device locked)",
+  "tasks": {
+    "A-P2-01": "PASS (document: docs/apple/p2-revision3-decision.md)",
+    "A-P2-02": "PASS in package tests: Swift reproduces p2-noise-xx-vectors.json byte for byte (not a security review)",
+    "A-P2-03": "PASS in package tests: strict JSON, DATA session, tamper/replay/reorder",
+    "A-P2-04": "IMPLEMENTED, NOT_RUN on device (P2Link: discovery, Capabilities read, CCCD, one-at-a-time writes)",
+    "A-P2-05": "IMPLEMENTED (screen + Keychain AfterFirstUnlockThisDeviceOnly), NOT_RUN pairing with the real watch",
+    "A-H01": "PASS in package tests against a simulated watch (ack only after save); NOT_RUN with real watch data",
+    "A-H02": "PASS UI in simulator (sample data labelled); Apple Health copy not implemented (optional)",
+    "A-H03": "PASS (docs/adr/ADR-009-health-ledger.md, proposed)",
+    "A-K7": "IMPLEMENTED (find.phone -> FindPhoneAlarm), NOT_RUN on device",
+    "A-K8": "IMPLEMENTED (find.watch request), NOT_RUN on device"
+  },
+  "tests": {
+    "package": "PASS 61",
+    "uiSimulator": "PASS (not a gate)"
+  },
+  "securityReview": "K3 OPEN: own Noise composition and own X25519 on Android are unreviewed; use only the user own data",
+  "knownRisks": [
+    "frame size agreement between watch and iPhone unmeasured",
+    "watch closes the session if DATA arrives before it confirms the code"
+  ]
+}

@@ -173,6 +173,15 @@ struct HomeView: View {
                     .matchedTransitionSource(id: "diagnostics", in: zoom)
             }
             NavigationLink {
+                SecureChannelScreen(model: model)
+                    .navigationTransition(.zoom(sourceID: "p2", in: zoom))
+            } label: {
+                featureTile("Canal seguro", detail: P2Link.shared.isReady ? "Listo · salud y buscar" : "Vincular con el reloj",
+                            symbol: "lock.shield.fill", color: .teal)
+                    .matchedTransitionSource(id: "p2", in: zoom)
+            }
+            .accessibilityIdentifier("feature-p2")
+            NavigationLink {
                 SetupGuideScreen()
                     .navigationTransition(.zoom(sourceID: "guide", in: zoom))
             } label: {

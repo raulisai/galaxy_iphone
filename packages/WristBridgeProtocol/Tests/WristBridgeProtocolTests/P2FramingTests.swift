@@ -114,7 +114,7 @@ private func describe(_ step: P2Step) -> String {
                 let step = reassembler.accept(frame, atMs: index < times.count ? times[index] : 0)
                 steps.append(describe(step))
                 if case .failed(_, true) = step { closed.append(index) }
-                if case .complete(_, _, let body) = step { lastBody = body }
+                if case .complete(_, _, _, let body) = step { lastBody = body }
             }
             let e = vector.expected
             if let expected = e.steps, expected != steps { failures.append("\(vector.id): steps \(steps) != \(expected)") }

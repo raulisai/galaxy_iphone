@@ -87,6 +87,8 @@ final class BridgeModel: ObservableObject {
             self?.authorizedID = nil
             self?.transport.revoke()
         }
+        transport.p2 = P2Link.shared
+        P2Link.shared.attach(health: health)
         transport.onEvent = { [weak self] in self?.apply($0) }
         transport.onMessage = { [weak self] in self?.message = $0 }
         transport.onRadio = { [weak self] in self?.radio = $0 }

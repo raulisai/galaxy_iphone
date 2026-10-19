@@ -354,6 +354,7 @@ struct HealthScreen: View {
 /// shows what is true on each side. Turning it on does not create data; it removes the iPhone as a blocker.
 private struct ReceiveCard: View {
     @ObservedObject var store: HealthStore
+    @ObservedObject private var link = P2Link.shared
 
     var body: some View {
         Card(title: "Recepción de salud") {
@@ -366,10 +367,27 @@ private struct ReceiveCard: View {
             Divider()
             step("iPhone listo para recibir y guardar", done: store.receiveEnabled, detail: store.receiveEnabled ? "Libro local, validación y confirmación tras guardar" : "Activa el interruptor")
             step("Reloj captura pasos y ritmo cardiaco", done: nil, detail: "La app del reloj 0.5.0-lab los guarda en el reloj (informado por Windows); el iPhone no puede comprobarlo")
-            step("Canal seguro iPhone ↔ reloj", done: false, detail: "Aún no existe: falta aprobar el contrato (G2) y la seguridad. Es lo único que impide ver los datos aquí")
-            step("Reloj envía por lotes y espera confirmación", done: false, detail: "Pendiente del lado Kotlin (agregación, cursor, outbox)")
-            Text("Activar la recepción no inventa datos: aparecerán cuando el reloj los envíe por el canal.")
+            step("Canal seguro iPhone ↔ reloj", done: link.isReady,
+                 detail: link.isReady ? "Sesión cifrada activa" : "Vincula en Canal seguro (pantalla Reloj). Estado: \(channelText)")
+            step("Reloj envía por lotes y espera confirmación", done: link.healthStatus.hasPrefix("Al día"),
+                 detail: link.isReady ? link.healthStatus : "Empieza cuando el canal esté listo")
+            if link.isReady {
+                Button { link.syncHealth() } label: { Label("Sincronizar ahora", systemImage: "arrow.triangle.2.circlepath").frame(maxWidth: .infinity) }
+                    .buttonStyle(.glass).disabled(!store.receiveEnabled).accessibilityIdentifier("healthSyncNow")
+            }
+            Text("Activar la recepción no inventa datos: aparecen solo cuando el reloj los envía por el canal seguro.")
                 .font(.caption).foregroundStyle(.secondary)
+        }
+    }
+
+    private var channelText: String {
+        switch link.state {
+        case .off: "desactivado"
+        case .waitingForLink: "esperando al reloj"
+        case .failed(let reason): reason
+        case .awaitingConfirmation: "falta confirmar el código"
+        case .ready: "listo"
+        default: "conectando"
         }
     }
 
@@ -442,6 +460,7 @@ private struct HeartRateChart: View {
 struct FindWatchScreen: View {
     @ObservedObject var model: BridgeModel
     @ObservedObject private var finder = FindViaNotifications.shared
+    @ObservedObject private var link = P2Link.shared
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -487,6 +506,7 @@ struct FindWatchScreen: View {
             }
             Card(title: "Hacer sonar el reloj") {
                 Button {
+                    if link.isReady { link.requestFindWatch(); return }
                     Task { if finder.watchBurstActive { finder.stopWatch() } else { await finder.ringWatch() } }
                 } label: {
                     Label(finder.watchBurstActive ? "Detener" : "Hacer sonar el reloj",
@@ -498,8 +518,9 @@ struct FindWatchScreen: View {
                 .disabled(model.isDemo)
                 .sensoryFeedback(.impact, trigger: finder.watchBurstActive)
                 .accessibilityIdentifier("ringWatch")
-                Text(finder.message).font(.footnote).foregroundStyle(.secondary)
-                Text("Envía 8 avisos al reloj en 30 s por el mismo camino que tus notificaciones. Que vibre o suene depende de los ajustes de avisos del reloj; el iPhone también sonará. Es «solicitado»: la app no puede confirmar que el reloj sonó.")
+                Text(link.isReady ? (link.lastFindWatch ?? "Usará el canal seguro: el reloj suena y vibra 30 s.") : finder.message)
+                    .font(.footnote).foregroundStyle(.secondary)
+                Text("Con el canal seguro listo la orden va directa al reloj. Si no, envía 8 avisos al reloj en 30 s por el mismo camino que tus notificaciones. Que vibre o suene depende de los ajustes de avisos del reloj; el iPhone también sonará. Es «solicitado»: la app no puede confirmar que el reloj sonó.")
                     .font(.caption).foregroundStyle(.tertiary)
             }
         }
@@ -528,6 +549,7 @@ struct FindPhoneScreen: View {
     @ObservedObject var model: BridgeModel
     @ObservedObject private var alarm = FindPhoneAlarm.shared
     @ObservedObject private var finder = FindViaNotifications.shared
+    @ObservedObject private var link = P2Link.shared
 
     var body: some View {
         FeatureScroll(feature: .findPhone, subtitle: "Haz sonar este iPhone para encontrarlo: desde aquí o pulsando un aviso en el reloj.") {
@@ -585,6 +607,10 @@ struct FindPhoneScreen: View {
                     .accessibilityIdentifier("findPhoneArmStatus")
             }
             Card(title: "Cómo funciona") {
+                IconRow(symbol: "lock.shield.fill", color: link.isReady ? .green : .gray, title: "Canal seguro",
+                        subtitle: link.isReady ? "Listo: el botón «Buscar iPhone» del reloj (Conexión › Vincular iPhone) hace sonar este iPhone."
+                                               : "No listo. Vincúlalo en Canal seguro o usa el aviso armado de arriba.")
+                Divider()
                 IconRow(symbol: "applewatch", color: .teal, title: "Abre el aviso en el reloj",
                         subtitle: "Lo recibe como cualquier aviso del iPhone (ANCS). Pulsa «Hacer sonar».")
                 Divider()

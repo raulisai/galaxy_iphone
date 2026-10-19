@@ -54,6 +54,10 @@ struct ContentView: View {
                             IconRow(symbol: "arrow.triangle.2.circlepath", color: .green, title: "Ensayo de reconexión",
                                     subtitle: "20 intentos del canal de configuración")
                         }
+                        NavigationLink { SecureChannelScreen(model: model) } label: {
+                            IconRow(symbol: "lock.shield.fill", color: .teal, title: "Canal seguro con el reloj",
+                                    subtitle: "Vincular, salud y buscar")
+                        }
                         NavigationLink { SetupGuideScreen() } label: {
                             IconRow(symbol: "book.fill", color: .blue, title: "Guía de configuración")
                         }

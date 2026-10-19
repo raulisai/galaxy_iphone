@@ -11,6 +11,8 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
     var onEvent: ((BridgeEvent) -> Void)?
     var onMessage: ((String) -> Void)?
     var onRadio: ((String) -> Void)?
+    /// Own secure channel (P2). Receives the verified peripheral and the characteristic callbacks.
+    var p2: P2Link?
     private let diagnostics = BluetoothDiagnostics()
     func clearDiagnostics() {
         diagnostics.clear()
@@ -82,6 +84,7 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
     }
 
     func stop() {
+        p2?.linkLost()
         diagnostics.record(.stopped)
         discoveryGate.reset()
         enabled = false
@@ -138,6 +141,7 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
     }
 
     private func invalidateRadioObjects() {
+        p2?.linkLost()
         discoveryGate.reset()
         connectionDeadline?.cancel()
         connectionDeadline = nil
@@ -241,6 +245,7 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
             diagnostics.record(.serviceVerified)
             onEvent?(.serviceFound)
             onMessage?("Se encontró el servicio de configuración. Los avisos del reloj siguen sin comprobarse.")
+            p2?.linkReady(peripheral)
         } else {
             stop()
             onEvent?(.disconnected)
@@ -271,6 +276,7 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
         connectionDeadline = nil
         self.peripheral = nil
         discoveryGate.reset()
+        p2?.linkLost()
         onEvent?(.disconnected)
         scheduleRecovery(immediately: reconnectImmediately)
     }
@@ -316,8 +322,26 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
         central.cancelPeripheralConnection(device)
     }
 
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        guard peripheral === self.peripheral else { return }
+        p2?.didDiscoverCharacteristics(service, error: error)
+    }
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        guard peripheral === self.peripheral else { return }
+        p2?.didUpdateValue(characteristic, error: error)
+    }
+    func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
+        guard peripheral === self.peripheral else { return }
+        p2?.didUpdateNotificationState(characteristic, error: error)
+    }
+    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+        guard peripheral === self.peripheral else { return }
+        p2?.didWrite(characteristic, error: error)
+    }
+
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
         guard enabled, peripheral === self.peripheral else { return }
+        p2?.linkLost()
         diagnostics.record(.servicesInvalidated, value: invalidatedServices.count)
         discoveryGate.reset()
         beginServiceDiscovery(peripheral)

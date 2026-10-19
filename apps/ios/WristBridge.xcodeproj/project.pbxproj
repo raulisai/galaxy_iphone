@@ -85,6 +85,26 @@
 			"isa" = "PBXBuildFile";
 			"fileRef" = "D2B7B488D37F2345D55D6DD5";
 		};
+		"810E548FAA2A1E8B71C11FFC" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Adapters/P2IdentityStore.swift";
+			"sourceTree" = "<group>";
+		};
+		"867000DBFAFA4275267F8AB5" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "810E548FAA2A1E8B71C11FFC";
+		};
+		"94A63E83DC4FFC0646828019" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Adapters/P2Link.swift";
+			"sourceTree" = "<group>";
+		};
+		"686ABAE1AD25FD96051B4F5A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "94A63E83DC4FFC0646828019";
+		};
 		"81B290D9AF4A9A537E658BCB" = {
 			"isa" = "PBXFileReference";
 			"lastKnownFileType" = "sourcecode.swift";
@@ -164,6 +184,16 @@
 		"46DF809AFAEAF4415695D5F1" = {
 			"isa" = "PBXBuildFile";
 			"fileRef" = "242D9AFE03DAC96730B81963";
+		};
+		"EA27633B974731FE54A5C116" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Views/SecureChannelView.swift";
+			"sourceTree" = "<group>";
+		};
+		"24B58395ECB60DB51A67970D" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "EA27633B974731FE54A5C116";
 		};
 		"A68ECEC1667549CEA2B53FBA" = {
 			"isa" = "PBXFileReference";
@@ -246,6 +276,8 @@
 				"DE88106DFF69BF899E68C2B3",
 				"BCB868EE79AEF1CC2FD808F1",
 				"D2B7B488D37F2345D55D6DD5",
+				"810E548FAA2A1E8B71C11FFC",
+				"94A63E83DC4FFC0646828019",
 				"81B290D9AF4A9A537E658BCB",
 				"5226E68D7E1B5CCD3CF5C7CF",
 				"6BAD5550F9512AAC289E3DC2",
@@ -254,6 +286,7 @@
 				"9FED10A07BAFF65E3052FC8D",
 				"3C7B6B1E6ADBB0D35E519C3A",
 				"242D9AFE03DAC96730B81963",
+				"EA27633B974731FE54A5C116",
 				"A68ECEC1667549CEA2B53FBA",
 				"DE992906F3558FA95D799624",
 				"6229094C876603F9B4DC3A4D",
@@ -321,6 +354,8 @@
 				"5B10366625876F0ACE6790FE",
 				"C0273F6AB0DD76A6DD9BFF25",
 				"2A50B4455A619DD5B9D0F101",
+				"867000DBFAFA4275267F8AB5",
+				"686ABAE1AD25FD96051B4F5A",
 				"D0F8527FFEF38285D53E68CA",
 				"93CA5C14D884FF71F63B611C",
 				"0523A87E90D74F8639ED6EFC",
@@ -329,6 +364,7 @@
 				"3E88CA6F0A9C3BA2F31C6229",
 				"3680D5DBC1A7F229528B72B7",
 				"46DF809AFAEAF4415695D5F1",
+				"24B58395ECB60DB51A67970D",
 				"20CA0160EDEDDC3E99D76E20",
 				"0817C33FB26D0920307715BB",
 				"94DB40E280255E53F091B95E",
@@ -387,8 +423,8 @@
 				"PRODUCT_BUNDLE_IDENTIFIER" = "$(WRISTBRIDGE_APP_BUNDLE_ID)";
 				"INFOPLIST_FILE" = "WristBridge/Info.plist";
 				"GENERATE_INFOPLIST_FILE" = "NO";
-				"MARKETING_VERSION" = "0.3.5";
-				"CURRENT_PROJECT_VERSION" = "12";
+				"MARKETING_VERSION" = "0.4.0";
+				"CURRENT_PROJECT_VERSION" = "13";
 				"LD_RUNPATH_SEARCH_PATHS" = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -417,8 +453,8 @@
 				"PRODUCT_BUNDLE_IDENTIFIER" = "$(WRISTBRIDGE_APP_BUNDLE_ID)";
 				"INFOPLIST_FILE" = "WristBridge/Info.plist";
 				"GENERATE_INFOPLIST_FILE" = "NO";
-				"MARKETING_VERSION" = "0.3.5";
-				"CURRENT_PROJECT_VERSION" = "12";
+				"MARKETING_VERSION" = "0.4.0";
+				"CURRENT_PROJECT_VERSION" = "13";
 				"LD_RUNPATH_SEARCH_PATHS" = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
