@@ -1,0 +1,1324 @@
+{
+  "schema": "wristbridge.p2-framing-vectors",
+  "version": "draft-2",
+  "status": "PROPUESTO",
+  "note": "Vectores de framing SIN cifrado, derivados a mano (cabecera 9 bytes + totalLength u32 en el primer frame). Ninguno se obtuvo ejecutando el codec bajo prueba. Borrador P2 no congelado; no es un contrato.",
+  "layout": "frameVersion u8 | type u8 | flags u8 | messageId u16 | fragIndex u16 | fragCount u16 | [totalLength u32 solo en fragIndex 0 de DATA/HANDSHAKE] | payload. Big-endian. Los espacios del hex son solo separadores.",
+  "schemas": {
+    "p2.frame": "bytesHex es un unico valor ATT; expected.outcome = frame | error | ignored.",
+    "p2.stream": "framesHex son valores ATT en orden; expected.steps lista un resultado por frame (partial, complete, error:NOMBRE, cancelled, cancel-noop, ack:known, ack:unknown, ignored, peer-error:CODIGO:RELACIONADO).",
+    "p2.encode": "context.encode describe la entrada del codificador; expected es un error esperado."
+  },
+  "contextKeys": {
+    "limitsUniform": "los tres limites de totalLength valen N",
+    "knownMaxAttValueBytes": "el receptor conoce la capacidad y exige primer frame = max-13",
+    "timesMs": "instante monotono de cada frame en ms (por defecto 0)",
+    "outboundInFlight": "messageId enviados sin ACK",
+    "encode": "si existe en un p2.stream, el codificador debe reproducir framesHex exactamente"
+  },
+  "vectors": [
+    {
+      "id": "F01-a",
+      "case": "DATA, un frame, messageId=1, totalLength=24 (minimo), cuerpo 00..17; cabecera de 13 bytes",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0001 00000018 000102030405060708090a0b0c0d0e0f1011121314151617"
+      ],
+      "context": {
+        "encode": {
+          "type": "DATA",
+          "flags": 0,
+          "messageId": 1,
+          "maxAttValueBytes": 64,
+          "bodyHex": "000102030405060708090a0b0c0d0e0f1011121314151617"
+        }
+      },
+      "expected": {
+        "steps": [
+          "complete"
+        ],
+        "bodyLength": 24,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f1011121314151617"
+      },
+      "origin": "a mano (Apple)",
+      "review": "CONFIRMADO (cuerpo concreto fijado por Windows)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F01-b",
+      "case": "ACK del mensaje 1 (9 bytes, sin cuerpo)",
+      "schema": "p2.frame",
+      "bytesHex": "01 82 00 0001 0000 0001",
+      "expected": {
+        "outcome": "frame",
+        "frameType": "ACK",
+        "messageId": 1
+      },
+      "origin": "a mano (Apple)",
+      "review": "CONFIRMADO",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F01-c",
+      "case": "ERROR E_SEQUENCE (0x0007) relacionado con el mensaje 1; messageId de cabecera 0",
+      "schema": "p2.frame",
+      "bytesHex": "01 83 00 0000 0000 0001 00070001",
+      "expected": {
+        "outcome": "frame",
+        "frameType": "ERROR",
+        "messageId": 0,
+        "errorCode": 7,
+        "relatedMessageId": 1
+      },
+      "origin": "a mano (Apple)",
+      "review": "CONFIRMADO",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F01-d",
+      "case": "CANCEL del mensaje 5",
+      "schema": "p2.frame",
+      "bytesHex": "01 84 00 0005 0000 0001",
+      "expected": {
+        "outcome": "frame",
+        "frameType": "CANCEL",
+        "messageId": 5
+      },
+      "origin": "a mano (Apple)",
+      "review": "CONFIRMADO",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F01-e",
+      "case": "HANDSHAKE (solo framing, cuerpo NO es un mensaje Noise real), un frame, totalLength=32",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 85 00 0001 0000 0001 00000020 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+      ],
+      "context": {
+        "encode": {
+          "type": "HANDSHAKE",
+          "flags": 0,
+          "messageId": 1,
+          "maxAttValueBytes": 64,
+          "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+        }
+      },
+      "expected": {
+        "steps": [
+          "complete"
+        ],
+        "bodyLength": 32,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F01-f",
+      "case": "ERROR con messageId de cabecera distinto de 0",
+      "schema": "p2.frame",
+      "bytesHex": "01 83 00 0001 0000 0001 00070001",
+      "expected": {
+        "outcome": "error",
+        "error": "E_MALFORMED_FRAME"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F01-g",
+      "case": "ACK con un byte de cuerpo",
+      "schema": "p2.frame",
+      "bytesHex": "01 82 00 0001 0000 0001 00",
+      "expected": {
+        "outcome": "error",
+        "error": "E_MALFORMED_FRAME"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F01-h",
+      "case": "ERROR con cuerpo truncado (2 bytes en vez de 4)",
+      "schema": "p2.frame",
+      "bytesHex": "01 83 00 0000 0000 0001 0007",
+      "expected": {
+        "outcome": "error",
+        "error": "E_MALFORMED_FRAME"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F01-i",
+      "case": "DATA con PRIORITY (flags=01), un frame exactamente lleno con max=37 (13+24)",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 01 0002 0000 0001 00000018 000102030405060708090a0b0c0d0e0f1011121314151617"
+      ],
+      "context": {
+        "encode": {
+          "type": "DATA",
+          "flags": 1,
+          "messageId": 2,
+          "maxAttValueBytes": 37,
+          "bodyHex": "000102030405060708090a0b0c0d0e0f1011121314151617"
+        }
+      },
+      "expected": {
+        "steps": [
+          "complete"
+        ],
+        "bodyLength": 24,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f1011121314151617"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F01-j",
+      "case": "ERROR con relatedMessageId=0xFFFF (no aplica) y codigo 0x0100",
+      "schema": "p2.frame",
+      "bytesHex": "01 83 00 0000 0000 0001 0100ffff",
+      "expected": {
+        "outcome": "frame",
+        "frameType": "ERROR",
+        "messageId": 0,
+        "errorCode": 256,
+        "relatedMessageId": 65535
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F01-k",
+      "case": "ACK de un mensaje que no esta en vuelo: se ignora y se cuenta (sin ERROR ni cierre)",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 82 00 0007 0000 0001"
+      ],
+      "context": {
+        "outboundInFlight": []
+      },
+      "expected": {
+        "steps": [
+          "ack:unknown"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F01-l",
+      "case": "ACK conocido y luego el mismo ACK repetido",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 82 00 0001 0000 0001",
+        "01 82 00 0001 0000 0001"
+      ],
+      "context": {
+        "outboundInFlight": [
+          1
+        ]
+      },
+      "expected": {
+        "steps": [
+          "ack:known",
+          "ack:unknown"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F02-a",
+      "case": "max=20, totalLength=24, regla (A): cargas 7+11+6, frames de 20/20/15 bytes",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0003 00000018 00010203040506",
+        "01 81 00 0001 0001 0003 0708090a0b0c0d0e0f1011",
+        "01 81 00 0001 0002 0003 121314151617"
+      ],
+      "context": {
+        "encode": {
+          "type": "DATA",
+          "flags": 0,
+          "messageId": 1,
+          "maxAttValueBytes": 20,
+          "bodyHex": "000102030405060708090a0b0c0d0e0f1011121314151617"
+        }
+      },
+      "expected": {
+        "steps": [
+          "partial",
+          "partial",
+          "complete"
+        ],
+        "bodyLength": 24,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f1011121314151617",
+        "frameSizes": [
+          20,
+          20,
+          15
+        ]
+      },
+      "origin": "a mano (Apple)",
+      "review": "CONFIRMADO (7/11/6 son cargas; los frames miden 20/20/15)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F02-b",
+      "case": "max=13: no se abre el canal",
+      "schema": "p2.encode",
+      "context": {
+        "encode": {
+          "type": "DATA",
+          "flags": 0,
+          "messageId": 1,
+          "maxAttValueBytes": 13,
+          "bodyHex": "000102030405060708090a0b0c0d0e0f1011121314151617"
+        }
+      },
+      "expected": {
+        "outcome": "error",
+        "error": "E_CAPACITY_TOO_SMALL"
+      },
+      "origin": "a mano (Apple)",
+      "review": "CONFIRMADO",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F02-c",
+      "case": "max=14 (minimo): cargas 1+5+5+5+5+3",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0006 00000018 00",
+        "01 81 00 0001 0001 0006 0102030405",
+        "01 81 00 0001 0002 0006 060708090a",
+        "01 81 00 0001 0003 0006 0b0c0d0e0f",
+        "01 81 00 0001 0004 0006 1011121314",
+        "01 81 00 0001 0005 0006 151617"
+      ],
+      "context": {
+        "encode": {
+          "type": "DATA",
+          "flags": 0,
+          "messageId": 1,
+          "maxAttValueBytes": 14,
+          "bodyHex": "000102030405060708090a0b0c0d0e0f1011121314151617"
+        }
+      },
+      "expected": {
+        "steps": [
+          "partial",
+          "partial",
+          "partial",
+          "partial",
+          "partial",
+          "complete"
+        ],
+        "bodyLength": 24,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f1011121314151617"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F02-d",
+      "case": "max=185, totalLength=600: cargas 172+176+176+76",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0009 0000 0004 00000258 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaab",
+        "01 81 00 0009 0001 0004 acadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b",
+        "01 81 00 0009 0002 0004 5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b",
+        "01 81 00 0009 0003 0004 0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f5051525354555657"
+      ],
+      "context": {
+        "encode": {
+          "type": "DATA",
+          "flags": 0,
+          "messageId": 9,
+          "maxAttValueBytes": 185,
+          "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f5051525354555657"
+        }
+      },
+      "expected": {
+        "steps": [
+          "partial",
+          "partial",
+          "partial",
+          "complete"
+        ],
+        "bodyLength": 600,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f5051525354555657"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F02-e",
+      "case": "max=512, totalLength=1000: cargas 499+501",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 000a 0000 0002 000003e8 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2",
+        "01 81 00 000a 0001 0002 f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7"
+      ],
+      "context": {
+        "encode": {
+          "type": "DATA",
+          "flags": 0,
+          "messageId": 10,
+          "maxAttValueBytes": 512,
+          "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7"
+        }
+      },
+      "expected": {
+        "steps": [
+          "partial",
+          "complete"
+        ],
+        "bodyLength": 1000,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F03-a",
+      "case": "N-1: HANDSHAKE de 6 bytes, un frame de 19 bytes (max=20)",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 85 00 0001 0000 0001 00000006 000102030405"
+      ],
+      "context": {
+        "encode": {
+          "type": "HANDSHAKE",
+          "flags": 0,
+          "messageId": 1,
+          "maxAttValueBytes": 20,
+          "bodyHex": "000102030405"
+        }
+      },
+      "expected": {
+        "steps": [
+          "complete"
+        ],
+        "bodyLength": 6,
+        "bodyHex": "000102030405"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F03-b",
+      "case": "N: HANDSHAKE de 7 bytes, un frame exactamente lleno (20 bytes)",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 85 00 0001 0000 0001 00000007 00010203040506"
+      ],
+      "context": {
+        "encode": {
+          "type": "HANDSHAKE",
+          "flags": 0,
+          "messageId": 1,
+          "maxAttValueBytes": 20,
+          "bodyHex": "00010203040506"
+        }
+      },
+      "expected": {
+        "steps": [
+          "complete"
+        ],
+        "bodyLength": 7,
+        "bodyHex": "00010203040506"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F03-c",
+      "case": "N+1: HANDSHAKE de 8 bytes, 7 + 1 (ultimo frame de 1 byte)",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 85 00 0001 0000 0002 00000008 00010203040506",
+        "01 85 00 0001 0001 0002 07"
+      ],
+      "context": {
+        "encode": {
+          "type": "HANDSHAKE",
+          "flags": 0,
+          "messageId": 1,
+          "maxAttValueBytes": 20,
+          "bodyHex": "0001020304050607"
+        }
+      },
+      "expected": {
+        "steps": [
+          "partial",
+          "complete"
+        ],
+        "bodyLength": 8,
+        "bodyHex": "0001020304050607"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F03-d",
+      "case": "ultimo frame exactamente lleno: DATA 29 = 7+11+11 (frame final de 20 bytes)",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0003 0000001d 00010203040506",
+        "01 81 00 0001 0001 0003 0708090a0b0c0d0e0f1011",
+        "01 81 00 0001 0002 0003 12131415161718191a1b1c"
+      ],
+      "context": {
+        "encode": {
+          "type": "DATA",
+          "flags": 0,
+          "messageId": 1,
+          "maxAttValueBytes": 20,
+          "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c"
+        }
+      },
+      "expected": {
+        "steps": [
+          "partial",
+          "partial",
+          "complete"
+        ],
+        "bodyLength": 29,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F03-e",
+      "case": "ultimo frame de 1 byte: DATA 30 = 7+11+11+1",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0004 0000001e 00010203040506",
+        "01 81 00 0001 0001 0004 0708090a0b0c0d0e0f1011",
+        "01 81 00 0001 0002 0004 12131415161718191a1b1c",
+        "01 81 00 0001 0003 0004 1d"
+      ],
+      "context": {
+        "encode": {
+          "type": "DATA",
+          "flags": 0,
+          "messageId": 1,
+          "maxAttValueBytes": 20,
+          "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d"
+        }
+      },
+      "expected": {
+        "steps": [
+          "partial",
+          "partial",
+          "partial",
+          "complete"
+        ],
+        "bodyLength": 30,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F03-f",
+      "case": "frame intermedio corto (10 en vez de 11): E_MALFORMED_FRAME",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0003 0000001d 00010203040506",
+        "01 81 00 0001 0001 0003 0708090a0b0c0d0e0f10"
+      ],
+      "expected": {
+        "steps": [
+          "partial",
+          "error:E_MALFORMED_FRAME"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F03-g",
+      "case": "frame intermedio demasiado largo (12 en vez de 11): E_MALFORMED_FRAME",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0003 0000001d 00010203040506",
+        "01 81 00 0001 0001 0003 0708090a0b0c0d0e0f101112"
+      ],
+      "expected": {
+        "steps": [
+          "partial",
+          "error:E_MALFORMED_FRAME"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F03-h",
+      "case": "fragCount=2 incoherente con totalLength=29 y carga inicial 7 (corresponden 3 frames)",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0002 0000001d 00010203040506"
+      ],
+      "expected": {
+        "steps": [
+          "error:E_LENGTH_MISMATCH"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F03-i",
+      "case": "ultimo frame corto (10 en vez de 11): suma 28 != 29, E_LENGTH_MISMATCH",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0003 0000001d 00010203040506",
+        "01 81 00 0001 0001 0003 0708090a0b0c0d0e0f1011",
+        "01 81 00 0001 0002 0003 12131415161718191a1b"
+      ],
+      "expected": {
+        "steps": [
+          "partial",
+          "partial",
+          "error:E_LENGTH_MISMATCH"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F03-j",
+      "case": "ultimo frame mas largo que la capacidad (12 > 11): E_MALFORMED_FRAME",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0003 0000001d 00010203040506",
+        "01 81 00 0001 0001 0003 0708090a0b0c0d0e0f1011",
+        "01 81 00 0001 0002 0003 12131415161718191a1b1c1d"
+      ],
+      "expected": {
+        "steps": [
+          "partial",
+          "partial",
+          "error:E_MALFORMED_FRAME"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F03-k",
+      "case": "un solo frame con 20 bytes de carga y totalLength=24: truncado, E_LENGTH_MISMATCH",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0001 00000018 000102030405060708090a0b0c0d0e0f10111213"
+      ],
+      "expected": {
+        "steps": [
+          "error:E_LENGTH_MISMATCH"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F03-l",
+      "case": "un solo frame con 25 bytes de carga y totalLength=24: E_LENGTH_MISMATCH",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0001 00000018 000102030405060708090a0b0c0d0e0f101112131415161718"
+      ],
+      "expected": {
+        "steps": [
+          "error:E_LENGTH_MISMATCH"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F03-m",
+      "case": "capacidad conocida 20: primer frame de un mensaje multi-frame con 6 bytes (debe ser 7)",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0004 0000001d 000102030405"
+      ],
+      "context": {
+        "knownMaxAttValueBytes": 20
+      },
+      "expected": {
+        "steps": [
+          "error:E_MALFORMED_FRAME"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F03-n",
+      "case": "capacidad conocida 20: primer frame con 8 bytes de carga (excede 7)",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0003 00000018 0001020304050607"
+      ],
+      "context": {
+        "knownMaxAttValueBytes": 20
+      },
+      "expected": {
+        "steps": [
+          "error:E_MALFORMED_FRAME"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F04-a",
+      "case": "salto de fragIndex (0 y luego 2): E_SEQUENCE, parcial descartado",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0003 0000 0003 0000001d 00010203040506",
+        "01 81 00 0003 0002 0003 12131415161718191a1b1c"
+      ],
+      "expected": {
+        "steps": [
+          "partial",
+          "error:E_SEQUENCE"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F04-b",
+      "case": "frame intermedio duplicado (0,1,1): E_SEQUENCE",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0003 0000 0003 0000001d 00010203040506",
+        "01 81 00 0003 0001 0003 0708090a0b0c0d0e0f1011",
+        "01 81 00 0003 0001 0003 0708090a0b0c0d0e0f1011"
+      ],
+      "expected": {
+        "steps": [
+          "partial",
+          "partial",
+          "error:E_SEQUENCE"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F04-c",
+      "case": "primer frame duplicado (0,0): E_SEQUENCE sin cerrar sesion",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0003 0000 0003 0000001d 00010203040506",
+        "01 81 00 0003 0000 0003 0000001d 00010203040506"
+      ],
+      "expected": {
+        "steps": [
+          "partial",
+          "error:E_SEQUENCE"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F04-d",
+      "case": "continuacion sin mensaje abierto: E_SEQUENCE",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0003 0001 0003 0708090a0b0c0d0e0f1011"
+      ],
+      "expected": {
+        "steps": [
+          "error:E_SEQUENCE"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F04-e",
+      "case": "tras descartar por duplicado, el mismo messageId se reensambla limpio",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0003 0000 0003 0000001d 00010203040506",
+        "01 81 00 0003 0000 0003 0000001d 00010203040506",
+        "01 81 00 0003 0000 0003 0000001d 00010203040506",
+        "01 81 00 0003 0001 0003 0708090a0b0c0d0e0f1011",
+        "01 81 00 0003 0002 0003 12131415161718191a1b1c"
+      ],
+      "expected": {
+        "steps": [
+          "partial",
+          "error:E_SEQUENCE",
+          "partial",
+          "partial",
+          "complete"
+        ],
+        "bodyLength": 29,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F04-f",
+      "case": "orden invertido (1 y luego 0): el 1 es huerfano, el 0 abre el mensaje",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0003 0001 0003 0708090a0b0c0d0e0f1011",
+        "01 81 00 0003 0000 0003 0000001d 00010203040506"
+      ],
+      "expected": {
+        "steps": [
+          "error:E_SEQUENCE",
+          "partial"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F05-a",
+      "case": "mismo messageId con fragCount distinto (3 y luego 4): E_SEQUENCE y cierre de sesion",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0003 0000 0003 0000001d 00010203040506",
+        "01 81 00 0003 0001 0004 0708090a0b0c0d0e0f1011"
+      ],
+      "expected": {
+        "steps": [
+          "partial",
+          "error:E_SEQUENCE"
+        ],
+        "closeSessionSteps": [
+          1
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F05-b",
+      "case": "reinicio del mismo messageId con totalLength distinto (29 y 30): E_SEQUENCE y cierre",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0003 0000 0003 0000001d 00010203040506",
+        "01 81 00 0003 0000 0003 0000001e 00010203040506"
+      ],
+      "expected": {
+        "steps": [
+          "partial",
+          "error:E_SEQUENCE"
+        ],
+        "closeSessionSteps": [
+          1
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F05-c",
+      "case": "continuacion de OTRO messageId no toca el parcial abierto",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0003 0000 0003 0000001d 00010203040506",
+        "01 81 00 0004 0001 0003 0708090a0b0c0d0e0f1011",
+        "01 81 00 0003 0001 0003 0708090a0b0c0d0e0f1011",
+        "01 81 00 0003 0002 0003 12131415161718191a1b1c"
+      ],
+      "expected": {
+        "steps": [
+          "partial",
+          "error:E_SEQUENCE",
+          "partial",
+          "complete"
+        ],
+        "bodyLength": 29,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F06-a",
+      "case": "segundo mensaje con uno parcial abierto (limite 1 en v1): E_TOO_MANY_PARTIALS y el primero se completa",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0003 0000001d 00010203040506",
+        "01 81 00 0002 0000 0003 0000001d 00010203040506",
+        "01 81 00 0001 0001 0003 0708090a0b0c0d0e0f1011",
+        "01 81 00 0001 0002 0003 12131415161718191a1b1c"
+      ],
+      "expected": {
+        "steps": [
+          "partial",
+          "error:E_TOO_MANY_PARTIALS",
+          "partial",
+          "complete"
+        ],
+        "bodyLength": 29,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F07-a",
+      "case": "totalLength=65536 con limite 8192, un frame sin carga: E_OVERSIZE antes de reservar",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0001 00010000"
+      ],
+      "context": {
+        "limitsUniform": 8192
+      },
+      "expected": {
+        "steps": [
+          "error:E_OVERSIZE"
+        ]
+      },
+      "origin": "a mano (Apple)",
+      "review": "CONFIRMADO (necesita el limite 8192 explicito: con limites por defecto 65536 no excede el de lote)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F07-b",
+      "case": "limite 24, totalLength=25: E_OVERSIZE",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0001 00000019"
+      ],
+      "context": {
+        "limitsUniform": 24
+      },
+      "expected": {
+        "steps": [
+          "error:E_OVERSIZE"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F07-c",
+      "case": "limite 24, totalLength=24 (en el limite): aceptado",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0001 00000018 000102030405060708090a0b0c0d0e0f1011121314151617"
+      ],
+      "context": {
+        "limitsUniform": 24
+      },
+      "expected": {
+        "steps": [
+          "complete"
+        ],
+        "bodyLength": 24,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f1011121314151617"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F07-d",
+      "case": "DATA con totalLength=23 (< 24 = contador+tag): E_MALFORMED_FRAME",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0001 00000017 000102030405060708090a0b0c0d0e0f10111213141516"
+      ],
+      "expected": {
+        "steps": [
+          "error:E_MALFORMED_FRAME"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F07-e",
+      "case": "DATA con totalLength=0: E_MALFORMED_FRAME",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0001 00000000"
+      ],
+      "expected": {
+        "steps": [
+          "error:E_MALFORMED_FRAME"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F07-f",
+      "case": "limite por defecto de carril PRIORITY: totalLength=8217 (limite 8192+24=8216): E_OVERSIZE",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 01 0001 0000 0001 00002019"
+      ],
+      "expected": {
+        "steps": [
+          "error:E_OVERSIZE"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F07-g",
+      "case": "totalLength=0xFFFFFFFF (no cabe en Int): E_OVERSIZE",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0001 ffffffff"
+      ],
+      "expected": {
+        "steps": [
+          "error:E_OVERSIZE"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F07-h",
+      "case": "limite por defecto de HANDSHAKE (1024): totalLength=1025: E_OVERSIZE",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 85 00 0001 0000 0001 00000401"
+      ],
+      "expected": {
+        "steps": [
+          "error:E_OVERSIZE"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F10-a",
+      "case": "flags reservado distinto de 0 (02)",
+      "schema": "p2.frame",
+      "bytesHex": "01 81 02 0001 0000 0001 00000018",
+      "expected": {
+        "outcome": "error",
+        "error": "E_MALFORMED_FRAME"
+      },
+      "origin": "a mano (Apple)",
+      "review": "CONFIRMADO",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F10-b",
+      "case": "frameVersion=02",
+      "schema": "p2.frame",
+      "bytesHex": "02 81 00 0001 0000 0001 00000018",
+      "expected": {
+        "outcome": "error",
+        "error": "E_INCOMPATIBLE_FRAME"
+      },
+      "origin": "a mano (Apple)",
+      "review": "CONFIRMADO",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F10-c",
+      "case": "tipo critico desconocido 0x86",
+      "schema": "p2.frame",
+      "bytesHex": "01 86 00 0001 0000 0001",
+      "expected": {
+        "outcome": "error",
+        "error": "E_UNSUPPORTED_TYPE"
+      },
+      "origin": "a mano (Apple)",
+      "review": "CONFIRMADO",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F10-d",
+      "case": "cabecera truncada (7 bytes)",
+      "schema": "p2.frame",
+      "bytesHex": "01 81 00 0001 0000",
+      "expected": {
+        "outcome": "error",
+        "error": "E_MALFORMED_FRAME"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F10-e",
+      "case": "primer frame DATA con 12 bytes (falta 1 de totalLength)",
+      "schema": "p2.frame",
+      "bytesHex": "01 81 00 0001 0000 0001 000000",
+      "expected": {
+        "outcome": "error",
+        "error": "E_MALFORMED_FRAME"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F10-f",
+      "case": "valor ATT vacio",
+      "schema": "p2.frame",
+      "bytesHex": "",
+      "expected": {
+        "outcome": "error",
+        "error": "E_MALFORMED_FRAME"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F10-g",
+      "case": "fragCount=0",
+      "schema": "p2.frame",
+      "bytesHex": "01 81 00 0001 0000 0000 00000018",
+      "expected": {
+        "outcome": "error",
+        "error": "E_MALFORMED_FRAME"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F10-h",
+      "case": "fragIndex=1 con fragCount=1",
+      "schema": "p2.frame",
+      "bytesHex": "01 81 00 0001 0001 0001 aa",
+      "expected": {
+        "outcome": "error",
+        "error": "E_MALFORMED_FRAME"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F10-i",
+      "case": "primer frame valido pero sin carga (fragmento vacio)",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0001 0000 0001 00000018"
+      ],
+      "expected": {
+        "steps": [
+          "error:E_MALFORMED_FRAME"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F10-j",
+      "case": "frameVersion=02 con solo 3 bytes: la version se comprueba antes del truncamiento",
+      "schema": "p2.frame",
+      "bytesHex": "02 81 00",
+      "expected": {
+        "outcome": "error",
+        "error": "E_INCOMPATIBLE_FRAME"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F10-k",
+      "case": "tipo no critico desconocido 0x42: se descarta y se cuenta",
+      "schema": "p2.frame",
+      "bytesHex": "01 42 00 0001 0000 0001",
+      "expected": {
+        "outcome": "ignored"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F10-l",
+      "case": "ACK con fragCount=2",
+      "schema": "p2.frame",
+      "bytesHex": "01 82 00 0001 0000 0002",
+      "expected": {
+        "outcome": "error",
+        "error": "E_MALFORMED_FRAME"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F11-a",
+      "case": "parcial caducado (16 s sin progreso) y llega el frame final viejo: huerfano, E_SEQUENCE",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0003 0000 0003 0000001d 00010203040506",
+        "01 81 00 0003 0002 0003 12131415161718191a1b1c"
+      ],
+      "context": {
+        "timesMs": [
+          0,
+          16000
+        ]
+      },
+      "expected": {
+        "steps": [
+          "partial",
+          "error:E_SEQUENCE"
+        ],
+        "timedOutCount": 1
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F11-b",
+      "case": "14,999 s entre frames no caduca; el progreso reinicia el plazo",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0003 0000 0003 0000001d 00010203040506",
+        "01 81 00 0003 0001 0003 0708090a0b0c0d0e0f1011",
+        "01 81 00 0003 0002 0003 12131415161718191a1b1c"
+      ],
+      "context": {
+        "timesMs": [
+          0,
+          14999,
+          29998
+        ]
+      },
+      "expected": {
+        "steps": [
+          "partial",
+          "partial",
+          "complete"
+        ],
+        "bodyLength": 29,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c",
+        "timedOutCount": 0
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F11-c",
+      "case": "exactamente 15 s sin progreso caduca",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0003 0000 0003 0000001d 00010203040506",
+        "01 81 00 0003 0001 0003 0708090a0b0c0d0e0f1011"
+      ],
+      "context": {
+        "timesMs": [
+          0,
+          15000
+        ]
+      },
+      "expected": {
+        "steps": [
+          "partial",
+          "error:E_SEQUENCE"
+        ],
+        "timedOutCount": 1
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F12-a",
+      "case": "CANCEL del mensaje abierto; un frame posterior del mismo mensaje es huerfano",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0003 0000 0003 0000001d 00010203040506",
+        "01 84 00 0003 0000 0001",
+        "01 81 00 0003 0001 0003 0708090a0b0c0d0e0f1011"
+      ],
+      "expected": {
+        "steps": [
+          "partial",
+          "cancelled",
+          "error:E_SEQUENCE"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F12-b",
+      "case": "CANCEL de un mensaje inexistente, dos veces: idempotente",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 84 00 0009 0000 0001",
+        "01 84 00 0009 0000 0001"
+      ],
+      "expected": {
+        "steps": [
+          "cancel-noop",
+          "cancel-noop"
+        ]
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F12-c",
+      "case": "CANCEL de otro messageId no afecta al parcial abierto",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0003 0000 0003 0000001d 00010203040506",
+        "01 84 00 0009 0000 0001",
+        "01 81 00 0003 0001 0003 0708090a0b0c0d0e0f1011",
+        "01 81 00 0003 0002 0003 12131415161718191a1b1c"
+      ],
+      "expected": {
+        "steps": [
+          "partial",
+          "cancel-noop",
+          "partial",
+          "complete"
+        ],
+        "bodyLength": 29,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    },
+    {
+      "id": "F12-d",
+      "case": "un ACK entre frames de un mensaje abierto no lo altera",
+      "schema": "p2.stream",
+      "framesHex": [
+        "01 81 00 0003 0000 0003 0000001d 00010203040506",
+        "01 82 00 0007 0000 0001",
+        "01 81 00 0003 0001 0003 0708090a0b0c0d0e0f1011",
+        "01 81 00 0003 0002 0003 12131415161718191a1b1c"
+      ],
+      "context": {
+        "outboundInFlight": [
+          7
+        ]
+      },
+      "expected": {
+        "steps": [
+          "partial",
+          "ack:known",
+          "partial",
+          "complete"
+        ],
+        "bodyLength": 29,
+        "bodyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c"
+      },
+      "origin": "a mano (Windows, revisado)",
+      "status": "PROPUESTO"
+    }
+  ]
+}
