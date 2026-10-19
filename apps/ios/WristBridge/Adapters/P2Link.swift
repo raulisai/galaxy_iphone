@@ -91,7 +91,7 @@ final class P2Link: ObservableObject {
     /// The watch's primary service was verified on this peripheral.
     func linkReady(_ peripheral: CBPeripheral) {
         self.peripheral = peripheral
-        guard enabled else { return }
+        guard enabled else { note("servicio verificado; canal desactivado (pulsa «Vincular reloj»)"); return }
         resetSession()
         state = .discovering
         note("buscando características")
@@ -160,10 +160,14 @@ final class P2Link: ObservableObject {
         guard let peripheral, let events else { return }
         // The watch fixes its frame size when the CCCD is enabled, so the MTU must already be negotiated:
         // CoreBluetooth negotiates at connection time; the size below is what iOS reports for it.
-        maxAtt = peripheral.maximumWriteValueLength(for: .withoutResponse)
+        // iOS reports 512 here on this phone (measured), which is not ATT_MTU-3, so it cannot be trusted.
+        // The watch fixes its frame size from the real MTU (usually 185 -> 182 with iOS). Our own messages are
+        // small and always fit ONE frame, which the watch accepts for any capacity >= 182; never exceed it.
+        let reported = peripheral.maximumWriteValueLength(for: .withoutResponse)
+        maxAtt = min(reported, 182)
+        note("capacidad iOS \(reported), usada \(maxAtt)")
         guard maxAtt >= P2Codec.minimumAttValueBytes else { fail(P2Error.capacityTooSmall.userFacingSummary); return }
         state = .enablingNotifications
-        note("capacidad ATT \(maxAtt)")
         if events.isNotifying { peripheral.setNotifyValue(false, for: events) } else { peripheral.setNotifyValue(true, for: events) }
         arm("El reloj no activó las notificaciones del canal.", seconds: 15)
     }
@@ -276,7 +280,11 @@ final class P2Link: ObservableObject {
 
     private func send(_ json: P2JSON) {
         guard let session else { return }
-        do { enqueue(frames: try session.send(json).frames) } catch { fail(errorText(error)) }
+        do {
+            let frames = try session.send(json).frames
+            if frames.count > 1 { note("aviso: mensaje en \(frames.count) frames; el reloj exige su misma capacidad") }
+            enqueue(frames: frames)
+        } catch { fail(errorText(error)) }
     }
 
     private func handleRequest(_ env: P2Messages.Envelope) {
@@ -364,7 +372,7 @@ final class P2Link: ObservableObject {
         }
     }
 
-    private func fail(_ message: String) { close(reason: message, newState: .failed(message)) }
+    private func fail(_ message: String) { close(reason: "fallo: \(message)", newState: .failed(message)) }
 
     private func close(reason: String?, newState: State) {
         timeout?.cancel(); heartbeat?.cancel()
@@ -381,7 +389,19 @@ final class P2Link: ObservableObject {
     }
 
     private func errorText(_ error: Error) -> String { (error as? P2Error)?.userFacingSummary ?? "Error del canal seguro." }
-    private func note(_ text: String) { diagnostics = Array((diagnostics + [text]).suffix(40)) }
+    private func note(_ text: String) {
+        let line = "\(Date().formatted(.iso8601.time(includingFractionalSeconds: false))) \(text)"
+        diagnostics = Array((diagnostics + [line]).suffix(60))
+        persistDiagnostics()
+    }
+
+    /// Short, secret-free trace kept on the device so a failed attempt can be inspected afterwards.
+    private func persistDiagnostics() {
+        let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("WristBridge")
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        let text = (["state=\(diagnosticSummary)"] + diagnostics).joined(separator: "\n")
+        try? text.write(to: dir.appendingPathComponent("p2-diagnostics.txt"), atomically: true, encoding: .utf8)
+    }
 
     var diagnosticSummary: String {
         let stateText: String

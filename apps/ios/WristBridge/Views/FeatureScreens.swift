@@ -295,7 +295,7 @@ struct HealthScreen: View {
                 IconRow(symbol: "internaldrive.fill", color: .gray, title: "Nada sale del dispositivo",
                         subtitle: "Se guarda cifrado por el sistema, fuera de las copias de seguridad. Borra todo desde Ajustes → Privacidad.")
             }
-            ReceiveCard(store: store)
+            ReceiveCard(store: store, model: model)
         }
     }
 
@@ -354,6 +354,7 @@ struct HealthScreen: View {
 /// shows what is true on each side. Turning it on does not create data; it removes the iPhone as a blocker.
 private struct ReceiveCard: View {
     @ObservedObject var store: HealthStore
+    @ObservedObject var model: BridgeModel
     @ObservedObject private var link = P2Link.shared
 
     var body: some View {
@@ -371,6 +372,13 @@ private struct ReceiveCard: View {
                  detail: link.isReady ? "Sesión cifrada activa" : "Vincula en Canal seguro (pantalla Reloj). Estado: \(channelText)")
             step("Reloj envía por lotes y espera confirmación", done: link.healthStatus.hasPrefix("Al día"),
                  detail: link.isReady ? link.healthStatus : "Empieza cuando el canal esté listo")
+            if !link.isReady {
+                NavigationLink { SecureChannelScreen(model: model) } label: {
+                    Label(link.isPaired ? "Conectar el canal seguro" : "Vincular reloj", systemImage: "lock.shield.fill")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.glassProminent).tint(.teal).accessibilityIdentifier("healthOpenChannel")
+            }
             if link.isReady {
                 Button { link.syncHealth() } label: { Label("Sincronizar ahora", systemImage: "arrow.triangle.2.circlepath").frame(maxWidth: .infinity) }
                     .buttonStyle(.glass).disabled(!store.receiveEnabled).accessibilityIdentifier("healthSyncNow")
