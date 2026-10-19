@@ -96,17 +96,19 @@ internal fun HomeScreen(
                     else -> media.playerName
                 }
                 val artist = if (model.hidePreview) null else media.artist.takeIf { it.isNotBlank() } ?: media.playerName
+                // Same brand color as the player screen; white would vanish behind the white note glyph.
+                val accent = playerAccent(media.playerName).takeIf { it != WbColors.Label } ?: WbColors.Pink
                 Tile(
                     onClick = { onOpen(Screen.MUSIC) },
                     glyph = GlyphKind.NOTE,
-                    accent = WbColors.Pink,
+                    accent = accent,
                     title = title,
                     subtitle = artist,
                     trailing = {
                         // Icon shows the action; TalkBack gets the current state instead.
                         Glyph(
                             if (media.isPlaying) GlyphKind.PAUSE else GlyphKind.PLAY,
-                            WbColors.Pink,
+                            accent,
                             Modifier.size(m.dp(22)),
                             description = AccessibilityText.playbackState(media.isPlaying),
                         )

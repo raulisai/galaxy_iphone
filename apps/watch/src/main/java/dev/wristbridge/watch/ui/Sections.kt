@@ -85,10 +85,21 @@ internal fun canSend(media: MediaState, command: RemoteCommand): Boolean =
 internal fun showVolume(media: MediaState): Boolean =
     media.supports(RemoteCommand.VOLUME_UP) || media.supports(RemoteCommand.VOLUME_DOWN)
 
-/** Explicit PLAY/PAUSE matching the shown icon when available, otherwise TOGGLE_PLAY_PAUSE. */
-internal fun playPauseCommand(media: MediaState): RemoteCommand? =
-    listOf(if (media.isPlaying) RemoteCommand.PAUSE else RemoteCommand.PLAY, RemoteCommand.TOGGLE_PLAY_PAUSE)
+/**
+ * Explicit PLAY/PAUSE matching the shown icon when available, otherwise TOGGLE_PLAY_PAUSE. [playing] is the
+ * state the button shows, which may run ahead of the iPhone right after a tap.
+ */
+internal fun playPauseCommand(media: MediaState, playing: Boolean = media.isPlaying): RemoteCommand? =
+    listOf(if (playing) RemoteCommand.PAUSE else RemoteCommand.PLAY, RemoteCommand.TOGGLE_PLAY_PAUSE)
         .firstOrNull { canSend(media, it) }
+
+/**
+ * No app owns now-playing (Spotify paused for a while), yet the iPhone still advertises PLAY: it resumes the
+ * last player. Without this the screen hid every control and play could not be pressed at all.
+ */
+internal fun resumeCommand(media: MediaState): RemoteCommand? =
+    if (media.hasPlayer) null
+    else listOf(RemoteCommand.PLAY, RemoteCommand.TOGGLE_PLAY_PAUSE).firstOrNull { media.supports(it) }
 
 /** Elapsed time extrapolated from the AMS anchor; ticks once per second only while playback moves. */
 @Composable
