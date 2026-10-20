@@ -122,8 +122,8 @@ internal fun DetailRow(label: String, value: String, detail: String = "") {
 @Composable
 private fun LastReceptionRow(lastElapsedMs: Long?) {
     var now by remember { mutableLongStateOf(SystemClock.elapsedRealtime()) }
-    LaunchedEffect(lastElapsedMs) {
-        if (lastElapsedMs == null) return@LaunchedEffect
+    RepeatWhileStarted(lastElapsedMs) {
+        if (lastElapsedMs == null) return@RepeatWhileStarted
         while (true) {
             now = SystemClock.elapsedRealtime()
             delay(1_000)

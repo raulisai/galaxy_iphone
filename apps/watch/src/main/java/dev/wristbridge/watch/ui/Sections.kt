@@ -108,7 +108,7 @@ internal fun rememberElapsedSeconds(media: MediaState): Double? {
         media.playback == PlaybackState.REWINDING ||
         media.playback == PlaybackState.FAST_FORWARDING
     var now by remember { mutableLongStateOf(SystemClock.elapsedRealtimeNanos()) }
-    LaunchedEffect(moving, media.elapsedAtNanos) {
+    RepeatWhileStarted(moving to media.elapsedAtNanos) {
         now = SystemClock.elapsedRealtimeNanos()
         if (moving) {
             while (true) {

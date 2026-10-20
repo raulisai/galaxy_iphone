@@ -109,10 +109,12 @@ class PeripheralHost(
     fun restartAdvertising() {
         stopAdvertising()
         includeNameInScanResponse = true
-        startAdvertising()
+        startAdvertising(force = true)
     }
 
-    private fun startAdvertising() {
+    /** Connectable advertising is only needed while no iPhone is connected; while connected it just burns radio time. */
+    private fun startAdvertising(force: Boolean = false) {
+        if (connected.isNotEmpty() && !force) return
         val advertiser = adapter?.bluetoothLeAdvertiser
         if (advertiser == null) {
             fail("Este reloj no ofrece publicidad BLE")
@@ -210,14 +212,14 @@ class PeripheralHost(
                 val id = Pseudonym.of(device)
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
                     connected += id
+                    stopAdvertising()
                     BridgeStatus.update { it.copy(ownChannel = OwnChannelState.CONNECTED, peer = id) }
                     BridgeStatus.event("Central conectado peer=$id")
                     onPeerConnected(device)
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     connected -= id
-                    BridgeStatus.update {
-                        it.copy(ownChannel = if (advertising) OwnChannelState.ADVERTISING else OwnChannelState.STOPPED)
-                    }
+                    if (connected.isEmpty()) startAdvertising()
+                    BridgeStatus.update { it.copy(ownChannel = OwnChannelState.ADVERTISING) }
                     BridgeStatus.event("Central desconectado peer=$id estado=$status")
                     p2.onDisconnected(device)
                     onPeerDisconnected(device)

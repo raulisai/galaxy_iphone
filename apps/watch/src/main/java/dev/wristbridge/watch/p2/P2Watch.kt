@@ -206,9 +206,11 @@ class P2Channel(
     private class Peer(val device: BluetoothDevice, val responder: P2Responder) {
         val queue = ArrayDeque<ByteArray>()
         var inFlight = false
+        var retries = 0
     }
 
     private var pendingFindMessage = -1
+    private val MAX_NOTIFY_RETRIES = 20
     private val mtus = HashMap<String, Int>()
     private val peers = HashMap<String, Peer>()
 
@@ -353,9 +355,16 @@ class P2Channel(
         if (code == BluetoothGatt.GATT_SUCCESS) {
             peer.queue.removeFirst()
             peer.inFlight = true
+            peer.retries = 0
         } else {
-            BridgeStatus.event("P2: notify rechazado código=$code; se reintenta")
-            handler.postDelayed({ pump(peer) }, 50)
+            peer.retries++
+            if (peer.retries > MAX_NOTIFY_RETRIES) {
+                BridgeStatus.event("P2: notify rechazado código=$code; se cierra la sesión")
+                peer.queue.clear()
+                peer.responder.close("sin suscripción")
+            } else {
+                handler.postDelayed({ pump(peer) }, 50L * peer.retries)
+            }
         }
     }
 }

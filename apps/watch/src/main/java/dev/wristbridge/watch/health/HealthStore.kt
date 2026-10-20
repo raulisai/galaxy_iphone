@@ -62,9 +62,19 @@ class HealthStore internal constructor(context: Context, databaseName: String = 
                 }
                 db.insertWithOnConflict("samples", null, values, SQLiteDatabase.CONFLICT_IGNORE)
             }
-            prune(db)
+            pruneIfDue(db)
             db.setTransactionSuccessful()
         } finally { db.endTransaction() }
+    }
+
+    private var lastPruneMs = 0L
+
+    /** Retention only needs to run now and then; pruning on every sensor batch and every screen refresh wastes writes. */
+    private fun pruneIfDue(db: SQLiteDatabase) {
+        val now = android.os.SystemClock.elapsedRealtime()
+        if (lastPruneMs != 0L && now - lastPruneMs < PRUNE_INTERVAL_MS) return
+        lastPruneMs = now
+        prune(db)
     }
 
     private fun prune(db: SQLiteDatabase) {
@@ -79,7 +89,7 @@ class HealthStore internal constructor(context: Context, databaseName: String = 
     @Synchronized fun summary(): HealthSummary {
         val db = writableDatabase
         db.beginTransaction()
-        try { prune(db); db.setTransactionSuccessful() } finally { db.endTransaction() }
+        try { pruneIfDue(db); db.setTransactionSuccessful() } finally { db.endTransaction() }
         fun scalar(sql: String): Long = db.rawQuery(sql, null).use { if (it.moveToFirst()) it.getLong(0) else 0 }
         fun latest(metric: String): Pair<Double, Long>? = db.rawQuery(
             "SELECT value,end_ms FROM samples WHERE metric=? ORDER BY end_ms DESC,cursor DESC LIMIT 1",
@@ -126,6 +136,7 @@ class HealthStore internal constructor(context: Context, databaseName: String = 
     companion object {
         const val STEPS_DAILY = "steps_daily_snapshot"
         const val HEART_RATE = "heart_rate_bpm"
+        private const val PRUNE_INTERVAL_MS = 10L * 60 * 1000
         private const val RETENTION_MS = 7L * 24 * 60 * 60 * 1000
         @Volatile private var instance: HealthStore? = null
         fun get(context: Context): HealthStore = instance ?: synchronized(this) {

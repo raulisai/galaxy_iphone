@@ -21,8 +21,8 @@ internal fun PairingScreen(bridgeRunning: Boolean) {
     val context: Context = LocalContext.current
     val ui by P2Bridge.state.collectAsStateWithLifecycle()
     var now by remember { mutableLongStateOf(SystemClock.elapsedRealtime()) }
-    LaunchedEffect(ui.registrationUntil) {
-        P2Bridge.refreshPaired(context)
+    LaunchedEffect(Unit) { P2Bridge.refreshPaired(context) }
+    RepeatWhileStarted(ui.registrationUntil) {
         while (ui.registrationUntil > 0) {
             now = SystemClock.elapsedRealtime()
             if (now >= ui.registrationUntil && ui.phase == P2Phase.REGISTERING) P2Bridge.cancelRegistration()

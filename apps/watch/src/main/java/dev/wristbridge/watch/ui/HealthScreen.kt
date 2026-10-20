@@ -29,12 +29,12 @@ internal fun HealthScreen() {
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
         HealthCapture.schedule(context)
     }
-    LaunchedEffect(Unit) {
-        HealthCapture.schedule(context)
+    LaunchedEffect(Unit) { HealthCapture.schedule(context) }
+    RepeatWhileStarted(Unit) {
         while (true) {
             summary = withContext(Dispatchers.IO) { HealthStore.get(context).summary() }
             status = HealthCapture.status(context)
-            delay(3_000)
+            delay(5_000)
         }
     }
     fun changed(key: String, enabled: Boolean, isHeart: Boolean) {
