@@ -92,7 +92,7 @@ class CampaignRecorder private constructor(context: Context) {
             file.delete()
             backup.delete()
         } catch (e: SecurityException) {
-            Log.w(TAG, "campaign reset failed", e)
+            DiagnosticLog.w("campaign reset failed", e)
         }
         mutableStats.value = journal.stats()
     }
@@ -114,16 +114,16 @@ class CampaignRecorder private constructor(context: Context) {
                 it.flush()
             }
         } catch (e: IOException) {
-            Log.w(TAG, "campaign journal write failed", e)
+            DiagnosticLog.w("campaign journal write failed", e)
         } catch (e: SecurityException) {
-            Log.w(TAG, "campaign journal write failed", e)
+            DiagnosticLog.w("campaign journal write failed", e)
         }
     }
 
     private fun readText(f: File): String = try {
         if (f.isFile && f.length() <= MAX_FILE_BYTES * 2) f.readText(Charsets.UTF_8) else ""
     } catch (e: IOException) {
-        Log.w(TAG, "campaign journal read failed", e)
+        DiagnosticLog.w("campaign journal read failed", e)
         ""
     }
 

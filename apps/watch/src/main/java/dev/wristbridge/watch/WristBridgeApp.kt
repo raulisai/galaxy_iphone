@@ -9,6 +9,7 @@ import android.media.RingtoneManager
 class WristBridgeApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        dev.wristbridge.watch.bridge.DiagnosticLog.init(this)
         val manager = getSystemService(NotificationManager::class.java)
         manager.createNotificationChannels(
             listOf(

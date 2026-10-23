@@ -62,6 +62,7 @@ class BridgeService : Service() {
                     val device = IntentCompat.getParcelableExtra(intent, BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java)
                         ?: return
                     val state = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR)
+                    BridgeStatus.event("Vínculo cambió estado=${bondName(state)} peer=${Pseudonym.of(device)}")
                     handler.post { ancs.onBondStateChanged(device, state) }
                 }
                 BluetoothAdapter.ACTION_STATE_CHANGED -> {
@@ -77,7 +78,16 @@ class BridgeService : Service() {
     override fun onCreate() {
         super.onCreate()
         thread = HandlerThread("wristbridge-ble").also { it.start() }
-        handler = Handler(thread.looper)
+        // A bug in any BLE callback must be logged and survived, never kill the process (that desynchronised the bridge).
+        handler = object : Handler(thread.looper) {
+            override fun dispatchMessage(msg: android.os.Message) {
+                try {
+                    super.dispatchMessage(msg)
+                } catch (e: Exception) {
+                    DiagnosticLog.e("Excepción en el hilo BLE (se continúa)", e)
+                }
+            }
+        }
         val presenter = CardPresenter(this)
         media = MediaPresenter(this)
         ancs = AncsClient(this, handler, presenter, media)
@@ -209,6 +219,13 @@ class BridgeService : Service() {
         ancs.stop()
         host.stop()
         BridgeStatus.event("Servicio detenido")
+    }
+
+    private fun bondName(state: Int) = when (state) {
+        BluetoothDevice.BOND_NONE -> "NONE"
+        BluetoothDevice.BOND_BONDING -> "BONDING"
+        BluetoothDevice.BOND_BONDED -> "BONDED"
+        else -> "ERROR($state)"
     }
 
     private fun onRadioChanged(state: Int) {

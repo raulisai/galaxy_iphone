@@ -49,6 +49,7 @@ object BridgeStatus {
     /** Records a redacted transition both on screen and in logcat (tag WristBridge). */
     fun event(message: String) {
         Log.i(TAG, message)
+        DiagnosticLog.i(message)
         val stamp = SystemClock.elapsedRealtime() / 1000
         mutable.update { it.copy(events = (listOf("[$stamp s] $message") + it.events).take(40)) }
     }

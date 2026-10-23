@@ -417,6 +417,7 @@ class AncsClient(
                 enqueue(q, "mtu", 5_000, { g.requestMtu(517) }) { discover(g) }
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 val peer = device
+                BridgeStatus.event("Enlace ANCS desconectado estado=$status")
                 campaign.linkDown("gatt=$status")
                 BridgeStatus.update { it.copy(ancs = AncsState.IDLE, ancsDetail = "Desconectado ($status)", lastGattStatus = status) }
                 if (peer != null) retryLink("Desconexión estado=$status")
@@ -425,6 +426,7 @@ class AncsClient(
 
         override fun onMtuChanged(g: BluetoothGatt, mtu: Int, status: Int) {
             if (!current(g)) return
+            BridgeStatus.event("MTU negociado=$mtu estado=$status")
             BridgeStatus.update { it.copy(mtu = mtu) }
             queue?.onCallback("mtu", status)
         }

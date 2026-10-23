@@ -26,7 +26,15 @@ object P2Profile {
 }
 
 /** What the responder needs from the app: identity, registration window and the health source. */
+/** Diagnostic log pages for the iPhone ("diag.logs"). Text carries ids, codes and sizes only. */
+interface DiagnosticsSource {
+    /** Page [pageFromEnd] (0 = newest) of at most [pageBytes] characters, and the number of pages. */
+    fun page(pageFromEnd: Int, pageBytes: Int): Pair<String, Int>
+}
+
 interface P2Policy {
+    val diagnostics: DiagnosticsSource? get() = null
+
     /** User opened "register iPhone" on the watch and the window has not expired. */
     fun registrationOpen(): Boolean
     fun pinnedPeer(): ByteArray?
@@ -224,6 +232,16 @@ class P2Responder(
                     ),
                 )
                 HealthSync.CAPABILITY -> HealthSync.respond(json, policy.health, policy.deviceId)
+                "diag.logs" -> {
+                    val p = (env?.get("payload") as? Map<*, *>)
+                    val page = (p?.get("page") as? Long ?: 0L).coerceIn(0, 1000).toInt()
+                    val bytes = (p?.get("bytes") as? Long ?: 4000L).coerceIn(500, 6000).toInt()
+                    val (text, pages) = policy.diagnostics?.page(page, bytes) ?: ("" to 0)
+                    mapOf(
+                        "kind" to "res", "requestId" to requestId, "capability" to capability,
+                        "payload" to mapOf("page" to page.toLong(), "pages" to pages.toLong(), "text" to text),
+                    )
+                }
                 "find.watch" -> {
                     listener.onFindWatch()
                     mapOf("kind" to "res", "requestId" to requestId, "capability" to capability, "payload" to mapOf("status" to "requested"))

@@ -96,7 +96,7 @@ class MediaPresenter(private val context: Context) {
         val mediaSession = try {
             session ?: createSession().also { session = it }
         } catch (e: RuntimeException) {
-            Log.w(TAG, "media session unavailable", e)
+            DiagnosticLog.w("media session unavailable", e)
             null
         }
         if (mediaSession != null) {
@@ -105,7 +105,7 @@ class MediaPresenter(private val context: Context) {
                 updatePlayback(mediaSession, media, hidden)
                 if (!mediaSession.isActive) mediaSession.isActive = true
             } catch (e: RuntimeException) {
-                Log.w(TAG, "media session update failed", e)
+                DiagnosticLog.w("media session update failed", e)
             }
         }
         if (!changed) return
@@ -119,7 +119,7 @@ class MediaPresenter(private val context: Context) {
             }
         } catch (e: SecurityException) {
             BridgeStatus.event("Permiso de notificaciones denegado: aviso de música no mostrado")
-            Log.w(TAG, "media notify denied", e)
+            DiagnosticLog.w("media notify denied", e)
         }
     }
 
@@ -142,7 +142,7 @@ class MediaPresenter(private val context: Context) {
             s.isActive = false
             s.release()
         } catch (e: RuntimeException) {
-            Log.w(TAG, "media session release failed", e)
+            DiagnosticLog.w("media session release failed", e)
         }
     }
 

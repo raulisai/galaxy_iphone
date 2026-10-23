@@ -22,7 +22,7 @@ class StartupReceiver : BroadcastReceiver() {
             Log.i(TAG, "Puente reanudado tras ${if (intent.action == Intent.ACTION_BOOT_COMPLETED) "reinicio" else "actualización"}")
         } catch (e: RuntimeException) {
             // ForegroundServiceStartNotAllowedException and similar: leave it to the user.
-            Log.w(TAG, "No se pudo reanudar el puente automáticamente", e)
+            DiagnosticLog.w("No se pudo reanudar el puente automáticamente", e)
         }
     }
 }

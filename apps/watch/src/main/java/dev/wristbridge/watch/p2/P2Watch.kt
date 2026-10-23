@@ -19,6 +19,7 @@ import dev.wristbridge.protocol.p2.secure.P2Responder
 import dev.wristbridge.protocol.p2.secure.X25519Key
 import dev.wristbridge.protocol.p2.health.HealthSource
 import dev.wristbridge.watch.bridge.BridgeStatus
+import dev.wristbridge.watch.bridge.DiagnosticLog
 import dev.wristbridge.watch.bridge.Pseudonym
 import dev.wristbridge.watch.health.HealthStore
 import dev.wristbridge.watch.health.HealthStoreSource
@@ -211,6 +212,11 @@ class P2Channel(
 
     private var pendingFindMessage = -1
     private val MAX_NOTIFY_RETRIES = 20
+
+    private companion object {
+        /** BluetoothGattServer.notifyCharacteristicChanged throws above 512 bytes; MTU 517 would give 514 and crashed the bridge. */
+        const val MAX_NOTIFY_BYTES = 512
+    }
     private val mtus = HashMap<String, Int>()
     private val peers = HashMap<String, Peer>()
 
@@ -222,6 +228,9 @@ class P2Channel(
             P2Bridge.update { it.copy(paired = true) }
         }
         override val health: HealthSource get() = HealthStoreSource(store)
+        override val diagnostics = object : dev.wristbridge.protocol.p2.secure.DiagnosticsSource {
+            override fun page(pageFromEnd: Int, pageBytes: Int) = DiagnosticLog.page(pageFromEnd, pageBytes)
+        }
         override val deviceId: String by lazy {
             "watch-" + java.security.MessageDigest.getInstance("SHA-256").digest(identity.localKey().publicKey)
                 .take(6).joinToString("") { "%02x".format(it) }
@@ -247,7 +256,7 @@ class P2Channel(
     fun onSubscribed(device: BluetoothDevice) {
         peers.remove(device.address)?.responder?.close("nueva suscripción")
         val id = Pseudonym.of(device)
-        val maxAtt = ((mtus[device.address] ?: 23) - 3).coerceAtLeast(20)
+        val maxAtt = ((mtus[device.address] ?: 23) - 3).coerceIn(20, MAX_NOTIFY_BYTES)
         val listener = object : P2Listener {
             override fun onSecurityCode(code: String) {
                 P2Bridge.update { it.copy(phase = P2Phase.CODE, code = code) }
@@ -348,9 +357,15 @@ class P2Channel(
         val s = server() ?: return
         val c = eventsCharacteristic() ?: return
         val code = try {
+            if (next.size > MAX_NOTIFY_BYTES) throw IllegalArgumentException("frame ${next.size} > $MAX_NOTIFY_BYTES")
             s.notifyCharacteristicChanged(peer.device, c, false, next)
         } catch (e: SecurityException) {
             BluetoothGatt.GATT_FAILURE
+        } catch (e: IllegalArgumentException) {
+            DiagnosticLog.e("P2: notificación inválida", e)
+            peer.queue.clear()
+            peer.responder.close("frame inválido")
+            return
         }
         if (code == BluetoothGatt.GATT_SUCCESS) {
             peer.queue.removeFirst()

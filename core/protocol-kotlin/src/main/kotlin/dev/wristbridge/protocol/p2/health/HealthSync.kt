@@ -23,6 +23,9 @@ interface HealthSource {
     fun samplesAfter(cursor: Long, limit: Int): List<HealthSample>
     fun hasMoreAfter(cursor: Long): Boolean
 
+    /** Highest delivery cursor the watch holds (0 when empty). A request ahead of it means the watch store was reset. */
+    fun maxCursor(): Long = Long.MAX_VALUE
+
     /** The iPhone saved everything up to and including [through]. */
     fun acknowledge(through: Long)
 }
@@ -95,17 +98,21 @@ object HealthSync {
                 val after = long(p, "after")
                 val max = long(p, "max")
                 if (after < 0 || max !in 1..MAX_SAMPLES_PER_BATCH.toLong()) invalid("cursor range")
-                val list = source.samplesAfter(after, max.toInt())
-                var prev = after
+                // The iPhone is ahead of this watch (store erased, reinstalled or restored): restart from the beginning
+                // and say so, instead of leaving both sides stuck on a cursor that can never be reached.
+                val reset = after > source.maxCursor()
+                val from = if (reset) 0L else after
+                val list = source.samplesAfter(from, max.toInt())
+                var prev = from
                 for (s in list) {
                     if (s.cursor <= prev) invalid("source returned unordered cursors")
                     prev = s.cursor
                 }
-                val last = list.lastOrNull()?.cursor ?: after
+                val last = list.lastOrNull()?.cursor ?: from
                 envelope(
                     "res", id,
                     mapOf(
-                        "op" to "batch", "deviceId" to deviceId, "after" to after, "last" to last,
+                        "op" to "batch", "deviceId" to deviceId, "after" to after, "last" to last, "reset" to reset,
                         "more" to (list.isNotEmpty() && source.hasMoreAfter(last)),
                         "samples" to list.mapNotNull { toLedger(it) },
                     ),
@@ -132,7 +139,7 @@ object HealthSync {
         val after = long(p, "after")
         val raw = p["samples"] as? List<*> ?: invalid("samples must be an array")
         if (raw.size > MAX_SAMPLES_PER_BATCH) throw P2Exception(P2Error.OVERSIZE, "too many samples")
-        var prev = after
+        var prev = if (p["reset"] == true) 0L else after
         return raw.map {
             val m = obj(it, "sample")
             val s = HealthSample(
@@ -160,6 +167,8 @@ object HealthSync {
 
     /** Last cursor scanned by the watch (valid or skipped); the next request continues after it. */
     fun batchLast(response: Any?): Long = long(obj(obj(response, "message")["payload"], "payload"), "last")
+
+    fun batchIsReset(response: Any?): Boolean = obj(obj(response, "message")["payload"], "payload")["reset"] == true
 
     fun batchHasMore(response: Any?): Boolean = obj(obj(response, "message")["payload"], "payload")["more"] == true
 }

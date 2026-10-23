@@ -46,12 +46,12 @@ class CardPresenter(private val context: Context) {
             }
         } catch (e: SecurityException) {
             BridgeStatus.event("Permiso de notificaciones denegado: tarjeta no mostrada")
-            Log.w(TAG, "notify denied", e)
+            DiagnosticLog.w("notify denied", e)
         } catch (e: RuntimeException) {
             // A presentation failure must never take the BLE thread (and the whole bridge) down: the card is
             // lost, the session goes on and the next one is shown.
             BridgeStatus.event("Tarjeta no mostrada: ${e.javaClass.simpleName}")
-            Log.w(TAG, "card presentation failed", e)
+            DiagnosticLog.w("card presentation failed", e)
         }
     }
 

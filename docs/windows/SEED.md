@@ -100,3 +100,6 @@ Buscar iPhone con respaldo ANCS (app cerrada) y bajo consumo (anuncio LOW_POWER,
 
 ## 0.6.5-lab (19-oct-2026)
 Optimizacion de bateria: anuncio detenido mientras hay iPhone conectado, temporizadores UI solo con pantalla encendida, depuracion de salud espaciada, reintentos P2 acotados. Ver docs/windows/bateria.md. APK 0.6.5-lab (19) compilado; NO instalado (ADB sin conexion); consumo real NOT_RUN.
+
+## 0.6.6-lab (23-oct-2026)
+Causa raiz de las desincronizaciones: 4 cierres fatales (21-oct) por notificaciones P2 de 514 bytes (>512) que mataban todo el proceso. Corregido (frame<=512, hilo BLE seguro), registro persistente wb.log + scripts/windows/pull-watch-logs.sh, resync de salud con reset:true, diag.logs. Ver docs/windows/diagnostico-conexion.md. Instalado y registro verificado; prueba en la calle NOT_RUN. Tareas Apple A-DIAG1..5.

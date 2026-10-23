@@ -13,6 +13,7 @@ import java.security.MessageDigest
 class HealthStoreSource(private val store: HealthStore) : HealthSource {
     override fun samplesAfter(cursor: Long, limit: Int) = store.samplesAfter(cursor, limit)
     override fun hasMoreAfter(cursor: Long) = store.hasMoreAfter(cursor)
+    override fun maxCursor() = store.maxCursor()
     override fun acknowledge(through: Long) = store.acknowledge(through)
 }
 
@@ -108,6 +109,9 @@ class HealthStore internal constructor(context: Context, databaseName: String = 
     ).use { c ->
         buildList { while (c.moveToNext()) add(HealthSample(c.getLong(0), c.getString(2), c.getLong(3), c.getLong(4), c.getDouble(5), c.getString(1))) }
     }
+
+    @Synchronized fun maxCursor(): Long = readableDatabase.rawQuery("SELECT COALESCE(MAX(cursor),0) FROM samples", null)
+        .use { if (it.moveToFirst()) it.getLong(0) else 0L }
 
     @Synchronized fun hasMoreAfter(cursor: Long): Boolean = readableDatabase.rawQuery(
         "SELECT 1 FROM samples WHERE cursor>? LIMIT 1", arrayOf(cursor.toString()),

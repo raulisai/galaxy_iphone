@@ -60,6 +60,16 @@ internal fun DiagnosticsScreen(model: UiModel) {
                 WbText(diagnostics(bridge), style = MaterialTheme.typography.bodyExtraSmall, color = WbColors.Secondary)
             }
         }
+        item(key = "savedlog") {
+            val kb = remember { dev.wristbridge.watch.bridge.DiagnosticLog.totalBytes() / 1024 }
+            GroupCard {
+                WbText("Registro guardado", style = MaterialTheme.typography.bodySmall, color = WbColors.Label)
+                WbText(
+                    "$kb KB de errores y eventos, también tras reinicios. Sácalo con scripts/windows/pull-watch-logs.sh o pídelo desde el iPhone.",
+                    style = MaterialTheme.typography.bodyExtraSmall, color = WbColors.Secondary,
+                )
+            }
+        }
         item(key = "campaign") {
             GroupCard {
                 WbText("Campaña", style = MaterialTheme.typography.bodySmall, color = WbColors.Label)

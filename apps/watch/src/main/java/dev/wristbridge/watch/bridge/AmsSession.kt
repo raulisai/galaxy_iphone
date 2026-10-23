@@ -259,7 +259,7 @@ class AmsSession(
             block()
         } catch (e: SecurityException) {
             BridgeStatus.event("Permiso de notificaciones denegado: música no mostrada")
-            Log.w(TAG, "media notify denied", e)
+            DiagnosticLog.w("media notify denied", e)
         }
     }
 

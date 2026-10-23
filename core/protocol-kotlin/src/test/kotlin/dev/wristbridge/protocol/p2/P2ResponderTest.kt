@@ -26,6 +26,7 @@ class P2ResponderTest {
         override fun samplesAfter(cursor: Long, limit: Int) = all.filter { it.cursor > cursor }.take(limit)
         override fun hasMoreAfter(cursor: Long) = all.any { it.cursor > cursor }
         override fun acknowledge(through: Long) { acked = through }
+        override fun maxCursor() = all.maxOfOrNull { it.cursor } ?: 0L
     }
 
     private class Policy(var open: Boolean) : P2Policy {
@@ -36,6 +37,9 @@ class P2ResponderTest {
         override fun pin(peerStaticKey: ByteArray) { pinned = peerStaticKey.copyOf() }
         override val health: HealthSource get() = src
         override val deviceId = "watch-test"
+        override val diagnostics = object : dev.wristbridge.protocol.p2.secure.DiagnosticsSource {
+            override fun page(pageFromEnd: Int, pageBytes: Int) = ("linea-$pageFromEnd" to 3)
+        }
     }
 
     private class Listener : P2Listener {
@@ -244,5 +248,27 @@ class P2ResponderTest {
         reply.forEach { r.onWrite(it, 0) }
         assertEquals("find.phone", l.response!!.first)
         assertNull(l.response!!.third)
+    }
+    @Test
+    fun cursorAheadOfTheWatchTriggersAResyncFromZero() {
+        val src = Source()
+        val res = HealthSync.respond(HealthSync.requestCursor(1, 99_999, 100), src, "watch-x")
+        assertTrue(HealthSync.batchIsReset(res))
+        assertEquals(30, HealthSync.parseBatch(res).size)
+        val normal = HealthSync.respond(HealthSync.requestCursor(2, 10, 100), src, "watch-x")
+        assertFalse(HealthSync.batchIsReset(normal))
+    }
+
+    @Test
+    fun diagnosticLogsAreServedByPage() {
+        val policy = Policy(open = true)
+        val r = newResponder(policy, Listener())
+        val phone = Phone(X25519Key.generate(), mtu)
+        phone.hello(r)
+        r.confirmCode(true)
+        val res = phone.call(r, mapOf("kind" to "req", "requestId" to 7L, "capability" to "diag.logs", "payload" to mapOf("page" to 2L, "bytes" to 4000L))) as Map<*, *>
+        val p = res["payload"] as Map<*, *>
+        assertEquals("linea-2", p["text"])
+        assertEquals(3L, p["pages"])
     }
 }
