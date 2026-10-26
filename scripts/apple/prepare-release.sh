@@ -9,7 +9,7 @@ repository="$(pwd)"
 case "$output/" in "$repository/"*) echo 'Use an output directory outside the repository (contains local signing material).' >&2; exit 1 ;; esac
 xcodebuild -project apps/ios/WristBridge.xcodeproj -scheme WristBridge \
     -configuration Release -destination 'generic/platform=iOS' \
-    -derivedDataPath "$output/DerivedData" build > "$output/build.local.log" 2>&1
+    -derivedDataPath "$output/DerivedData" -allowProvisioningUpdates build > "$output/build.local.log" 2>&1
 app="$output/DerivedData/Build/Products/Release-iphoneos/WristBridge.app"
 codesign --verify --deep --strict "$app" > "$output/signature.local.log" 2>&1
 # Keep the signed app/profile and raw logs local; the report deliberately omits identity.
