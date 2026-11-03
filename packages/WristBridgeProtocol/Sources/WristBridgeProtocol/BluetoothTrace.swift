@@ -7,7 +7,7 @@ public enum BluetoothTraceStep: String, Codable, Sendable {
     case peerUnavailable, connectSubmitted, connected, discoverySubmitted
     case discoveryCompleted, serviceVerified, discoveryTimedOut, connectionFailed, disconnected
     case cancellationSubmitted, cancellationCompleted, recoveryScheduled, retryExhausted
-    case servicesInvalidated, restorationReceived
+    case servicesInvalidated, restorationReceived, serviceMissing
     case writeWithResponseCapacity, writeWithoutResponseCapacity
 }
 

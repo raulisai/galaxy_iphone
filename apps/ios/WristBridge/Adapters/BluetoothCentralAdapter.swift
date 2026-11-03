@@ -1,5 +1,6 @@
 import CoreBluetooth
 import Foundation
+import UIKit
 import WristBridgeProtocol
 
 /// Path A laboratory transport. No P2 writes, arbitrary scanning or ANCS parsing.
@@ -90,6 +91,7 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
         enabled = false
         retryTask?.cancel()
         retryTask = nil
+        releaseBackgroundTime()
         connectionDeadline?.cancel()
         connectionDeadline = nil
         let unvalidated = pendingRestoration
@@ -147,6 +149,7 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
         connectionDeadline = nil
         retryTask?.cancel()
         retryTask = nil
+        releaseBackgroundTime()
         peripheral?.delegate = nil
         peripheral = nil
         // A powered-off/reset manager invalidates old objects. Their cancellation
@@ -168,7 +171,8 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
         guard let device = central.retrievePeripherals(withIdentifiers: [authorizedID]).first else {
             diagnostics.record(.peerUnavailable)
             onEvent?(.disconnected)
-            onMessage?("No se encontró el reloj autorizado. Acércalo y vuelve a seleccionarlo.")
+            onMessage?("iOS aún no ofrece el reloj autorizado. Se volverá a buscar automáticamente.")
+            scheduleRecovery(immediately: false)
             return
         }
         peripheral = device
@@ -246,10 +250,29 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
             onEvent?(.serviceFound)
             onMessage?("Se encontró el servicio de configuración. Los avisos del reloj siguen sin comprobarse.")
             p2?.linkReady(peripheral)
+        } else if automaticRecovery {
+            // Usually the watch app is restarting and has not registered its service yet. Keep the link:
+            // Service Changed (didModifyServices) rediscovers in real time; a slow re-check covers a peer
+            // that never sends it.
+            diagnostics.record(.serviceMissing, value: retryPolicy.attempts)
+            onMessage?("El reloj está enlazado pero su app aún no abre el servicio. Se comprobará de nuevo sola.")
+            scheduleRediscovery(peripheral)
         } else {
             stop()
             onEvent?(.disconnected)
             onMessage?("El reloj no ofrece el servicio esperado. Revisa la versión de su app.")
+        }
+    }
+
+    private func scheduleRediscovery(_ device: CBPeripheral) {
+        retryTask?.cancel()
+        let delay = max(5, retryPolicy.nextDelay())
+        diagnostics.record(.recoveryScheduled, value: delay)
+        retryTask = Task { [weak self, weak device] in
+            do { try await Task.sleep(for: .seconds(delay)) } catch { return }
+            guard let self, let device else { return }
+            self.retryTask = nil
+            self.beginServiceDiscovery(device)
         }
     }
 
@@ -281,33 +304,48 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
         scheduleRecovery(immediately: reconnectImmediately)
     }
 
+    /// The iPhone never gives up while the watch is authorized and Detener was not pressed: a lost link
+    /// is re-requested at once, a failed attempt after a capped backoff. Radio-off waits for poweredOn.
     private func scheduleRecovery(immediately: Bool) {
-        guard enabled, automaticRecovery, central?.state == .poweredOn,
-              retryTask == nil else {
+        guard enabled, automaticRecovery else {
             onMessage?("El canal de configuración se desconectó. Pulsa Reconectar para volver a intentarlo.")
             return
         }
-        guard let delay = retryPolicy.nextDelay() else {
-            enabled = false
-            diagnostics.record(.retryExhausted)
-            onMessage?("Se agotaron los tres reintentos. Pulsa Reconectar para iniciar otra prueba.")
-            return
-        }
+        guard central?.state == .poweredOn, retryTask == nil else { return }
         if immediately {
             // Submit the new pending request inside the Bluetooth callback, before
             // iOS suspends us again. Backoff is only for reported connection failures.
             connectIfPossible()
             return
         }
-        onMessage?("El canal se desconectó. Se solicitará de nuevo el enlace al reloj autorizado.")
+        let delay = retryPolicy.nextDelay()
         diagnostics.record(.recoveryScheduled, value: delay)
+        if delay == 0 { connectIfPossible(); return }
+        onMessage?("El enlace falló. Se pedirá de nuevo al reloj en \(delay) s, sin que tengas que hacer nada.")
+        // Keep the process alive through short waits so a suspended app still re-submits the request;
+        // longer waits are covered by state restoration and the foreground heartbeat.
+        if delay <= 15 { holdBackgroundTime() }
         retryTask = Task { [weak self] in
             do { try await Task.sleep(for: .seconds(delay)) } catch { return }
             guard let self else { return }
+            defer { self.releaseBackgroundTime() }
             self.retryTask = nil
             guard self.enabled, self.automaticRecovery else { return }
             self.connectIfPossible()
         }
+    }
+
+    private var backgroundTime = UIBackgroundTaskIdentifier.invalid
+    private func holdBackgroundTime() {
+        releaseBackgroundTime()
+        backgroundTime = UIApplication.shared.beginBackgroundTask(withName: "wristbridge-reconnect") { [weak self] in
+            MainActor.assumeIsolated { self?.releaseBackgroundTime() }
+        }
+    }
+    private func releaseBackgroundTime() {
+        guard backgroundTime != .invalid else { return }
+        UIApplication.shared.endBackgroundTask(backgroundTime)
+        backgroundTime = .invalid
     }
 
     private func cancel(_ device: CBPeripheral) {

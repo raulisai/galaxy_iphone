@@ -53,6 +53,7 @@ final class BridgeModel: ObservableObject {
     /// (watch came back, discovery gave up, radio returned). Called on foreground
     /// and by a slow heartbeat; a pending connection is never restarted.
     func resumeLinkIfNeeded() {
+        if !isDemo, !stopped { P2Link.shared.resumeIfNeeded() }
         guard !isDemo, let accessory = authorizedID,
               LinkResumePolicy.shouldResume(stopped: stopped, authorized: state.authorization == .authorized,
                                             automaticRecovery: automaticRecovery,

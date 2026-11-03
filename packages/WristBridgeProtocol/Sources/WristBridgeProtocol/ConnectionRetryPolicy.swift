@@ -1,14 +1,16 @@
-/// A finite budget per operator request or successfully discovered service.
-/// Waiting for an out-of-range peer uses CoreBluetooth's pending connection,
+/// Backoff for reported connection failures. It never runs out: while the watch is
+/// authorized and the operator has not pressed Detener, the iPhone keeps asking for
+/// the link, like the vendor companion apps. The first retry is immediate so a
+/// suspended app re-submits its pending connection inside the Bluetooth callback.
+/// Waiting for an out-of-range peer still uses CoreBluetooth's pending connection,
 /// not a timer that repeatedly cancels and reconnects.
 public struct ConnectionRetryPolicy: Sendable {
+    public static let delays = [0, 2, 5, 15, 30, 60]
     public private(set) var attempts = 0
     public init() {}
     public mutating func reset() { attempts = 0 }
-    public mutating func nextDelay() -> Int? {
-        let delays = [2, 5, 15]
-        guard attempts < delays.count else { return nil }
-        let delay = delays[attempts]
+    public mutating func nextDelay() -> Int {
+        let delay = Self.delays[min(attempts, Self.delays.count - 1)]
         attempts += 1
         return delay
     }

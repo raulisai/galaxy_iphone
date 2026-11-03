@@ -107,6 +107,7 @@ final class P2Link: ObservableObject {
     /// Bluetooth link lost, Service Changed, radio off: the application session ends; ANCS is untouched.
     func linkLost() {
         peripheral = nil
+        sessionRetry?.cancel()
         guard state != .off else { return }
         close(reason: nil, newState: enabled ? .waitingForLink : .off)
     }
@@ -191,7 +192,7 @@ final class P2Link: ObservableObject {
         let now = parts.seconds * 1000 + parts.attoseconds / 1_000_000_000_000_000
         do {
             if let session { try receiveSecure(session, bytes, now: now) } else { try receiveHandshake(bytes, now: now) }
-        } catch { fail(errorText(error)) }
+        } catch { fail(errorText(error), retry: (error as? P2Error) != .identityChanged) }
     }
 
     private func receiveHandshake(_ bytes: [UInt8], now: Int64) throws {
@@ -251,6 +252,7 @@ final class P2Link: ObservableObject {
             isPaired = identity.pinnedWatch != nil
         }
         state = .ready(sessionId: sessionId)
+        sessionRetryAttempts = 0
         note("canal listo")
         startHeartbeat()
         syncHealth()
@@ -382,10 +384,41 @@ final class P2Link: ObservableObject {
         }
     }
 
-    private func fail(_ message: String) { close(reason: "fallo: \(message)", newState: .failed(message)) }
+    private func fail(_ message: String, retry: Bool = true) {
+        close(reason: "fallo: \(message)", newState: .failed(message))
+        if retry { scheduleSessionRetry() }
+    }
+
+    // MARK: Automatic session recovery
+
+    private var sessionRetry: Task<Void, Never>?
+    private var sessionRetryAttempts = 0
+    private static let sessionRetryDelays = [3, 10, 30, 60]
+
+    /// A paired watch whose Bluetooth link is still up gets a fresh secure session on its own after a
+    /// failure (watch app restarted, timeout, dropped frame). First registration and a changed identity
+    /// never retry by themselves: they need the user.
+    private func scheduleSessionRetry() {
+        sessionRetry?.cancel()
+        guard enabled, isPaired, peripheral != nil else { return }
+        let delay = Self.sessionRetryDelays[min(sessionRetryAttempts, Self.sessionRetryDelays.count - 1)]
+        sessionRetryAttempts += 1
+        note("se reintentará el canal en \(delay) s")
+        sessionRetry = Task { [weak self] in
+            do { try await Task.sleep(for: .seconds(delay)) } catch { return }
+            self?.resumeIfNeeded()
+        }
+    }
+
+    /// Foreground, heartbeat or retry timer: restart a failed session if the watch link is verified.
+    func resumeIfNeeded() {
+        guard enabled, isPaired, let peripheral, case .failed = state else { return }
+        note("reintento automático del canal")
+        linkReady(peripheral)
+    }
 
     private func close(reason: String?, newState: State) {
-        timeout?.cancel(); heartbeat?.cancel()
+        timeout?.cancel(); heartbeat?.cancel(); sessionRetry?.cancel()
         responders.removeAll(); routeSync.removeAll(); syncClient = nil
         resetSession()
         if let reason { note(reason) }

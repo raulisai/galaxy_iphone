@@ -2,17 +2,14 @@ import Foundation
 import Testing
 @testable import WristBridgeProtocol
 
-@Test func recoveryBudgetIsFiniteAndSuccessStartsANewCampaign() {
+@Test func recoveryNeverGivesUpAndSuccessRestartsTheBackoff() {
     var policy = ConnectionRetryPolicy()
-    #expect(policy.nextDelay() == 2)
-    #expect(policy.nextDelay() == 5)
-    #expect(policy.nextDelay() == 15)
-    #expect(policy.nextDelay() == nil)
-    #expect(policy.nextDelay() == nil)
-    #expect(policy.attempts == 3)
+    let observed = (0..<9).map { _ in policy.nextDelay() }
+    #expect(observed == [0, 2, 5, 15, 30, 60, 60, 60, 60])
+    #expect(policy.attempts == 9)
     policy.reset()
     #expect(policy.attempts == 0)
-    #expect(policy.nextDelay() == 2)
+    #expect(policy.nextDelay() == 0)
 }
 
 @MainActor
