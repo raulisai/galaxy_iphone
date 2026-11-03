@@ -43,3 +43,10 @@ El iPhone 0.4.2 ya atiende `find.phone` (probado en simulador y con el canal **l
 3. Confirmar que el APK instalado del reloj es 0.6.1-lab (15) (Ajustes › Acerca de) y que en «Vincular iPhone» aparece «Sesión segura activa.».
 4. Mantener el texto honesto: «Solicitado al iPhone» / «aceptó la orden»; nunca «sonó».
 Mientras tanto, el iPhone ofrece una ruta sin botón nuevo: en Buscar iPhone → «Armar», el reloj recibe un aviso «Buscar iPhone» con acciones «Hacer sonar/Detener» (ANCS).
+
+## K10 · Reconexión: el reloj debe volver a anunciarse siempre (3-nov-2026)
+
+El iPhone 0.4.4 ya no se rinde nunca: deja una conexión pendiente de CoreBluetooth que se completa en cuanto el reloj se anuncia (también en segundo plano), reintenta el servicio si falta y reabre la sesión P2 sola si el reloj ya está registrado. En el par físico (3-nov) el iPhone quedó **en `connecting` más de 1 min sin respuesta del reloj**: iOS solo puede reconectar si el reloj se anuncia. Riesgo en `PeripheralHost.kt` (0.6.5-lab, «stop advertising while connected»):
+1. `connected` se rellena con cualquier central del servidor GATT (incluido el enlace físico que comparte ANCS). Si nunca llega `STATE_DISCONNECTED` (radio reiniciada, `server.close()`, enlace caído sin callback), el conjunto queda con entradas viejas y **no se vuelve a anunciar jamás**.
+2. Tareas Kotlin: (a) vaciar `connected` y volver a anunciar al recibir `ACTION_STATE_CHANGED` ON y al recrear el servidor; (b) vigilancia periódica (p. ej. cada 60 s): si no hay sesión P2 lista y `bluetoothManager.getConnectedDevices(GATT_SERVER)` no contiene al iPhone, purgar `connected` y `startAdvertising()`; (c) registrar en `diag.logs` cada inicio/parada de anuncio con el tamaño de `connected`.
+3. Evidencia útil: exportar el log de diagnóstico del reloj justo después de un corte en el que el iPhone no reconecta.
