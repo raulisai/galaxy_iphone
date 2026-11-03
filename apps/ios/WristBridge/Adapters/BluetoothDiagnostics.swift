@@ -10,7 +10,11 @@ final class BluetoothDiagnostics {
     init() {
         file = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)
             .first?.appendingPathComponent("bluetooth-diagnostics.json")
+        // Keep the history of previous launches: a disconnection usually happens while the app is suspended.
+        trace = BluetoothTrace(restoring: file.flatMap { try? Data(contentsOf: $0) })
     }
+
+    var readableLines: [String] { trace.readable() }
 
     func record(_ step: BluetoothTraceStep, value: Int? = nil, error: Error? = nil) {
         trace.record(step, value: value, errorCode: error.map { ($0 as NSError).code })

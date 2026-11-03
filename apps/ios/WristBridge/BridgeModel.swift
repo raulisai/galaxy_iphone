@@ -15,6 +15,9 @@ final class BridgeModel: ObservableObject {
     @Published private(set) var settingsWarning: String?
     @Published private(set) var retentionDays = 30
     @Published private(set) var lastLinkedAt: Date?
+    /// The watch erased its bond: only removing and adding the accessory again restores the link.
+    @Published private(set) var pairingLost = false
+    private var repairing = false
     let isDemo: Bool
     private let preferences: UserDefaults
     private static let lastLinkedKey = "WristBridge.lastLinkedAt"
@@ -85,8 +88,20 @@ final class BridgeModel: ObservableObject {
             else { self.transport.rejectRestoration() }
         }
         setup.onRemoved = { [weak self] in
-            self?.authorizedID = nil
-            self?.transport.revoke()
+            guard let self else { return }
+            self.authorizedID = nil
+            self.transport.revoke()
+            if self.repairing {
+                // Removing the accessory also drops iOS's stale bond; adding it again creates a fresh one.
+                self.repairing = false
+                self.message = "Vínculo anterior quitado. Elige el reloj en la hoja de iOS y acepta el emparejamiento en ambos."
+                self.setup.showPicker()
+            }
+        }
+        transport.onPairingLost = { [weak self] in
+            guard let self, !self.pairingLost else { return }
+            self.pairingLost = true
+            PairingAlert.post()
         }
         transport.p2 = P2Link.shared
         P2Link.shared.attach(health: health)
@@ -157,6 +172,38 @@ final class BridgeModel: ObservableObject {
         }
     }
 
+    /// One tap for what fixed it by hand: remove the accessory (and its stale bond), then add it again.
+    /// The secure-channel registration is kept, so the watch is not asked for a new code.
+    func repairPairing() {
+        guard !isDemo else { pairingLost = false; return }
+        campaignController?.cancel(interrupted: true)
+        pairingLost = false
+        PairingAlert.clear()
+        stopped = false
+        settingsStore?.update(stopped: false)
+        if authorizedID != nil {
+            repairing = true
+            message = "Quitando el vínculo anterior…"
+            setup.forget()
+        } else { setup.showPicker() }
+    }
+
+    /// Everything needed to see why the link dropped: summary, readable Bluetooth events and secure-channel notes.
+    var connectionLog: String {
+        let bluetooth = transport.readableTrace
+        return """
+        \(diagnosticSummary)
+
+        == Eventos Bluetooth (\(bluetooth.count), más antiguos primero) ==
+        \(bluetooth.joined(separator: "\n"))
+
+        == Canal seguro ==
+        \(P2Link.shared.diagnosticSummary)
+        \(P2Link.shared.diagnostics.joined(separator: "\n"))
+        """
+    }
+    var recentBluetoothEvents: [String] { Array(transport.readableTrace.suffix(60).reversed()) }
+
     func setRetentionDays(_ days: Int) {
         guard [7, 30, 90].contains(days) else { return }
         healthStore?.applyRetention(days: days)
@@ -189,6 +236,7 @@ final class BridgeModel: ObservableObject {
         lastCheck = Date()
         // Local observation only: when our own service check last succeeded.
         if case .serviceFound = event, state.channel == .serviceFound {
+            if pairingLost { pairingLost = false; PairingAlert.clear() }
             lastLinkedAt = Date()
             if !isDemo { preferences.set(lastLinkedAt, forKey: Self.lastLinkedKey) }
         }

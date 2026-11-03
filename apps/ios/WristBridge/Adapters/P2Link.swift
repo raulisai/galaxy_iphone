@@ -128,7 +128,11 @@ final class P2Link: ObservableObject {
     }
 
     func didUpdateValue(_ characteristic: CBCharacteristic, error: Error?) {
-        if error != nil { if state != .off { fail("No se pudo leer del reloj (¿vínculo cifrado?).") }; return }
+        if let error {
+            // ATT 5/15 = insufficient authentication/encryption: the bond is not valid on one side.
+            if state != .off { fail("No se pudo leer del reloj (ATT \((error as NSError).code); ¿vínculo cifrado?).") }
+            return
+        }
         let bytes = Array(characteristic.value ?? Data())
         if characteristic.uuid == CBUUID(nsuuid: BLEProfile.capabilities) {
             guard state == .readingCapabilities else { return }

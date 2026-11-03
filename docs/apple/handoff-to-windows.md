@@ -50,3 +50,11 @@ El iPhone 0.4.4 ya no se rinde nunca: deja una conexión pendiente de CoreBlueto
 1. `connected` se rellena con cualquier central del servidor GATT (incluido el enlace físico que comparte ANCS). Si nunca llega `STATE_DISCONNECTED` (radio reiniciada, `server.close()`, enlace caído sin callback), el conjunto queda con entradas viejas y **no se vuelve a anunciar jamás**.
 2. Tareas Kotlin: (a) vaciar `connected` y volver a anunciar al recibir `ACTION_STATE_CHANGED` ON y al recrear el servidor; (b) vigilancia periódica (p. ej. cada 60 s): si no hay sesión P2 lista y `bluetoothManager.getConnectedDevices(GATT_SERVER)` no contiene al iPhone, purgar `connected` y `startAdvertising()`; (c) registrar en `diag.logs` cada inicio/parada de anuncio con el tamaño de `connected`.
 3. Evidencia útil: exportar el log de diagnóstico del reloj justo después de un corte en el que el iPhone no reconecta.
+
+## K11 · El reloj borra el emparejamiento con el iPhone (3-nov-2026)
+
+Evidencia del iPhone (traza `bluetooth-diagnostics.json`, 3-nov 07:32–07:33 UTC): 9 intentos seguidos fallan con **CBError 14 `peerRemovedPairingInformation`**; solo se recuperó al quitar el accesorio y volver a agregarlo (o al omitir el reloj en Ajustes › Bluetooth). Significa que **el reloj ya no tiene el bond (LTK) que iOS conserva**. El código del reloj no llama `removeBond`, pero `AncsClient.requestBond` llama `createBond()` cuando `bondState == BOND_NONE`: si Wear OS o un reinicio dejó el bond en NONE, el reloj crea uno nuevo y el viejo de iOS queda inválido.
+Tareas Kotlin:
+1. Registrar en `diag.logs` cada `ACTION_BOND_STATE_CHANGED` del iPhone (anterior → nuevo, con `EXTRA_REASON` si existe) y el momento en que se llama `createBond()`.
+2. No llamar `createBond()` en automático si el iPhone ya estuvo emparejado antes: avisar en el reloj «El emparejamiento se perdió; repáralo desde el iPhone» (el iPhone 0.4.5 ya muestra «Reparar vínculo» y una notificación).
+3. Averiguar qué borra el bond (reinicio, actualización de la app, limpieza de Wear OS, Galaxy Wearable) con el log del punto 1 tras el siguiente corte.

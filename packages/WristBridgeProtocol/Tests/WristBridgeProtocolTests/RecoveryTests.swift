@@ -78,3 +78,19 @@ func unreadableSettingsFailClosedWithoutOverwritingOriginal(data: Data) throws {
         #expect(!resume(radio: false, .unavailable))
     }
 }
+
+@Test func bluetoothTraceSurvivesRelaunchAndExplainsPairingLoss() throws {
+    var trace = BluetoothTrace()
+    let date = try #require(ISO8601DateFormatter().date(from: "2026-11-03T07:32:30Z"))
+    trace.record(.connectionFailed, errorCode: 14, at: date)
+    let restored = BluetoothTrace(restoring: Data(trace.export().utf8))
+    #expect(restored.entries.count == 1)
+    let line = try #require(restored.readable(timeZone: TimeZone(identifier: "UTC")!).first)
+    #expect(line.hasPrefix("03 nov 07:32:30 · Conexión fallida"))
+    #expect(line.contains("error 14: el reloj borró el emparejamiento"))
+    #expect(BluetoothTrace.isPairingLost(errorCode: 14))
+    #expect(!BluetoothTrace.isPairingLost(errorCode: 6))
+    #expect(!BluetoothTrace.isPairingLost(errorCode: nil))
+    #expect(BluetoothTrace(restoring: Data("corrupt".utf8)).entries.isEmpty)
+}
+

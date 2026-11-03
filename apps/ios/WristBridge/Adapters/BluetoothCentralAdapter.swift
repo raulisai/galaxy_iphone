@@ -20,6 +20,9 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
         attCapacity = "not-measured"
     }
     var diagnosticTrace: String { diagnostics.summary }
+    var readableTrace: [String] { diagnostics.readableLines }
+    /// The watch erased its bond (CBError 14). Retrying is useless until the accessory is removed and added again.
+    var onPairingLost: (() -> Void)?
     var tracePersistenceAvailable: Bool { diagnostics.persistenceAvailable }
     private var central: CBCentralManager?
     private var peripheral: CBPeripheral?
@@ -279,16 +282,25 @@ final class BluetoothCentralAdapter: NSObject, @preconcurrency CBCentralManagerD
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral,
                         error: Error?) {
         diagnostics.record(.connectionFailed, error: error)
-        finishDisconnection(peripheral)
+        finishDisconnection(peripheral, error: error)
     }
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral,
                         error: Error?) {
         diagnostics.record(.disconnected, error: error)
-        finishDisconnection(peripheral, reconnectImmediately: true)
+        finishDisconnection(peripheral, error: error, reconnectImmediately: true)
     }
 
-    private func finishDisconnection(_ peripheral: CBPeripheral, reconnectImmediately: Bool = false) {
+    private func finishDisconnection(_ peripheral: CBPeripheral, error: Error?, reconnectImmediately: Bool = false) {
+        let code = (error as NSError?).flatMap { $0.domain == CBErrorDomain ? $0.code : nil }
+        if BluetoothTrace.isPairingLost(errorCode: code), peripheral.identifier == authorizedID {
+            diagnostics.record(.pairingLost, error: error)
+            stop()
+            onEvent?(.disconnected)
+            onMessage?("El reloj borró su emparejamiento con este iPhone. Pulsa «Reparar vínculo» para quitarlo y volver a agregarlo.")
+            onPairingLost?()
+            return
+        }
         if cancelling.remove(peripheral.identifier) != nil {
             diagnostics.record(.cancellationCompleted)
             if enabled { connectIfPossible() }

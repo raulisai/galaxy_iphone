@@ -31,6 +31,9 @@ struct HomeView: View {
                             .accessibilityIdentifier("demoBanner")
                             .appear(0)
                     }
+                    if model.pairingLost {
+                        repairCard.transition(.move(edge: .top).combined(with: .opacity))
+                    }
                     statusCard.appear(1).scrollDepth()
                     featureGrid.appear(2)
                     upcoming.appear(3)
@@ -121,6 +124,25 @@ struct HomeView: View {
 
     // MARK: Cards
 
+    private var repairCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Label("El reloj perdió el emparejamiento", systemImage: "link.badge.plus")
+                .font(.headline).foregroundStyle(.red)
+            Text("El reloj borró sus claves de Bluetooth y iOS rechaza las antiguas, así que no puede reconectar solo. Al reparar se quita el vínculo viejo y se vuelve a agregar; el canal seguro se conserva.")
+                .font(.footnote).foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            Button(action: model.repairPairing) {
+                Label("Reparar vínculo", systemImage: "arrow.triangle.2.circlepath")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent).tint(.red)
+            .accessibilityIdentifier("repairPairing")
+        }
+        .padding(16)
+        .background(.red.opacity(0.1), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .animation(Motion.smooth, value: model.pairingLost)
+    }
+
     private var statusCard: some View {
         Card(title: "Estado del enlace") {
             IconRow(symbol: "checkmark.shield.fill", color: .blue, title: "Accesorio", subtitle: model.authorizationText)
@@ -169,7 +191,7 @@ struct HomeView: View {
                 DiagnosticsScreen(model: model)
                     .navigationTransition(.zoom(sourceID: "diagnostics", in: zoom))
             } label: {
-                featureTile("Diagnóstico", detail: "Traza Bluetooth sin mensajes", symbol: "waveform.path.ecg", color: .purple)
+                featureTile("Diagnóstico", detail: "Registro de conexión y errores", symbol: "waveform.path.ecg", color: .purple)
                     .matchedTransitionSource(id: "diagnostics", in: zoom)
             }
             NavigationLink {
@@ -272,7 +294,37 @@ struct RecoveryCampaignScreen: View {
 struct DiagnosticsScreen: View {
     @ObservedObject var model: BridgeModel
     var body: some View {
-        List { DiagnosticsSection(model: model) }.navigationTitle("Diagnóstico")
+        List {
+            DiagnosticsSection(model: model)
+            ConnectionLogSection(model: model)
+        }
+        .navigationTitle("Diagnóstico")
+    }
+}
+
+/// Readable connection history that survives relaunches: what happened, when, and the iOS error behind it.
+struct ConnectionLogSection: View {
+    @ObservedObject var model: BridgeModel
+    var body: some View {
+        Section {
+            ShareLink(item: model.connectionLog, preview: SharePreview("Registro de conexión WristBridge")) {
+                Label("Exportar registro de conexión", systemImage: "square.and.arrow.up")
+            }
+            .accessibilityIdentifier("exportConnectionLog")
+            let events = model.recentBluetoothEvents
+            if events.isEmpty {
+                Text("Aún no hay eventos.").foregroundStyle(.secondary)
+            }
+            ForEach(Array(events.enumerated()), id: \.offset) { _, line in
+                Text(line)
+                    .font(.caption.monospaced())
+                    .foregroundStyle(line.contains("error") || line.contains("BORRÓ") ? .red : .primary)
+            }
+        } header: {
+            Text("Registro de conexión")
+        } footer: {
+            Text("Más recientes arriba. Se conserva entre aperturas de la app (hasta 400 eventos). No incluye identificadores del reloj ni contenido de avisos.")
+        }
     }
 }
 
